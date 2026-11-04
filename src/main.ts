@@ -11,7 +11,7 @@ import { initSearch } from './ui/search'
 import { initEventCard } from './ui/eventCard'
 import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
-import { initSlice } from './ui/slice'
+import { initSnapshot } from './ui/snapshot'
 
 function boot(): void {
   const container = document.getElementById('scene-container') as HTMLElement
@@ -138,7 +138,11 @@ function boot(): void {
 
   initTimeline()
   initLegend()
-  initSlice(goToEvent)
+  // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数
+  initSnapshot(goToEvent, (key) => {
+    const c = CONTINENTS[key]
+    if (c) rig.flyTo(c.lat, c.lon, c.dist)
+  })
 
   // ---- 主循环 ----
   const clock = new THREE.Clock()

@@ -142,7 +142,7 @@ await page.click('#random-btn')
 await new Promise((r) => setTimeout(r, 2000))
 await shot('08-random')
 
-// 9. "此刻世界"切片面板
+// 9. 世界快照面板（年份/时代/类型筛选/大洲概览/事件列表）
 await page.click('#slice-toggle')
 await new Promise((r) => setTimeout(r, 600))
 const sliceInfo = await page.evaluate(() => ({
@@ -150,9 +150,40 @@ const sliceInfo = await page.evaluate(() => ({
   rows: document.querySelectorAll('#slice-list .slice-row').length,
   first: document.querySelector('#slice-list .slice-row')?.getAttribute('data-id') ?? null,
   count: document.getElementById('active-count')?.textContent,
+  era: document.getElementById('snapshot-era')?.textContent ?? '',
+  typeChips: document.querySelectorAll('#snapshot-types .snap-chip').length,
+  contChips: [...document.querySelectorAll('#snapshot-continents .snap-chip:not(:disabled)')].length,
+  densityBars: document.querySelectorAll('#timeline-density rect').length,
 }))
-console.log('   切片面板:', JSON.stringify(sliceInfo))
+console.log('   快照面板:', JSON.stringify(sliceInfo))
+if (sliceInfo.era.length === 0) throw new Error('快照时代标签为空')
+if (sliceInfo.typeChips < 8) throw new Error(`类型 chips 异常: ${sliceInfo.typeChips}`)
+if (sliceInfo.densityBars < 160) throw new Error(`密度条柱数异常: ${sliceInfo.densityBars}`)
 await shot('09-slice-panel')
+// 类型筛选：点击"战争"，全部行应为战争色
+await page.click('#snapshot-types [data-type="war"]')
+await new Promise((r) => setTimeout(r, 400))
+const warFilter = await page.evaluate(() => {
+  const rows = [...document.querySelectorAll('#slice-list .slice-row')]
+  return { rows: rows.length, allWar: rows.every((r) => r.style.getPropertyValue('--type-color') === '#ef4444') }
+})
+console.log('   类型筛选(战争):', JSON.stringify(warFilter), warFilter.allWar && warFilter.rows > 0 ? '✓' : '✗')
+await shot('09b-snapshot-filter')
+await page.click('#snapshot-types [data-type="all"]')
+// 大洲筛选：点击"亚洲"，行应只剩亚洲事件（并用 data 属性校验飞行回调在 main 中装配）
+await page.click('#snapshot-continents [data-continent="asia"]')
+await new Promise((r) => setTimeout(r, 400))
+const contInfo = await page.evaluate(() => {
+  const rows = [...document.querySelectorAll('#slice-list .slice-row')]
+  const ids = rows.map((r) => r.getAttribute('data-id'))
+  const events = window.__chrono.events
+  return { rows: rows.length, allAsia: ids.every((id) => events.find((e) => e.id === id)?.continent === 'asia') }
+})
+console.log('   大洲筛选(亚洲):', JSON.stringify(contInfo), contInfo.allAsia && contInfo.rows > 0 ? '✓' : '✗')
+await shot('09c-snapshot-continent')
+// 复点取消筛选，行点击定位
+await page.click('#snapshot-continents [data-continent="asia"]')
+await new Promise((r) => setTimeout(r, 300))
 if (sliceInfo.rows > 0) {
   await page.click('#slice-list .slice-row')
   await new Promise((r) => setTimeout(r, 1800))

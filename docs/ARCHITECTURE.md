@@ -11,7 +11,8 @@ src/
 │   ├── events.ts           # EVENTS(119条，含大洲/精度/来源) / EVENT_TYPES(七类+色) / CONTINENTS(定位参数)
 │   ├── links.ts            # LINKS(32条因果边: from/to/kind六类/双语说明/审核状态)
 │   ├── people.ts           # PEOPLE(46位双语人物: 生卒年/简介/挂接事件)
-│   └── sources.ts          # SOURCES(22条已验证参考资料: 双语名称/机构/URL/类型)
+│   ├── sources.ts          # SOURCES(22条已验证参考资料: 双语名称/机构/URL/类型)
+│   └── eras.ts             # ERA_BANDS(1750–1911 六时代波段: 双语名+背景句) + eraOf(year)
 ├── scene/
 │   ├── Globe.ts            # renderer/camera/controls/贴图三源降级/大气 shader/星空/Bloom
 │   ├── EventPillars.ts     # 119×(地块+棱柱)，欠阻尼弹簧缓动，raycaster 拾取
@@ -19,10 +20,10 @@ src/
 │   ├── LinkArcs.ts         # 因果弧线：BFS ≤3 跳，前因紫/后果青，深度衰减
 │   └── latLon.ts           # 经纬度 → Vector3（equirectangular 对齐）
 └── ui/
-    ├── timeline.ts         # 拖动/自动播放/窗口/键盘
+    ├── timeline.ts         # 拖动/自动播放/窗口/键盘/密度条(点击跳年)/年代提示
     ├── search.ts           # 中英模糊搜索（事件+人物）
     ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips(含关系类型 tooltip)/参考资料外链
-    ├── slice.ts            # "此刻世界"切片面板 + 活跃计数
+    ├── snapshot.ts         # "世界快照"面板：时代分期/类型筛选 chips/大洲概览 chips(飞行+过滤)/事件列表
     ├── continents.ts       # 大洲 ghost 按钮
     └── legend.ts           # 分类图例
 scripts/
@@ -42,7 +43,7 @@ scripts/
 
 ## 关键约定
 
-- **DOM id 契约**：`#scene-container #loading #webgl-error #search-input #search-clear #search-results #random-btn #continent-nav #event-card #legend #year-range #play-btn #year-readout #window-select #slice-toggle #active-count #slice-panel #slice-year #slice-list`。
+- **DOM id 契约**：`#scene-container #loading #webgl-error #search-input #search-clear #search-results #random-btn #continent-nav #event-card #legend #year-range #play-btn #year-readout #era-readout #timeline-density #window-select #slice-toggle #active-count #slice-panel #slice-year #snapshot-era #snapshot-blurb #snapshot-types #snapshot-continents #slice-list`。
 - **URL hash 契约**：`#y=<年>&ev=<id>`；启动恢复（main.ts）+ replaceState 写回。
 - **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, store, events }`。
 - **拾取**：pointer 位移 ≤8px 判点击；空白点击取消选中。
