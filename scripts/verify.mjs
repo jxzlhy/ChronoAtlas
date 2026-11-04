@@ -374,11 +374,15 @@ await shot('17-mobile')
 
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
 const perf = await page.evaluate(() => window.__chrono.perf()).catch(() => null)
+console.log('性能基线:', JSON.stringify(perf), '· init:', `${initMs}ms`)
+// 合批回归门槛：棱柱/地块已 InstancedMesh 化（V0.16 基线 20），超过 150 视为合批失效
+if (perf && perf.drawCalls > 150) {
+  errors.push(`drawCalls=${perf.drawCalls} 超过合批门槛 150（棱柱 InstancedMesh 可能失效）`)
+}
 const report = { errors, envWarnings, perf, initMs, logsCount: logs.length, logsTail: logs.slice(-12) }
 writeFileSync(resolve(outDir, 'report.json'), JSON.stringify(report, null, 2))
 console.log('\n=== 验证报告 ===')
 console.log('控制台错误数:', errors.length, '· 环境网络警告:', envWarnings.length)
-console.log('性能基线:', JSON.stringify(perf), '· init:', `${initMs}ms`)
 for (const e of errors.slice(0, 10)) console.log('  ', e)
 
 await browser.close()

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## V0.16.0 — V1.0-M3 动态地球 III · InstancedMesh 合批（2026-11-05）
+
+性能里程碑：事件棱柱层全量合批（总任务书 §6.6 + ROADMAP 预备项）。
+
+- **EventPillars 重写为 InstancedMesh**：119×2 独立 mesh → 2 个 InstancedMesh（地块 + 棱柱）。per-instance 颜色走 `setColorAt`（类型主题色，静态）；per-instance 透明度经 `onBeforeCompile` 注入 `aAlpha` instanced attribute（保持选中 0.95/悬停 0.8/常规 0.58/隐没 0 的原梯度，不退化用颜色暗化近似）；每帧弹簧矩阵直接写 instanceMatrix。
+- **行为完全兼容**：弹簧生长/过冲、选中呼吸脉冲、悬停放大、大洲与类型筛选明暗、raycast 拾取（instanceId → 事件 id，隐没棱柱不参与拾取保持空白点击取消选中的行为）——20+ 步回归断言全过。
+- **性能（SwiftShader 无头实测）**：drawCalls **195 → 20（-90%）**，geometries 260 → 24，heap 14 → 10MB，init ≈1.5s；triangles 30.5k 基本持平（frustumCulled=false 换取单次提交，GPU 零负担）。
+- **合批回归门槛**：verify 新增 drawCalls > 150 即失败断言，防止未来改动悄悄退回逐实例渲染。
+- 140+ 事件扩容（内容扩容 III）的性能前置条件已达成。
+
 ## V0.15.1 — 性能基线记录（2026-11-05）
 
 按总任务书 §6.6"先测量再优化"建立性能基线设施：
