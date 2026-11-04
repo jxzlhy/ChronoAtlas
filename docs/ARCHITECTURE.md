@@ -15,7 +15,7 @@ src/
 │   └── eras.ts             # ERA_BANDS(1750–1911 六时代波段: 双语名+背景句) + eraOf(year)
 ├── scene/
 │   ├── Globe.ts            # renderer/camera/controls/贴图三源降级/大气 shader/星空/Bloom
-│   ├── EventPillars.ts     # InstancedMesh×2（地块+棱柱，per-instance 颜色/aAlpha 透明度/弹簧矩阵），raycast instanceId 拾取，筛选联动明暗
+│   ├── EventPillars.ts     # InstancedMesh×2（地块+棱柱，per-instance 颜色/aAlpha 透明度/弹簧矩阵），raycast instanceId 拾取，筛选联动明暗，projectScreen 卡片罗盘锚定
 │   ├── CameraRig.ts        # GSAP 球面 slerp 飞行（北极恒朝上）
 │   ├── LinkArcs.ts         # 因果弧线：BFS(arcsDepth 1/3 跳)，按 kind 六色着色，深度衰减
 │   ├── HotZones.ts         # 历史热区：15° 网格聚类光晕簇(28 池复用)，点击下钻，开关 store.hotspotsOn
@@ -23,7 +23,7 @@ src/
 └── ui/
     ├── timeline.ts         # 拖动/自动播放/窗口/键盘/密度条(点击跳年)/年代提示
     ├── search.ts           # 中英模糊搜索（事件+人物）
-    ├── eventCard.ts        # 双语事件卡：前因后果 chips(关系类型 tooltip)/历史路径/弧线图例/参考资料外链/人物 chips→档案卡
+    ├── eventCard.ts        # 双语事件卡：前因后果 chips(关系类型 tooltip)/历史路径/弧线图例/参考资料外链/人物 chips→档案卡/罗盘(getCompassEl 桥接主循环)
     ├── snapshot.ts         # "世界快照"面板：时代分期/类型筛选 chips/大洲概览 chips(飞行+过滤)/排序/同时代对比
     ├── network.ts          # 二维因果网络：力导向布局/平移缩放/节点拖拽/选中联动 store（共享数据）
     ├── personCard.ts       # 人物档案卡：档案/活动地区/时间线（行点击跳地球），与事件卡同位互斥

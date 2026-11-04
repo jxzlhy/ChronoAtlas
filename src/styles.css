@@ -670,6 +670,31 @@ body.ready .continent-nav {
   box-shadow: 0 0 8px rgba(34, 211, 238, 0.8);
 }
 
+/* 卡片罗盘：指向选中棱柱的屏幕方向（主循环每帧写入 --ec-angle） */
+.ec-compass {
+  position: absolute;
+  top: 12px;
+  right: 44px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  border-radius: 50%;
+}
+
+.ec-compass[hidden] {
+  display: none;
+}
+
+.ec-compass svg {
+  width: 13px;
+  height: 13px;
+  transform: rotate(var(--ec-angle, 0deg));
+}
+
 /* 历史路径：按年代排序的探索序列（kind 色条标注连接类型） */
 .ec-journey {
   display: flex;

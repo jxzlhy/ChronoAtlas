@@ -202,4 +202,29 @@ export class EventPillars {
     }
     return null
   }
+
+  /**
+   * 选中事件的棱柱屏幕投影（卡片罗盘锚定用）：
+   * 返回视口坐标与可见性；事件不在索引中、位于相机后方或屏幕外时返回 null。
+   */
+  projectScreen(
+    id: string,
+    camera: THREE.PerspectiveCamera,
+    canvas: HTMLElement,
+  ): { x: number; y: number } | null {
+    const idx = this.ids.indexOf(id)
+    if (idx < 0) return null
+    const rect = canvas.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return null
+    const pos = this.entries[idx].surface.clone().project(camera)
+    // 相机后方（project 后 z 超出 [-1,1] 视锥范围）
+    if (pos.z < -1 || pos.z > 1) return null
+    const x = ((pos.x + 1) / 2) * rect.width + rect.left
+    const y = ((1 - pos.y) / 2) * rect.height + rect.top
+    // 屏幕外带 80px 余量（飞行中棱柱可能暂时出屏，罗盘隐藏）
+    if (x < rect.left - 80 || x > rect.right + 80 || y < rect.top - 80 || y > rect.bottom + 80) {
+      return null
+    }
+    return { x, y }
+  }
 }

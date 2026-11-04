@@ -115,9 +115,17 @@ await page.evaluate(() => {
 await new Promise((r) => setTimeout(r, 2200))
 const cardVisible = await page.evaluate(() => {
   const card = document.getElementById('event-card')
-  return { hidden: card.hidden, show: card.classList.contains('show'), title: card.querySelector('.ec-title')?.textContent ?? null }
+  const compass = card.querySelector('.ec-compass')
+  return {
+    hidden: card.hidden,
+    show: card.classList.contains('show'),
+    title: card.querySelector('.ec-title')?.textContent ?? null,
+    compass: !compass?.hidden,
+    angle: compass?.style.getPropertyValue('--ec-angle') ?? null,
+  }
 })
 console.log('   事件卡:', JSON.stringify(cardVisible))
+if (!cardVisible.compass) throw new Error('卡片罗盘未显示（棱柱屏幕锚定失效）')
 await shot('03-event-card')
 
 // 5. 搜索"鸦片"

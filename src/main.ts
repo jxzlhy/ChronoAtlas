@@ -11,7 +11,7 @@ import { LINKS } from './data/links'
 import { PEOPLE } from './data/people'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
-import { initEventCard } from './ui/eventCard'
+import { initEventCard, getCompassEl } from './ui/eventCard'
 import { initPersonCard } from './ui/personCard'
 import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
@@ -182,6 +182,8 @@ function boot(): void {
       s.setHotspotsOn(!s.hotspotsOn)
     } else if (e.key === 'r' || e.key === 'R') {
       ;(document.getElementById('random-btn') as HTMLButtonElement)?.click()
+    } else if (e.key === 'p' || e.key === 'P') {
+      ;(document.getElementById('slice-toggle') as HTMLButtonElement)?.click()
     }
   })
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数
@@ -198,6 +200,24 @@ function boot(): void {
     pillars.update(dt, clock.elapsedTime)
     arcs.update(dt, clock.elapsedTime)
     hotspots.update(dt, clock.elapsedTime)
+    // 卡片罗盘：指向选中棱柱的屏幕方向（3D-2D 空间连接）
+    const compassEl = getCompassEl()
+    const sid = appStore.getState().selectedId
+    if (compassEl && sid) {
+      const target = pillars.projectScreen(sid, globe.camera, globe.renderer.domElement)
+      if (target) {
+        const cardRect = compassEl.parentElement!.getBoundingClientRect()
+        const cx = cardRect.left + cardRect.width / 2
+        const cy = cardRect.top + 40
+        const angle = (Math.atan2(target.y - cy, target.x - cx) * 180) / Math.PI + 90
+        compassEl.style.setProperty('--ec-angle', `${angle.toFixed(1)}deg`)
+        const dist = Math.hypot(target.x - cx, target.y - cy)
+        compassEl.title = `指向事件棱柱（${Math.round(dist)}px） · Points to the pillar`
+        compassEl.hidden = false
+      } else {
+        compassEl.hidden = true
+      }
+    }
     globe.render()
   }
   globe.renderer.setAnimationLoop(renderLoop)

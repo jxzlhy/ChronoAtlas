@@ -16,6 +16,12 @@ const KIND_LABEL: Record<LinkKind, { zh: string; en: string }> = {
   continuation: { zh: '延续发展', en: 'Continuation' },
 }
 
+/** 卡内罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
+let compassRef: HTMLElement | null = null
+export function getCompassEl(): HTMLElement | null {
+  return compassRef
+}
+
 /** 右侧双语事件卡片，由选中状态驱动；前因/后果 chips + 相关人物（点击打开人物档案卡） */
 export function initEventCard(
   onLocate: (ev: HistoryEvent) => void,
@@ -161,8 +167,14 @@ export function initEventCard(
 
     card.innerHTML = `
       <button class="ec-close" type="button" data-close aria-label="关闭事件卡片">×</button>
+      <div class="ec-compass" hidden title="指向事件棱柱 · Points to the pillar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v16" /><path d="m6 9 6-6 6 6" />
+        </svg>
+      </div>
       <div class="ec-type">${type.zh} · ${type.en}</div>
       <div class="ec-meta">公元 ${years} 年 · ${ev.place.zh}</div>
+
       <h3 class="ec-title">${ev.title.zh}</h3>
       <div class="ec-title-en">${ev.title.en}</div>
       <p class="ec-desc">${ev.desc.zh}</p>
@@ -170,6 +182,7 @@ export function initEventCard(
       <p class="ec-desc-en">${ev.desc.en}</p>
       <div class="ec-meta-en">${ev.place.en} · ${years} A.D. · Importance ${'★'.repeat(ev.importance)}</div>
       ${figuresSection()}
+
       ${section('前因', 'Origins', 'ec-chip--cause', causes)}
       ${section('后果', 'Legacies', 'ec-chip--effect', effects)}
       ${journeySection()}
@@ -183,6 +196,7 @@ export function initEventCard(
         </svg>
         定位到事件地点
       </button>`
+    compassRef = card.querySelector('.ec-compass')
   }
 
   const apply = (s: AppState): void => {
@@ -190,6 +204,7 @@ export function initEventCard(
     if (ev === current) return
     current = ev
     if (!ev) {
+      compassRef = null
       card.classList.remove('show')
       window.setTimeout(() => {
         if (!appStore.getState().selectedId) card.hidden = true
