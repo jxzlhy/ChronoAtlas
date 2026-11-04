@@ -16,14 +16,13 @@ const KIND_LABEL: Record<LinkKind, { zh: string; en: string }> = {
   continuation: { zh: '延续发展', en: 'Continuation' },
 }
 
-/** 右侧双语事件卡片，由选中状态驱动；前因/后果 chips + 相关人物（可展开详情） */
+/** 右侧双语事件卡片，由选中状态驱动；前因/后果 chips + 相关人物（点击打开人物档案卡） */
 export function initEventCard(
   onLocate: (ev: HistoryEvent) => void,
   onGo: (ev: HistoryEvent) => void,
 ): void {
   const card = document.getElementById('event-card') as HTMLElement
   let current: HistoryEvent | null = null
-  let expandedPerson: string | null = null
 
   const render = (ev: HistoryEvent): void => {
     const type = EVENT_TYPES[ev.type]
@@ -58,43 +57,20 @@ export function initEventCard(
         </div>`
     }
 
-    // 相关人物：chip 点击展开/收起详情，详情内可跳转该人物的其他事件
+    // 相关人物：chip 点击打开人物档案卡（人物作为独立探索入口，V1.0-M5）
     const figures = PEOPLE.filter((p) => p.eventIds.includes(ev.id))
     const figuresSection = (): string => {
       if (figures.length === 0) return ''
       const chips = figures
         .map(
           (p) =>
-            `<button class="ec-chip ec-chip--person${expandedPerson === p.id ? ' is-open' : ''}" type="button" data-person="${p.id}">${p.name.zh}</button>`,
+            `<button class="ec-chip ec-chip--person" type="button" data-person="${p.id}">${p.name.zh}</button>`,
         )
         .join('')
-      const expanded = figures.find((p) => p.id === expandedPerson)
-      const detail = expanded
-        ? `<div class="ec-person">
-             <div class="ec-person-name">${expanded.name.zh} <span class="ec-person-en">${expanded.name.en}</span></div>
-             <div class="ec-person-life">${expanded.life}</div>
-             <p class="ec-person-bio">${expanded.bio.zh}</p>
-             <p class="ec-person-bio-en">${expanded.bio.en}</p>
-             ${
-               expanded.eventIds.length > 1
-                 ? `<div class="ec-person-events">${expanded.eventIds
-                     .filter((id) => id !== ev.id)
-                     .map((id) => {
-                       const other = EVENTS.find((e) => e.id === id)
-                       return other
-                         ? `<button class="ec-chip ec-chip--effect" type="button" data-goto="${other.id}">${other.title.zh}</button>`
-                         : ''
-                     })
-                     .join('')}</div>`
-                 : ''
-             }
-           </div>`
-        : ''
       return `
         <div class="ec-links">
           <div class="ec-links-label">相关人物 · Figures</div>
           <div class="ec-chips">${chips}</div>
-          ${detail}
         </div>`
     }
 
@@ -213,7 +189,6 @@ export function initEventCard(
     const ev = s.selectedId ? (EVENTS.find((e) => e.id === s.selectedId) ?? null) : null
     if (ev === current) return
     current = ev
-    expandedPerson = null
     if (!ev) {
       card.classList.remove('show')
       window.setTimeout(() => {
@@ -244,9 +219,8 @@ export function initEventCard(
     }
     const personBtn = target.closest<HTMLElement>('[data-person]')
     if (personBtn?.dataset.person) {
-      // 展开/收起人物详情（仅重绘，不改变选中状态）
-      expandedPerson = expandedPerson === personBtn.dataset.person ? null : personBtn.dataset.person
-      if (current) render(current)
+      // 打开人物档案卡（人物作为独立探索入口）
+      appStore.getState().selectPerson(personBtn.dataset.person)
       return
     }
     const gotoBtn = target.closest<HTMLElement>('[data-goto]')

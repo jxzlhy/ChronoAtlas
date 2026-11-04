@@ -19,6 +19,8 @@ export interface AppState {
   arcsDepth: 1 | 3
   /** 历史热区模式开关（展示已收录事件的空间密度） */
   hotspotsOn: boolean
+  /** 当前人物档案（人物卡独立探索入口；null = 关闭） */
+  selectedPersonId: string | null
   setYear: (y: number) => void
   setPlaying: (p: boolean) => void
   togglePlay: () => void
@@ -30,6 +32,7 @@ export interface AppState {
   setContinentFilter: (c: ContinentKey | null) => void
   setArcsDepth: (d: 1 | 3) => void
   setHotspotsOn: (v: boolean) => void
+  selectPerson: (id: string | null) => void
 }
 
 export const YEAR_MIN = 1750
@@ -46,6 +49,7 @@ export const appStore = createStore<AppState>()((set) => ({
   continentFilter: null,
   arcsDepth: 3,
   hotspotsOn: false,
+  selectedPersonId: null,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
@@ -57,6 +61,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setContinentFilter: (continentFilter) => set({ continentFilter }),
   setArcsDepth: (arcsDepth) => set({ arcsDepth }),
   setHotspotsOn: (hotspotsOn) => set({ hotspotsOn }),
+  selectPerson: (selectedPersonId) => set({ selectedPersonId }),
 }))
 
 /** 事件是否落在当前年份窗口内（windowSize 极大时视为全部显示） */

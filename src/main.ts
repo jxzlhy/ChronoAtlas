@@ -8,9 +8,11 @@ import { HotZones } from './scene/HotZones'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
+import { PEOPLE } from './data/people'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
 import { initEventCard } from './ui/eventCard'
+import { initPersonCard } from './ui/personCard'
 import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
 import { initSnapshot } from './ui/snapshot'
@@ -36,7 +38,7 @@ function boot(): void {
   const arcs = new LinkArcs(globe.scene)
   const hotspots = new HotZones(globe.scene)
 
-  // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>）----
+  // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>&p=<人物>）----
   {
     const params = new URLSearchParams(window.location.hash.replace(/^#/, ''))
     const s = appStore.getState()
@@ -46,6 +48,8 @@ function boot(): void {
     }
     const evId = params.get('ev')
     if (evId && EVENTS.some((e) => e.id === evId)) s.select(evId)
+    const pId = params.get('p')
+    if (pId && PEOPLE.some((x) => x.id === pId)) s.selectPerson(pId)
   }
   // store → hash（replaceState，不打断导航）
   {
@@ -54,6 +58,7 @@ function boot(): void {
       const p = new URLSearchParams()
       p.set('y', String(s.year))
       if (s.selectedId) p.set('ev', s.selectedId)
+      if (s.selectedPersonId) p.set('p', s.selectedPersonId)
       const h = `#${p.toString()}`
       if (h !== lastHash) {
         lastHash = h
@@ -122,13 +127,18 @@ function boot(): void {
     s.select(ev.id)
     rig.flyTo(ev.lat, ev.lon, 2.0, 1.0)
   }
-  initSearch(goToEvent)
+  initSearch(goToEvent, (pid) => {
+    appStore.getState().selectPerson(pid)
+  })
 
   // ---- 事件卡片（chips 沿链跳转复用 goToEvent）----
   initEventCard(
     (ev) => rig.flyTo(ev.lat, ev.lon, 1.8, 0.9),
     goToEvent,
   )
+
+  // ---- 人物档案卡（人物作为独立探索入口）----
+  initPersonCard(goToEvent)
 
   // ---- 随机发现（尊重当前时间窗口与快照筛选）----
   ;(document.getElementById('random-btn') as HTMLButtonElement).addEventListener('click', () => {

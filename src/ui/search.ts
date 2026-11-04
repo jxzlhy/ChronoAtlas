@@ -29,8 +29,8 @@ function matchPersonName(zh: string, en: string, q: string): number {
   return score
 }
 
-/** 顶部搜索：中英文模糊匹配事件（标题/地点/类型/描述）与人物姓名，回车或点击跳转 */
-export function initSearch(onGo: (ev: HistoryEvent) => void): void {
+/** 顶部搜索：中英文模糊匹配事件（标题/地点/类型/描述）与人物姓名，回车或点击跳转；人物结果打开人物档案卡 */
+export function initSearch(onGo: (ev: HistoryEvent) => void, onPerson: (pid: string) => void): void {
   const input = document.getElementById('search-input') as HTMLInputElement
   const clearBtn = document.getElementById('search-clear') as HTMLButtonElement
   const panel = document.getElementById('search-results') as HTMLElement
@@ -95,19 +95,18 @@ export function initSearch(onGo: (ev: HistoryEvent) => void): void {
   }
 
   const go = (target: { kind: 'event' | 'person'; id: string }): void => {
-    let ev: HistoryEvent | undefined
-    if (target.kind === 'person') {
-      const p = PEOPLE.find((x) => x.id === target.id)
-      ev = p ? EVENTS.find((e) => e.id === p.eventIds[0]) : undefined
-    } else {
-      ev = EVENTS.find((e) => e.id === target.id)
-    }
-    if (!ev) return
     input.value = ''
     clearBtn.hidden = true
     panel.hidden = true
     panel.innerHTML = ''
     input.blur()
+    if (target.kind === 'person') {
+      // 人物作为独立探索入口：打开人物档案卡（卡内时间线可再跳转事件）
+      onPerson(target.id)
+      return
+    }
+    const ev = EVENTS.find((e) => e.id === target.id)
+    if (!ev) return
     onGo(ev)
   }
 

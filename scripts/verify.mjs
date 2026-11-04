@@ -296,7 +296,7 @@ if (firstEffect) {
   await shot('12-chain-jump')
 }
 
-// 11. 人物层：事件卡相关人物 chips + 展开详情 + 人物搜索
+// 11. 人物档案卡：事件卡 chips → 人物卡（时间线跳事件）+ 人物搜索直达人物卡
 await page.evaluate(() => {
   window.__chrono.goTo('watt-steam-engine')
 })
@@ -305,18 +305,28 @@ const peopleInfo = await page.evaluate(() => ({
   chips: [...document.querySelectorAll('.ec-chip--person')].map((b) => b.textContent?.trim()),
 }))
 console.log('   人物chips:', JSON.stringify(peopleInfo))
-// 展开 瓦特 详情
 await page.click('[data-person="watt"]')
-await new Promise((r) => setTimeout(r, 500))
+await new Promise((r) => setTimeout(r, 700))
 const personDetail = await page.evaluate(() => ({
-  open: !!document.querySelector('.ec-person'),
-  name: document.querySelector('.ec-person-name')?.textContent?.trim(),
-  bio: document.querySelector('.ec-person-bio')?.textContent?.slice(0, 20),
+  open: !document.getElementById('person-card')?.hidden,
+  name: document.querySelector('.pc-name')?.textContent?.trim(),
+  life: document.querySelector('.pc-life')?.textContent?.trim(),
+  tlRows: document.querySelectorAll('.pc-tl-row').length,
 }))
-console.log('   人物详情:', JSON.stringify(personDetail))
+console.log('   人物卡:', JSON.stringify(personDetail))
+if (!personDetail.open || personDetail.tlRows === 0) throw new Error(`人物卡异常: ${JSON.stringify(personDetail)}`)
 await shot('14-person-detail')
+// 时间线行点击 → 跳转事件并收起人物卡
+await page.click('#person-card .pc-tl-row')
+await new Promise((r) => setTimeout(r, 1800))
+const tlJump = await page.evaluate(() => ({
+  sel: window.__chrono.store.getState().selectedId,
+  personOpen: !document.getElementById('person-card')?.hidden,
+}))
+console.log('   时间线跳转:', JSON.stringify(tlJump), tlJump.sel && !tlJump.personOpen ? '✓' : '✗')
+await shot('14b-person-jump')
 
-// 人物搜索：输入"李鸿章"应出现"人物"徽章行，点击跳转其主事件
+// 人物搜索：输入"李鸿章"出现人物徽章行，回车直达人物档案卡
 await page.click('#search-input')
 await page.type('#search-input', '李鸿章')
 await new Promise((r) => setTimeout(r, 600))
@@ -326,10 +336,20 @@ const personSearch = await page.evaluate(() => ({
 }))
 console.log('   人物搜索:', JSON.stringify(personSearch))
 await page.keyboard.press('Enter')
-await new Promise((r) => setTimeout(r, 2000))
-const personJump = await page.evaluate(() => window.__chrono.store.getState().selectedId)
-console.log('   人物跳转:', personJump, personJump === 'self-strengthening-movement' ? '✓' : '✗')
+await new Promise((r) => setTimeout(r, 800))
+const personCardOpen = await page.evaluate(() => ({
+  open: !document.getElementById('person-card')?.hidden,
+  pid: window.__chrono.store.getState().selectedPersonId,
+  name: document.querySelector('.pc-name')?.textContent?.trim(),
+}))
+console.log(
+  '   搜索直达人物卡:',
+  JSON.stringify(personCardOpen),
+  personCardOpen.open && personCardOpen.pid === 'li-hongzhang' ? '✓' : '✗',
+)
 await shot('15-person-search')
+await page.click('#person-card [data-close]')
+await new Promise((r) => setTimeout(r, 500))
 
 // 12. URL 状态还原（分享链接回环）
 const hashBefore = await page.evaluate(() => window.location.hash)
