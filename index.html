@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="ChronoAtlas · 动态历史地球 — 在 3D 地球上探索公元 1750–1911 年的世界历史事件" />
+    <title>ChronoAtlas · 动态历史地球</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%230b1526' stroke='%2322d3ee' stroke-width='8'/><circle cx='50' cy='50' r='14' fill='%2322d3ee'/></svg>" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="scene-container" aria-label="3D 历史地球场景"></div>
+
+      <!-- 加载层 -->
+      <div id="loading" class="loading-overlay" role="status" aria-live="polite">
+        <div class="loading-ring" aria-hidden="true"></div>
+        <div class="loading-text">正在校准历史时空…</div>
+        <div class="loading-sub">CHRONOATLAS · DYNAMIC HISTORY GLOBE</div>
+      </div>
+
+      <!-- WebGL 不可用提示 -->
+      <div id="webgl-error" class="webgl-error" hidden>
+        <div class="webgl-error-card">
+          <h2>无法启动 3D 场景</h2>
+          <p>当前浏览器或设备不支持 WebGL，请更换现代浏览器（Chrome / Edge / Safari）后重试。</p>
+        </div>
+      </div>
+
+      <!-- 品牌 -->
+      <header class="brand">
+        <div class="brand-title"><span class="brand-dot" aria-hidden="true"></span>ChronoAtlas</div>
+        <div class="brand-sub">动态历史地球 · 1750 – 1911</div>
+      </header>
+
+      <!-- 搜索 -->
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.5" y2="16.5" />
+          </svg>
+          <input id="search-input" type="text" placeholder="搜索事件、人物或地点 / Search history"
+                 autocomplete="off" spellcheck="false" aria-label="搜索事件、人物或地点" />
+          <button id="search-clear" class="search-clear" type="button" aria-label="清空搜索" hidden>×</button>
+        </div>
+        <div id="search-results" class="search-results" role="listbox" aria-label="搜索结果" hidden></div>
+      </div>
+
+      <!-- 随机发现 -->
+      <button id="random-btn" class="random-btn" type="button" aria-label="随机发现一个历史事件" title="随机发现">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 3h5v5" /><path d="M4 20 21 3" /><path d="M21 16v5h-5" /><path d="m15 15 6 6" /><path d="m4 4 5 5" />
+        </svg>
+      </button>
+
+      <!-- 大洲快速定位 -->
+      <nav id="continent-nav" class="continent-nav" aria-label="大洲快速定位">
+        <button type="button" data-continent="north">正北</button>
+        <button type="button" data-continent="world" class="active">全球</button>
+        <button type="button" data-continent="asia">亚洲</button>
+        <button type="button" data-continent="europe">欧洲</button>
+        <button type="button" data-continent="africa">非洲</button>
+        <button type="button" data-continent="north-america">北美洲</button>
+        <button type="button" data-continent="south-america">南美洲</button>
+        <button type="button" data-continent="oceania">大洋洲</button>
+      </nav>
+
+      <!-- 事件卡片 -->
+      <aside id="event-card" class="event-card" hidden></aside>
+
+      <!-- 图例 -->
+      <div id="legend" class="legend" aria-label="事件类型图例"></div>
+
+      <!-- 时间轴 -->
+      <div class="timeline-wrap">
+        <!-- 此刻世界：当前年份切片事件面板 -->
+        <section id="slice-panel" class="slice-panel" hidden aria-label="当前年份活跃事件列表">
+          <div class="slice-head">
+            <span class="slice-head-title">此刻世界 · <span id="slice-year" class="tabular-nums"></span></span>
+            <span class="slice-head-hint">点击行定位 · 悬停联动地球</span>
+          </div>
+          <div id="slice-list" class="slice-list" role="listbox" aria-label="活跃事件"></div>
+        </section>
+
+        <div class="timeline-top">
+          <button id="play-btn" class="play-btn" type="button" aria-label="播放时间演进" title="自动播放">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="5.5" width="4" height="13" rx="1" /><rect x="13.5" y="5.5" width="4" height="13" rx="1" /></svg>
+          </button>
+          <div id="year-readout" class="year-readout">公元 <b class="tabular-nums">1850</b> 年</div>
+          <label class="window-label">时间窗口
+            <select id="window-select" aria-label="时间窗口宽度">
+              <option value="5">±5 年</option>
+              <option value="10" selected>±10 年</option>
+              <option value="20">±20 年</option>
+              <option value="9999">全部</option>
+            </select>
+          </label>
+          <button id="slice-toggle" class="slice-toggle" type="button" aria-expanded="false" aria-controls="slice-panel" aria-label="查看当前活跃事件列表">
+            <span id="active-count" aria-live="polite">0</span>
+            <span class="slice-toggle-label">个事件活跃</span>
+            <svg class="slice-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </button>
+        </div>
+        <div class="timeline-slider">
+          <div class="timeline-track" aria-hidden="true"></div>
+          <input id="year-range" type="range" min="1750" max="1911" value="1850" step="1" aria-label="选择年份" />
+        </div>
+        <div class="timeline-labels" aria-hidden="true">
+          <span>1750</span><span>1775</span><span>1800</span><span>1825</span><span>1850</span><span>1875</span><span>1900</span><span>1911</span>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

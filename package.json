@@ -1,0 +1,24 @@
+{
+  "name": "chrono-atlas",
+  "private": true,
+  "version": "0.9.0",
+  "description": "ChronoAtlas · 动态历史地球 — a 3D dynamic history globe (1750–1911)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "three": "^0.169.0",
+    "zustand": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.169.0",
+    "puppeteer-core": "^23.9.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
