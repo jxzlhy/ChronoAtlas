@@ -17,8 +17,8 @@
 
 draft 工作区曾被宿主环境整体回收（代码+git 历史全失，V0.9 从上下文重建）。已发生一次，可能再发生：
 
-- [ ] **远端备份**：推送到 GitHub 私有仓库（需用户授权远端），或至少每次 checkpoint 后把源码 tar 存到工作区外。
-- [ ] 恢复 playbook 已验证：全部源码可从 AI_HANDOFF + 对话上下文重建。
+- [x] **远端备份**：已连接 GitHub（`github.com/jxzlhy/ChronoAtlas`），每次 checkpoint 后 `git push`。
+- [x] 恢复 playbook 已验证：全部源码可从 AI_HANDOFF + 对话上下文重建。
 
 ## 下一轮候选池（按价值排序）
 

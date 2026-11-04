@@ -4,7 +4,7 @@
 
 ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。17 步无头验证 + 0 控制台错误。当前 V0.9.0；下一步见 ROADMAP（内容扩容 III / InstancedMesh / 面板过滤）。
 
-## ⚠️ 工作区警示
+## ⚠️ 工作区警示（远端备份已配置：github.com/jxzlhy/ChronoAtlas）
 
 draft 工作区曾被宿主整体回收（V0.9 时发生）。若再次发现目录消失：全部源码可从 AI_HANDOFF + 会话上下文重建（已演练一次成功）。预防：推动 remote 备份。
 
