@@ -1,6 +1,7 @@
 import { appStore, isActive, YEAR_MAX, YEAR_MIN } from '../store'
 import { EVENTS } from '../data/events'
 import { eraOf } from '../data/eras'
+import { playTick } from './sound'
 
 /** 事件密度条：每年 1 柱（全数据集重叠计数，与时间窗口无关），点击快速跳年 */
 function buildDensity(): void {
@@ -65,13 +66,15 @@ export function initTimeline(): void {
     appStore.getState().setWindowSize(Number(windowSelect.value))
   })
 
-  // 自动播放：1× 约 110ms 推进一年，2×/5× 按倍率加速
+  // 自动播放：1× 约 110ms 推进一年，2×/5× 按倍率加速；每逢十年一声极轻 tick
   let last = 0
   const step = (now: number): void => {
     const s = appStore.getState()
     if (s.playing && now - last >= 110 / s.playSpeed) {
       last = now
-      s.setYear(s.year >= YEAR_MAX ? YEAR_MIN : s.year + 1)
+      const next = s.year >= YEAR_MAX ? YEAR_MIN : s.year + 1
+      s.setYear(next)
+      if (s.soundOn && next % 10 === 0) playTick()
     } else if (!s.playing) {
       last = now
     }

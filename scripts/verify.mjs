@@ -474,6 +474,18 @@ const kbR = await page.evaluate(() => window.__chrono.store.getState().selectedI
 const kbOk = kbH.on && kbH.zones > 0 && kbN1 && !kbN2 && !!kbR
 console.log('   快捷键 N/H/R:', JSON.stringify({ h: kbH, n: kbN1 && !kbN2, r: kbR }), kbOk ? '✓' : '✗')
 
+// 12.9 音效开关：点击 → store.soundOn + aria；再点关
+await page.click('#sound-toggle')
+await new Promise((r) => setTimeout(r, 300))
+const sndOn = await page.evaluate(() => ({
+  on: window.__chrono.store.getState().soundOn,
+  pressed: document.getElementById('sound-toggle')?.getAttribute('aria-pressed'),
+}))
+await page.click('#sound-toggle')
+await new Promise((r) => setTimeout(r, 300))
+const sndOff = await page.evaluate(() => window.__chrono.store.getState().soundOn)
+console.log('   音效开关:', JSON.stringify({ sndOn, sndOff }), sndOn.on && sndOn.pressed === 'true' && !sndOff ? '✓' : '✗')
+
 // 13. 移动端视口
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))

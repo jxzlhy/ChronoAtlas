@@ -17,6 +17,7 @@ import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
 import { initSnapshot } from './ui/snapshot'
 import { initNetwork } from './ui/network'
+import { playSelect, playFly } from './ui/sound'
 
 function boot(): void {
   const container = document.getElementById('scene-container') as HTMLElement
@@ -91,6 +92,7 @@ function boot(): void {
       const ev = EVENTS.find((x) => x.id === id)
       if (!ev) return
       state.select(id)
+      if (state.soundOn) playSelect()
       // 保持当前观察距离，但收敛到舒适区间
       const dist = Math.min(Math.max(globe.camera.position.length(), 1.8), 2.7)
       rig.flyTo(ev.lat, ev.lon, dist, 0.9)
@@ -125,6 +127,7 @@ function boot(): void {
       s.setYear(ev.start)
     }
     s.select(ev.id)
+    if (s.soundOn) playFly()
     rig.flyTo(ev.lat, ev.lon, 2.0, 1.0)
   }
   initSearch(goToEvent, (pid) => {
@@ -156,6 +159,10 @@ function boot(): void {
     recentRandom.push(ev.id)
     if (recentRandom.length > 5) recentRandom.shift()
     s.select(ev.id)
+    if (s.soundOn) {
+      playSelect()
+      playFly()
+    }
     rig.flyTo(ev.lat, ev.lon, 2.0, 1.1)
   })
 

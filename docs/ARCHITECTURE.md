@@ -28,7 +28,8 @@ src/
     ├── network.ts          # 二维因果网络：力导向布局/平移缩放/节点拖拽/选中联动 store（共享数据）
     ├── personCard.ts       # 人物档案卡：档案/活动地区/时间线（行点击跳地球），与事件卡同位互斥
     ├── continents.ts       # 大洲 ghost 按钮
-    └── legend.ts           # 分类图例 + 热区模式开关
+    ├── sound.ts            # Web Audio 合成音效（select blip/fly sweep/decade tick），soundOn 关闭或受限时静默
+    └── legend.ts           # 分类图例 + 热区开关 + 音效开关
 scripts/
 ├── verify.mjs              # 无头端到端验证（17 步剧本 + 服务器自愈）
 ├── validate-data.mjs       # 数据校验（npm run validate:data）：引用/类型/双语/来源/年代画像

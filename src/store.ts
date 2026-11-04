@@ -19,6 +19,8 @@ export interface AppState {
   arcsDepth: 1 | 3
   /** 历史热区模式开关（展示已收录事件的空间密度） */
   hotspotsOn: boolean
+  /** 界面音效（Web Audio 合成，默认关；localStorage 记忆） */
+  soundOn: boolean
   /** 当前人物档案（人物卡独立探索入口；null = 关闭） */
   selectedPersonId: string | null
   setYear: (y: number) => void
@@ -32,6 +34,7 @@ export interface AppState {
   setContinentFilter: (c: ContinentKey | null) => void
   setArcsDepth: (d: 1 | 3) => void
   setHotspotsOn: (v: boolean) => void
+  setSoundOn: (v: boolean) => void
   selectPerson: (id: string | null) => void
 }
 
@@ -49,6 +52,7 @@ export const appStore = createStore<AppState>()((set) => ({
   continentFilter: null,
   arcsDepth: 3,
   hotspotsOn: false,
+  soundOn: false,
   selectedPersonId: null,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
@@ -61,8 +65,24 @@ export const appStore = createStore<AppState>()((set) => ({
   setContinentFilter: (continentFilter) => set({ continentFilter }),
   setArcsDepth: (arcsDepth) => set({ arcsDepth }),
   setHotspotsOn: (hotspotsOn) => set({ hotspotsOn }),
+  setSoundOn: (soundOn) => set({ soundOn }),
   selectPerson: (selectedPersonId) => set({ selectedPersonId }),
 }))
+
+// 音效偏好记忆（首次访问默认关；无法读写时静默跳过）
+try {
+  const saved = localStorage.getItem('chrono-sound')
+  if (saved === 'on') appStore.getState().setSoundOn(true)
+} catch {
+  /* storage 不可用 */
+}
+appStore.subscribe((s) => {
+  try {
+    localStorage.setItem('chrono-sound', s.soundOn ? 'on' : 'off')
+  } catch {
+    /* storage 不可用 */
+  }
+})
 
 /** 事件是否落在当前年份窗口内（windowSize 极大时视为全部显示） */
 export function isActive(ev: HistoryEvent, year: number, windowSize: number): boolean {
