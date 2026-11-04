@@ -4,6 +4,7 @@ import { Globe } from './scene/Globe'
 import { EventPillars } from './scene/EventPillars'
 import { CameraRig } from './scene/CameraRig'
 import { LinkArcs } from './scene/LinkArcs'
+import { HotZones } from './scene/HotZones'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
@@ -32,6 +33,7 @@ function boot(): void {
   const pillars = new EventPillars(globe.scene)
   const rig = new CameraRig(globe.camera, globe.controls)
   const arcs = new LinkArcs(globe.scene)
+  const hotspots = new HotZones(globe.scene)
 
   // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>）----
   {
@@ -77,7 +79,7 @@ function boot(): void {
     downPoint = null
     if (dx * dx + dy * dy > 64) return // 视为拖拽
 
-    const id = pillars.pick(e.clientX, e.clientY, globe.camera, canvas)
+    const id = pillars.pick(e.clientX, e.clientY, globe.camera, canvas) ?? hotspots.pick(e.clientX, e.clientY, globe.camera, canvas)
     const state = appStore.getState()
     if (id) {
       const ev = EVENTS.find((x) => x.id === id)
@@ -97,7 +99,7 @@ function boot(): void {
     const now = performance.now()
     if (now - lastHover < 70) return
     lastHover = now
-    const id = pillars.pick(e.clientX, e.clientY, globe.camera, canvas)
+    const id = pillars.pick(e.clientX, e.clientY, globe.camera, canvas) ?? hotspots.pick(e.clientX, e.clientY, globe.camera, canvas)
     if (id !== appStore.getState().hoverId) {
       appStore.getState().setHover(id)
     }
@@ -152,6 +154,7 @@ function boot(): void {
     globe.update(dt)
     pillars.update(dt, clock.elapsedTime)
     arcs.update(dt, clock.elapsedTime)
+    hotspots.update(dt, clock.elapsedTime)
     globe.render()
   }
   globe.renderer.setAnimationLoop(renderLoop)
@@ -167,6 +170,11 @@ function boot(): void {
     },
     /** 当前弧线数（自动化断言用） */
     arcsCount: () => arcs.count,
+    /** 当前可见热区数（自动化断言用） */
+    hotspotsCount: () =>
+      hotspots.root.visible
+        ? hotspots.root.children.filter((c) => (c as THREE.Mesh).visible).length
+        : 0,
     /** 手动渲染一帧并导出 JPEG dataURL（同一任务内调用，缓冲区未被清除） */
     capture: (maxWidth = 1280) => {
       renderLoop()

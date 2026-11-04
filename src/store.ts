@@ -17,6 +17,8 @@ export interface AppState {
   continentFilter: ContinentKey | null
   /** 关系弧线跳数（1 = 直接关系，3 = 长河多跳） */
   arcsDepth: 1 | 3
+  /** 历史热区模式开关（展示已收录事件的空间密度） */
+  hotspotsOn: boolean
   setYear: (y: number) => void
   setPlaying: (p: boolean) => void
   togglePlay: () => void
@@ -27,6 +29,7 @@ export interface AppState {
   setTypeFilter: (t: EventType | null) => void
   setContinentFilter: (c: ContinentKey | null) => void
   setArcsDepth: (d: 1 | 3) => void
+  setHotspotsOn: (v: boolean) => void
 }
 
 export const YEAR_MIN = 1750
@@ -42,6 +45,7 @@ export const appStore = createStore<AppState>()((set) => ({
   typeFilter: null,
   continentFilter: null,
   arcsDepth: 3,
+  hotspotsOn: false,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
@@ -52,6 +56,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setTypeFilter: (typeFilter) => set({ typeFilter }),
   setContinentFilter: (continentFilter) => set({ continentFilter }),
   setArcsDepth: (arcsDepth) => set({ arcsDepth }),
+  setHotspotsOn: (hotspotsOn) => set({ hotspotsOn }),
 }))
 
 /** 事件是否落在当前年份窗口内（windowSize 极大时视为全部显示） */

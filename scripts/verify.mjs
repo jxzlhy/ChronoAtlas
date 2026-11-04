@@ -344,6 +344,27 @@ const hashOk =
 console.log(`   URL 回环: before=${hashBefore} after=${restored.hash} year=${restored.year} ${hashOk ? '✓' : '✗'}`)
 await shot('16-url-restored')
 
+// 12.5 历史热区模式：开关 → 光晕簇出现/消失
+await page.setViewport({ width: 1440, height: 900 })
+// 贴图冷缓存时加载层最长 12s+ 才收起，必须等它移除后再做真实点击
+await page.waitForFunction(() => document.body.classList.contains('ready'), { timeout: 40000 })
+await page.waitForFunction(() => !document.getElementById('loading'), { timeout: 10000 }).catch(() => {})
+await new Promise((r) => setTimeout(r, 600))
+const before = await page.evaluate(() => window.__chrono.hotspotsCount())
+await page.click('#hotspot-toggle')
+await new Promise((r) => setTimeout(r, 900))
+const on = await page.evaluate(() => ({
+  pressed: document.getElementById('hotspot-toggle')?.getAttribute('aria-pressed'),
+  zones: window.__chrono.hotspotsCount(),
+}))
+await page.evaluate(() => window.__chrono.store.getState().setYear(1870))
+await new Promise((r) => setTimeout(r, 900))
+await shot('18-hotspots')
+await page.click('#hotspot-toggle')
+await new Promise((r) => setTimeout(r, 600))
+const after = await page.evaluate(() => window.__chrono.hotspotsCount())
+console.log('   热区模式:', JSON.stringify({ before, on, after }), on.pressed === 'true' && on.zones > 0 && after === 0 ? '✓' : '✗')
+
 // 13. 移动端视口
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))

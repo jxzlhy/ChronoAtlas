@@ -625,6 +625,51 @@ body.ready .continent-nav {
   background: color-mix(in srgb, var(--chip-color) 26%, transparent);
 }
 
+/* 图例：类型行 + 热区开关 */
+.legend-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 12px;
+}
+
+.hotspot-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: rgba(148, 180, 255, 0.07);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.hotspot-toggle i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #22d3ee 35%, transparent);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hotspot-toggle:hover {
+  color: var(--text);
+}
+
+.hotspot-toggle.is-on {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.hotspot-toggle.is-on i {
+  background: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.8);
+}
+
 /* 弧线图例 + 跳数切换 */
 .ec-arcs {
   margin-top: 14px;
@@ -799,10 +844,15 @@ body.ready .continent-nav {
   bottom: 108px;
   z-index: 15;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 4px 12px;
   max-width: 190px;
   pointer-events: none;
+}
+
+/* 热区开关可点击（图例容器整体不拦截地球操作） */
+.hotspot-toggle {
+  pointer-events: auto;
 }
 
 .legend-item {

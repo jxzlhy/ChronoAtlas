@@ -15,9 +15,10 @@ src/
 │   └── eras.ts             # ERA_BANDS(1750–1911 六时代波段: 双语名+背景句) + eraOf(year)
 ├── scene/
 │   ├── Globe.ts            # renderer/camera/controls/贴图三源降级/大气 shader/星空/Bloom
-│   ├── EventPillars.ts     # 119×(地块+棱柱)，欠阻尼弹簧缓动，raycaster 拾取
+│   ├── EventPillars.ts     # 119×(地块+棱柱)，欠阻尼弹簧缓动，raycaster 拾取，筛选联动明暗
 │   ├── CameraRig.ts        # GSAP 球面 slerp 飞行（北极恒朝上）
-│   ├── LinkArcs.ts         # 因果弧线：BFS ≤3 跳，前因紫/后果青，深度衰减
+│   ├── LinkArcs.ts         # 因果弧线：BFS(arcsDepth 1/3 跳)，按 kind 六色着色，深度衰减
+│   ├── HotZones.ts         # 历史热区：15° 网格聚类光晕簇(28 池复用)，点击下钻，开关 store.hotspotsOn
 │   └── latLon.ts           # 经纬度 → Vector3（equirectangular 对齐）
 └── ui/
     ├── timeline.ts         # 拖动/自动播放/窗口/键盘/密度条(点击跳年)/年代提示
@@ -25,7 +26,7 @@ src/
     ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips(含关系类型 tooltip)/参考资料外链
     ├── snapshot.ts         # "世界快照"面板：时代分期/类型筛选 chips/大洲概览 chips(飞行+过滤)/事件列表
     ├── continents.ts       # 大洲 ghost 按钮
-    └── legend.ts           # 分类图例
+    └── legend.ts           # 分类图例 + 热区模式开关
 scripts/
 ├── verify.mjs              # 无头端到端验证（17 步剧本 + 服务器自愈）
 ├── validate-data.mjs       # 数据校验（npm run validate:data）：引用/类型/双语/来源/年代画像
@@ -45,7 +46,7 @@ scripts/
 
 - **DOM id 契约**：`#scene-container #loading #webgl-error #search-input #search-clear #search-results #random-btn #continent-nav #event-card #legend #year-range #play-btn #year-readout #era-readout #timeline-density #window-select #slice-toggle #active-count #slice-panel #slice-year #snapshot-era #snapshot-blurb #snapshot-types #snapshot-continents #slice-list`。
 - **URL hash 契约**：`#y=<年>&ev=<id>`；启动恢复（main.ts）+ replaceState 写回。
-- **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, store, events }`。
+- **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, hotspotsCount, store, events, links }`。
 - **拾取**：pointer 位移 ≤8px 判点击；空白点击取消选中。
 - **数据完整性**：任何数据改动后跑 `npm run validate:data`（重复 ID/悬空引用/双语/来源/年代/生卒冲突 + 数据画像）。
 - **来源纪律**：sourceIds 只指向 sources.ts 中已人工验证 URL 的条目；`review: 'reviewed'` 必须以已验证来源或复核为前提，缺省 = 待核实。
