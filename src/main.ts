@@ -52,10 +52,11 @@ function boot(): void {
     const pId = params.get('p')
     if (pId && PEOPLE.some((x) => x.id === pId)) s.selectPerson(pId)
   }
-  // store → hash（replaceState，不打断导航）
+  // store → hash（replaceState，不打断导航）；boot 时也写回一次以清理无效参数
   {
     let lastHash = ''
-    appStore.subscribe((s) => {
+    const writeHash = (): void => {
+      const s = appStore.getState()
       const p = new URLSearchParams()
       p.set('y', String(s.year))
       if (s.selectedId) p.set('ev', s.selectedId)
@@ -65,7 +66,9 @@ function boot(): void {
         lastHash = h
         window.history.replaceState(null, '', h)
       }
-    })
+    }
+    appStore.subscribe(writeHash)
+    writeHash()
   }
 
   // ---- 拾取：区分拖拽与点击 ----

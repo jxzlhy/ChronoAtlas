@@ -504,6 +504,50 @@ await new Promise((r) => setTimeout(r, 300))
 const sndOff = await page.evaluate(() => window.__chrono.store.getState().soundOn)
 console.log('   音效开关:', JSON.stringify({ sndOn, sndOff }), sndOn.on && sndOn.pressed === 'true' && !sndOff ? '✓' : '✗')
 
+// 12.10 Esc 关闭路径 + 事件卡关闭按钮 + 无效 hash 容错
+// 快照面板 Esc
+await page.click('#slice-toggle')
+await new Promise((r) => setTimeout(r, 400))
+await page.keyboard.press('Escape')
+await new Promise((r) => setTimeout(r, 300))
+const escSlice = await page.evaluate(() => document.getElementById('slice-panel')?.hidden)
+// 人物卡 Esc
+await page.evaluate(() => window.__chrono.store.getState().selectPerson('watt'))
+await new Promise((r) => setTimeout(r, 600))
+await page.keyboard.press('Escape')
+await new Promise((r) => setTimeout(r, 500))
+const escPerson = await page.evaluate(() => document.getElementById('person-card')?.hidden)
+// 事件卡 close 按钮
+await page.evaluate(() => window.__chrono.store.getState().select('watt-steam-engine'))
+await new Promise((r) => setTimeout(r, 600))
+await page.click('#event-card [data-close]')
+await new Promise((r) => setTimeout(r, 600))
+const closeEvent = await page.evaluate(() => {
+  const card = document.getElementById('event-card')
+  return card.hidden || !card.classList.contains('show')
+})
+console.log(
+  '   Esc/close 关闭路径:',
+  JSON.stringify({ escSlice, escPerson, closeEvent }),
+  escSlice && escPerson && closeEvent ? '✓' : '✗',
+)
+// 无效 hash 容错：reload 后不崩溃、无选中、hash 被写回清理
+await page.evaluate(() => {
+  window.location.hash = '#y=1850&ev=nonexistent-id'
+})
+await page.reload({ waitUntil: 'domcontentloaded' })
+await page.waitForFunction(() => typeof window.__chrono !== 'undefined', { timeout: 30000 })
+await new Promise((r) => setTimeout(r, 1200))
+const badHash = await page.evaluate(() => ({
+  selected: window.__chrono.store.getState().selectedId,
+  hash: window.location.hash,
+}))
+console.log(
+  '   无效hash容错:',
+  JSON.stringify(badHash),
+  badHash.selected === null && badHash.hash === '#y=1850' ? '✓' : '✗',
+)
+
 // 13. 移动端视口 + 罗盘移动端行为
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))
