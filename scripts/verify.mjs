@@ -348,6 +348,18 @@ console.log(
   personCardOpen.open && personCardOpen.pid === 'li-hongzhang' ? '✓' : '✗',
 )
 await shot('15-person-search')
+// 同事件人物：卡内 chips 切换到另一人物
+const peersInfo = await page.evaluate(() => {
+  const chips = [...document.querySelectorAll('#person-card .pc-chip')]
+  return { count: chips.length, first: chips[0]?.getAttribute('data-peer') ?? null }
+})
+console.log('   同事件人物:', JSON.stringify(peersInfo))
+if (peersInfo.count > 0 && peersInfo.first) {
+  await page.click(`#person-card [data-peer="${peersInfo.first}"]`)
+  await new Promise((r) => setTimeout(r, 600))
+  const switched = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
+  console.log('   卡内切换:', switched, switched === peersInfo.first ? '✓' : '✗')
+}
 await page.click('#person-card [data-close]')
 await new Promise((r) => setTimeout(r, 500))
 

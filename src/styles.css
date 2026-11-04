@@ -932,6 +932,33 @@ body.ready .continent-nav {
   text-overflow: ellipsis;
 }
 
+/* 同事件人物 chips（卡内切换） */
+.pc-peers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pc-chip {
+  max-width: 100%;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  color: #f0abfc;
+  background: color-mix(in srgb, #f0abfc 13%, transparent);
+  border: 1px solid color-mix(in srgb, #f0abfc 42%, transparent);
+  transition: background 0.2s ease;
+}
+
+.pc-chip:hover {
+  background: color-mix(in srgb, #f0abfc 26%, transparent);
+}
+
 .pc-close {
   position: absolute;
   top: 10px;

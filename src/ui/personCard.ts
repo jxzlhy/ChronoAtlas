@@ -24,6 +24,16 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     // 活动地区：由挂接事件地点归纳（去重），不虚构
     const places = [...new Set(timeline.map((e) => e.place.zh))]
 
+    // 同事件人物：从共享挂接事件派生（只陈述"同于某事件"，不虚构关系性质）
+    const peers = new Map<string, string>() // pid → 经由事件标题
+    for (const eId of p.eventIds) {
+      const via = EVENTS.find((e) => e.id === eId)
+      for (const other of PEOPLE) {
+        if (other.id === p.id || !other.eventIds.includes(eId)) continue
+        if (!peers.has(other.id) && via) peers.set(other.id, via.title.zh)
+      }
+    }
+
     return `
       <button class="pc-close" type="button" data-close aria-label="关闭人物档案">×</button>
       <div class="pc-badge">人物 · Figure</div>
@@ -52,6 +62,19 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
                  </span>
                </button>`
            })
+           .join('')}
+       </div>`
+          : ''
+      }
+      ${
+        peers.size > 0
+          ? `<div class="pc-links-label">同事件人物 · Contemporaries</div>
+       <div class="pc-peers">
+         ${[...peers.entries()]
+           .map(
+             ([peerId, via]) =>
+               `<button class="pc-chip" type="button" data-peer="${peerId}" title="同于：${via}">${PEOPLE.find((x) => x.id === peerId)?.name.zh ?? peerId}</button>`,
+           )
            .join('')}
        </div>`
           : ''
@@ -92,6 +115,12 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     const target = e.target as HTMLElement
     if (target.closest('[data-close]')) {
       appStore.getState().selectPerson(null)
+      return
+    }
+    const peerBtn = target.closest<HTMLElement>('[data-peer]')
+    if (peerBtn?.dataset.peer) {
+      // 卡内切换到同事件人物
+      appStore.getState().selectPerson(peerBtn.dataset.peer)
       return
     }
     const row = target.closest<HTMLElement>('[data-goto]')
