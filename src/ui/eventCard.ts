@@ -121,6 +121,46 @@ export function initEventCard(
     const causes = LINKS.filter((l) => l.to === ev.id)
     const effects = LINKS.filter((l) => l.from === ev.id)
 
+    // 历史路径：从当前事件沿关系图两跳（全部已复核关系）收集探索序列，
+    // 按年代排序；tooltip 标注它与根事件的连接类型。≥2 个他事件才成节。
+    const journeyRoot = ev
+    const journeyMap = new Map<string, { kind: LinkKind; depth: 1 | 2 }>()
+    for (const l of LINKS) {
+      if (l.from === journeyRoot.id && !journeyMap.has(l.to)) journeyMap.set(l.to, { kind: l.kind, depth: 1 })
+      else if (l.to === journeyRoot.id && !journeyMap.has(l.from)) journeyMap.set(l.from, { kind: l.kind, depth: 1 })
+    }
+    const firstHop = [...journeyMap.keys()]
+    for (const mid of firstHop) {
+      for (const l of LINKS) {
+        if (journeyMap.size >= 8) break
+        const other = l.from === mid ? l.to : l.to === mid ? l.from : null
+        if (!other || other === journeyRoot.id || journeyMap.has(other)) continue
+        journeyMap.set(other, { kind: l.kind, depth: 2 })
+      }
+    }
+    const journey = [...journeyMap.entries()]
+      .map(([id, rel]) => ({ ev: EVENTS.find((x) => x.id === id), rel }))
+      .filter((x): x is { ev: HistoryEvent; rel: { kind: LinkKind; depth: 1 | 2 } } => x.ev !== undefined)
+      .sort((a, b) => a.ev.start - b.ev.start)
+    const journeySection = (): string => {
+      if (journey.length < 2) return ''
+      return `
+        <div class="ec-links">
+          <div class="ec-links-label">历史路径 · Journey</div>
+          <div class="ec-journey">
+            ${journey
+              .map(
+                (j) =>
+                  `<button class="ec-journey-step" type="button" data-goto="${j.ev.id}" title="${KIND_LABEL[j.rel.kind].zh}（${j.rel.depth === 1 ? '直接' : '两跳'}）：${KIND_LABEL[j.rel.kind].en}" style="--k:${KIND_COLOR[j.rel.kind]}">
+                     <span class="ec-journey-year">${j.ev.start}</span>
+                     ${j.ev.title.zh}
+                   </button>`,
+              )
+              .join('')}
+          </div>
+        </div>`
+    }
+
     // 弧线图例 + 跳数切换（有直接关系时才显示）
     const kinds = [...new Set([...causes, ...effects].map((l) => l.kind))]
     const depth = appStore.getState().arcsDepth
@@ -156,6 +196,7 @@ export function initEventCard(
       ${figuresSection()}
       ${section('前因', 'Origins', 'ec-chip--cause', causes)}
       ${section('后果', 'Legacies', 'ec-chip--effect', effects)}
+      ${journeySection()}
       ${arcsSection()}
       ${sourcesSection()}
       <button class="ec-locate" type="button" data-locate>

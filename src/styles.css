@@ -670,6 +670,42 @@ body.ready .continent-nav {
   box-shadow: 0 0 8px rgba(34, 211, 238, 0.8);
 }
 
+/* 历史路径：按年代排序的探索序列（kind 色条标注连接类型） */
+.ec-journey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ec-journey-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: var(--text);
+  background: rgba(148, 180, 255, 0.08);
+  border: 1px solid color-mix(in srgb, var(--k, var(--accent)) 45%, transparent);
+  box-shadow: inset 2px 0 0 var(--k, var(--accent));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ec-journey-step:hover {
+  background: color-mix(in srgb, var(--k, var(--accent)) 18%, transparent);
+}
+
+.ec-journey-year {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* 弧线图例 + 跳数切换 */
 .ec-arcs {
   margin-top: 14px;
@@ -1323,6 +1359,65 @@ body.ready .continent-nav {
 .network-legend-title {
   font-size: 10.5px;
   letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* 连线详情弹层 */
+.network-link-info {
+  position: absolute;
+  z-index: 2;
+  width: 260px;
+  padding: 10px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+
+.network-link-info[hidden] {
+  display: none;
+}
+
+.nl-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--k, var(--accent));
+  letter-spacing: 0.05em;
+}
+
+.nl-kind::before {
+  content: '';
+  width: 14px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--k, var(--accent));
+}
+
+.nl-route {
+  margin-top: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.nl-arrow {
+  margin: 0 4px;
+  color: var(--text-muted);
+}
+
+.nl-zh {
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.nl-en {
+  margin: 5px 0 0;
+  font-size: 11px;
+  line-height: 1.55;
   color: var(--text-muted);
 }
 

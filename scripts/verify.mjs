@@ -391,6 +391,23 @@ await new Promise((r) => setTimeout(r, 500))
 const netSel = await page.evaluate(() => window.__chrono.store.getState().selectedId)
 console.log('   网络选中:', netSel, netSel === 'self-strengthening-movement' ? '✓' : '✗')
 await shot('19b-network-select')
+// 点击连线（中点）→ 关系详情弹层
+await page.evaluate(() => {
+  const p1 = window.__chronoNetwork.nodePos('watt-steam-engine')
+  const p2 = window.__chronoNetwork.nodePos('stockton-darlington')
+  const el = document.getElementById('network-canvas')
+  const mid = { clientX: (p1.x + p2.x) / 2, clientY: (p1.y + p2.y) / 2 }
+  const opts = { bubbles: true, ...mid }
+  el.dispatchEvent(new PointerEvent('pointerdown', opts))
+  el.dispatchEvent(new PointerEvent('pointerup', opts))
+})
+await new Promise((r) => setTimeout(r, 400))
+const linkInfo = await page.evaluate(() => {
+  const el = document.getElementById('network-link-info')
+  return { open: !el.hidden, kind: el.querySelector('.nl-kind')?.textContent?.trim() ?? null }
+})
+console.log('   连线详情:', JSON.stringify(linkInfo), linkInfo.open && linkInfo.kind?.includes('直接因果') ? '✓' : '✗')
+await shot('19c-network-link')
 await page.click('#network-close')
 await new Promise((r) => setTimeout(r, 400))
 const netClosed = await page.evaluate(() => !document.getElementById('network-overlay').hidden)

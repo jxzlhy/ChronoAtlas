@@ -67,7 +67,10 @@
           <button id="network-open-globe" class="network-open" type="button" hidden>在地球上打开 · Open on globe</button>
           <button id="network-close" class="network-close" type="button" aria-label="关闭因果网络视图">×</button>
         </div>
-        <div class="network-stage"><canvas id="network-canvas"></canvas></div>
+        <div class="network-stage">
+          <canvas id="network-canvas"></canvas>
+          <div id="network-link-info" class="network-link-info" hidden></div>
+        </div>
         <div class="network-legend">
           <span class="network-legend-title">关系 · Links</span>
           <span class="legend-item"><i style="background:#22d3ee"></i>直接因果</span>

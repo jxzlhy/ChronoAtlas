@@ -21,6 +21,7 @@ interface NetLink {
   to: number
   kind: keyof typeof KIND_COLOR
   zh: string
+  en: string
 }
 
 const KIND_ZH: Record<string, { zh: string; en: string }> = {
@@ -51,6 +52,7 @@ export function initNetwork(): void {
   let viewY = 0
   let scale = 1
   let hoveredId: string | null = null
+  let hoveredLink: NetLink | null = null
   let dragNodeId: number | null = null
   let panLast: { x: number; y: number } | null = null
   let dirty = true
@@ -74,7 +76,7 @@ export function initNetwork(): void {
     const a = nodeById.get(l.from)
     const b = nodeById.get(l.to)
     if (!a || !b) continue
-    links.push({ from: nodes.indexOf(a), to: nodes.indexOf(b), kind: l.kind, zh: l.zh })
+    links.push({ from: nodes.indexOf(a), to: nodes.indexOf(b), kind: l.kind, zh: l.zh, en: l.en })
   }
 
   const computeLayout = (): void => {
@@ -178,8 +180,8 @@ export function initNetwork(): void {
       const dim =
         selectedId && a.id !== selectedId && b.id !== selectedId && !neighbors.has(a.id) && !neighbors.has(b.id)
       ctx.strokeStyle = KIND_COLOR[l.kind]
-      ctx.globalAlpha = dim ? 0.1 : 0.75
-      ctx.lineWidth = l.kind === 'direct-cause' ? 1.8 : 1.1
+      ctx.globalAlpha = dim ? 0.1 : l === hoveredLink ? 1 : 0.75
+      ctx.lineWidth = l === hoveredLink ? 2.6 : l.kind === 'direct-cause' ? 1.8 : 1.1
       ctx.beginPath()
       ctx.moveTo(a.x, a.y)
       ctx.lineTo(b.x, b.y)
@@ -246,6 +248,51 @@ export function initNetwork(): void {
     return null
   }
 
+  /** 点到线段距离（世界坐标） */
+  const distToSegment = (px: number, py: number, ax: number, ay: number, bx: number, by: number): number => {
+    const dx = bx - ax
+    const dy = by - ay
+    const len2 = dx * dx + dy * dy
+    const tt = len2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / len2))
+    const cx = ax + tt * dx
+    const cy = ay + tt * dy
+    return Math.hypot(px - cx, py - cy)
+  }
+
+  const linkAt = (wx: number, wy: number): NetLink | null => {
+    const tol = 7 / scale // 屏幕空间 7px
+    for (const l of links) {
+      const a = nodes[l.from]
+      const b = nodes[l.to]
+      if (distToSegment(wx, wy, a.x, a.y, b.x, b.y) < tol) return l
+    }
+    return null
+  }
+
+  /** 连线详情弹层：双语解释 + 关系类型 */
+  const infoEl = document.getElementById('network-link-info') as HTMLElement
+  const showLinkInfo = (l: NetLink, clientX: number, clientY: number): void => {
+    const a = nodes[l.from]
+    const b = nodes[l.to]
+    const evA = EVENTS.find((e) => e.id === a.id)
+    const evB = EVENTS.find((e) => e.id === b.id)
+    const kl = KIND_ZH[l.kind] ?? { zh: l.kind, en: l.kind }
+    infoEl.innerHTML = `
+      <div class="nl-kind" style="--k:${KIND_COLOR[l.kind]}">${kl.zh} · ${kl.en}</div>
+      <div class="nl-route">${evA?.title.zh ?? a.id} <span class="nl-arrow">→</span> ${evB?.title.zh ?? b.id}</div>
+      <p class="nl-zh">${l.zh}</p>
+      <p class="nl-en">${l.en}</p>`
+    const stage = infoEl.parentElement!.getBoundingClientRect()
+    const x = Math.min(Math.max(clientX - stage.left + 12, 8), stage.width - 280)
+    const y = Math.min(Math.max(clientY - stage.top + 12, 8), stage.height - 150)
+    infoEl.style.left = `${x}px`
+    infoEl.style.top = `${y}px`
+    infoEl.hidden = false
+  }
+  const hideLinkInfo = (): void => {
+    infoEl.hidden = true
+  }
+
   canvas.addEventListener('pointerdown', (e) => {
     const { x, y } = toWorld(e.clientX, e.clientY)
     dragNodeId = nodeAt(x, y)
@@ -271,25 +318,34 @@ export function initNetwork(): void {
       viewX += e.clientX - panLast.x
       viewY += e.clientY - panLast.y
       panLast = { x: e.clientX, y: e.clientY }
+      hideLinkInfo()
       dirty = true
       return
     }
     const idx = nodeAt(x, y)
+    const linkHit = idx === null ? linkAt(x, y) : null
     const id = idx !== null ? nodes[idx].id : null
-    if (id !== hoveredId) {
+    if (id !== hoveredId || linkHit !== hoveredLink) {
       hoveredId = id
+      hoveredLink = linkHit
       dirty = true
     }
-    canvas.style.cursor = idx !== null ? 'pointer' : 'grab'
+    canvas.style.cursor = idx !== null || linkHit ? 'pointer' : 'grab'
   })
 
   canvas.addEventListener('pointerup', (e) => {
     const { x, y } = toWorld(e.clientX, e.clientY)
+    const moved = panLast ? Math.hypot(e.clientX - panLast.x, e.clientY - panLast.y) : 0
     const idx = nodeAt(x, y)
-    if (idx !== null && panLast) {
-      // 位移极小视为点击 → 选中（共享 store）
-      const moved = Math.hypot(e.clientX - panLast.x, e.clientY - panLast.y)
-      if (moved <= 4) appStore.getState().select(nodes[idx].id)
+    if (idx !== null && moved <= 4) {
+      // 点击节点 → 选中（共享 store）
+      appStore.getState().select(nodes[idx].id)
+      hideLinkInfo()
+    } else if (idx === null && moved <= 4) {
+      // 点击连线 → 关系详情弹层
+      const l = linkAt(x, y)
+      if (l) showLinkInfo(l, e.clientX, e.clientY)
+      else hideLinkInfo()
     }
     dragNodeId = null
     panLast = null
@@ -307,6 +363,7 @@ export function initNetwork(): void {
       viewX = mx - ((mx - viewX) / scale) * next
       viewY = my - ((my - viewY) / scale) * next
       scale = next
+      hideLinkInfo()
       dirty = true
     },
     { passive: false },
@@ -317,6 +374,7 @@ export function initNetwork(): void {
     overlay.hidden = !v
     toggle.setAttribute('aria-pressed', String(v))
     toggle.classList.toggle('is-open', v)
+    hideLinkInfo()
     if (v) {
       resize()
       dirty = true
