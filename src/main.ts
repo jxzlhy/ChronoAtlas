@@ -144,12 +144,17 @@ function boot(): void {
   const pauseRender = (): void => globe.renderer.setAnimationLoop(null)
   const resumeRender = (): void => globe.renderer.setAnimationLoop(renderLoop)
 
-  // ---- 随机发现（尊重当前时间窗口与快照筛选）----
+  // ---- 随机发现（尊重当前时间窗口与快照筛选；排除最近 5 个避免连续重复）----
+  const recentRandom: string[] = []
   ;(document.getElementById('random-btn') as HTMLButtonElement).addEventListener('click', () => {
     const s = appStore.getState()
     const pool = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize) && matchesFilters(ev, s))
     const source = pool.length > 0 ? pool : EVENTS
-    const ev = source[Math.floor(Math.random() * source.length)]
+    const fresh = source.filter((ev) => !recentRandom.includes(ev.id))
+    const candidates = fresh.length > 0 ? fresh : source
+    const ev = candidates[Math.floor(Math.random() * candidates.length)]
+    recentRandom.push(ev.id)
+    if (recentRandom.length > 5) recentRandom.shift()
     s.select(ev.id)
     rig.flyTo(ev.lat, ev.lon, 2.0, 1.1)
   })
