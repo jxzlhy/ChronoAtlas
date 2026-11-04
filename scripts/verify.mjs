@@ -77,7 +77,9 @@ console.log('1. 打开页面…')
 await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded', timeout: 30000 })
 
 // 等应用钩子就位（最多 30 秒）
+const bootStart = Date.now()
 await page.waitForFunction(() => typeof window.__chrono !== 'undefined', { timeout: 30000 })
+const initMs = Date.now() - bootStart
 console.log('   应用已启动')
 
 // 等入场飞行动画结束
@@ -370,11 +372,13 @@ await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))
 await shot('17-mobile')
 
-// 汇总
-const report = { errors, envWarnings, logsCount: logs.length, logsTail: logs.slice(-12) }
+// 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
+const perf = await page.evaluate(() => window.__chrono.perf()).catch(() => null)
+const report = { errors, envWarnings, perf, initMs, logsCount: logs.length, logsTail: logs.slice(-12) }
 writeFileSync(resolve(outDir, 'report.json'), JSON.stringify(report, null, 2))
 console.log('\n=== 验证报告 ===')
 console.log('控制台错误数:', errors.length, '· 环境网络警告:', envWarnings.length)
+console.log('性能基线:', JSON.stringify(perf), '· init:', `${initMs}ms`)
 for (const e of errors.slice(0, 10)) console.log('  ', e)
 
 await browser.close()

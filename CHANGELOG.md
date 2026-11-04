@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## V0.15.1 — 性能基线记录（2026-11-05）
+
+按总任务书 §6.6"先测量再优化"建立性能基线设施：
+
+- `__chrono.perf()`：暴露 drawCalls/triangles/geometries/textures/programs/heapMB。
+- 修复 EffectComposer 每 pass reset renderer.info 的问题：`info.autoReset=false` + 每帧手动 reset，perf 反映整帧累计。
+- verify 采样写入 report.json（perf + initMs）。
+- **基线（SwiftShader 无头，1440×900，初始全球视图 ±10 年）**：drawCalls 195 / triangles 30,566 / geometries 260 / textures 14 / programs 15 / heap 14MB / init ≈1.6s。
+- 结论：195 次调用中 ~240 项来自 119×2 棱柱+地块（每实例独立 mesh）；事件扩至 140+ 前做 InstancedMesh 合批的依据成立（M3-III 预备）。
+
 ## V0.15.0 — V1.0-M3 动态地球 II · 历史热区模式（2026-11-05）
 
 M3 第二增量（总任务书 §6.2 历史热区模式）：

@@ -45,6 +45,9 @@ export class Globe {
     this.renderer.setClearColor(0x04060e, 1)
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
     this.renderer.toneMappingExposure = 1.05
+    // EffectComposer 每个 pass 都会 reset info；关闭 autoReset 改为整帧手动累计，
+    // 使 renderer.info 反映完整帧的 draw calls/triangles（性能基线用）
+    this.renderer.info.autoReset = false
     container.appendChild(this.renderer.domElement)
 
     this.camera = new THREE.PerspectiveCamera(42, width / height, 0.05, 200)
@@ -240,6 +243,7 @@ export class Globe {
 
   render(): void {
     this.controls.update()
+    this.renderer.info.reset()
     this.composer.render()
   }
 }

@@ -175,6 +175,19 @@ function boot(): void {
       hotspots.root.visible
         ? hotspots.root.children.filter((c) => (c as THREE.Mesh).visible).length
         : 0,
+    /** 渲染性能摘要（自动化基线记录用，总任务书 §6.6 先测量再优化） */
+    perf: () => {
+      const info = globe.renderer.info
+      const mem = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+      return {
+        drawCalls: info.render.calls,
+        triangles: info.render.triangles,
+        geometries: info.memory.geometries,
+        textures: info.memory.textures,
+        programs: info.programs?.length ?? 0,
+        heapMB: mem ? Math.round(mem.usedJSHeapSize / 1048576) : null,
+      }
+    },
     /** 手动渲染一帧并导出 JPEG dataURL（同一任务内调用，缓冲区未被清除） */
     capture: (maxWidth = 1280) => {
       renderLoop()
