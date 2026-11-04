@@ -15,6 +15,7 @@ import type { ContinentKey, EventType } from '../data/model'
  */
 
 type SortBy = 'importance' | 'time' | 'geo' | 'type'
+type ViewMode = 'list' | 'sync'
 
 const SORT_LABEL: Record<SortBy, { zh: string; en: string }> = {
   importance: { zh: '重要度', en: 'Importance' },
@@ -22,6 +23,9 @@ const SORT_LABEL: Record<SortBy, { zh: string; en: string }> = {
   geo: { zh: '地理', en: 'Geography' },
   type: { zh: '类型', en: 'Type' },
 }
+
+/** 同时代模式下每个大洲展示的代表事件数上限 */
+const SYNC_TOP_N = 3
 
 const DATA_CONTINENTS: ContinentKey[] = [
   'asia',
@@ -53,10 +57,12 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   const typesEl = document.getElementById('snapshot-types') as HTMLElement
   const contEl = document.getElementById('snapshot-continents') as HTMLElement
   const sortEl = document.getElementById('snapshot-sort') as HTMLElement
+  const viewEl = document.getElementById('snapshot-view') as HTMLElement
 
   let open = false
   let signature = ''
   let sortBy: SortBy = 'importance'
+  let viewMode: ViewMode = 'list'
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -136,10 +142,74 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     return rows2
   }
 
+  const renderView = (): void => {
+    viewEl.innerHTML =
+      `<span class="snap-sort-label">视图 · View</span>` +
+      ([
+        ['list', '列表'],
+        ['sync', '同时代'],
+      ] as const)
+        .map(
+          ([k, zh]) =>
+            `<button class="snap-sort-btn${viewMode === k ? ' is-active' : ''}" type="button" data-view="${k}">${zh}</button>`,
+        )
+        .join('')
+  }
+
+  /** 同时代视图：按大洲并置当年代表事件（数据驱动，不虚构叙述） */
+  const renderSync = (rows: HistoryEvent[], selectedId: string | null): string => {
+    const byCont = new Map<ContinentKey, HistoryEvent[]>()
+    for (const ev of rows) {
+      if (!DATA_CONTINENTS.includes(ev.continent)) continue
+      const arr = byCont.get(ev.continent) ?? []
+      arr.push(ev)
+      byCont.set(ev.continent, arr)
+    }
+    const sections = DATA_CONTINENTS.filter((c) => (byCont.get(c)?.length ?? 0) > 0)
+    if (sections.length === 0) {
+      return '<div class="slice-empty">该筛选下没有活跃事件，试试其他类型或大洲。</div>'
+    }
+    return sections
+      .map((c) => {
+        const arr = (byCont.get(c) ?? []).sort((a, b) => b.importance - a.importance || a.start - b.start)
+        const label = CONTINENT_LABEL[c]!
+        const top = arr.slice(0, SYNC_TOP_N)
+        const rest = arr.length - top.length
+        return `
+          <div class="sync-section">
+            <div class="sync-head">
+              <button class="sync-cont" type="button" data-sync-cont="${c}" title="查看全部${label.zh}事件">
+                ${label.zh}<span class="sync-cont-en">${label.en}</span>
+                <span class="sync-cont-count">${arr.length} 条</span>
+              </button>
+            </div>
+            ${top
+              .map((ev) => {
+                const t = EVENT_TYPES[ev.type]
+                const years = ev.start === ev.end ? `${ev.start}` : `${ev.start}–${ev.end}`
+                return `
+                  <button class="slice-row${selectedId === ev.id ? ' is-active' : ''}" type="button"
+                          role="option" aria-selected="${selectedId === ev.id}" data-id="${ev.id}"
+                          style="--type-color:${t.color}">
+                    <span class="slice-dot" aria-hidden="true"></span>
+                    <span class="slice-main">
+                      <span class="slice-title">${ev.title.zh}</span>
+                      <span class="slice-sub">${ev.title.en}</span>
+                    </span>
+                    <span class="slice-meta">${years} 年 · ${ev.place.zh}</span>
+                  </button>`
+              })
+              .join('')}
+            ${rest > 0 ? `<button class="sync-more" type="button" data-sync-cont="${c}">还有 ${rest} 条 → 查看全部</button>` : ''}
+          </div>`
+      })
+      .join('')
+  }
+
   const render = (force = false): void => {
     const s = appStore.getState()
-    // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选/排序
-    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}`
+    // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选/排序/视图
+    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}|${viewMode}`
     if (!force && next === signature) return
     signature = next
 
@@ -167,9 +237,16 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     }
     renderContinents(contCounts, s.continentFilter)
     renderSort()
+    renderView()
 
     const filtered = sortEvents(active.filter((ev) => matchesFilters(ev, s)))
     countEl.textContent = String(active.length)
+
+    if (viewMode === 'sync') {
+      // 同时代视图：不做全局排序（各大洲内部按重要度），忽略类型筛选的列表排序
+      list.innerHTML = renderSync(filtered, s.selectedId)
+      return
+    }
 
     if (filtered.length === 0) {
       list.innerHTML =
@@ -224,7 +301,24 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     render(true)
   })
 
+  viewEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-view]')
+    if (!btn?.dataset.view) return
+    viewMode = btn.dataset.view as ViewMode
+    render(true)
+  })
+
   list.addEventListener('click', (e) => {
+    // 同时代视图：大洲标题/查看全部 → 设定该大洲筛选并回到列表视图
+    const syncBtn = (e.target as HTMLElement).closest<HTMLElement>('[data-sync-cont]')
+    if (syncBtn?.dataset.syncCont) {
+      const key = syncBtn.dataset.syncCont as ContinentKey
+      appStore.getState().setContinentFilter(key)
+      viewMode = 'list'
+      onFlyContinent(key)
+      render(true)
+      return
+    }
     const row = (e.target as HTMLElement).closest<HTMLElement>('[data-id]')
     if (!row?.dataset.id) return
     const ev = EVENTS.find((x) => x.id === row.dataset.id)

@@ -222,6 +222,31 @@ await new Promise((r) => setTimeout(r, 200))
 const speedVal = await page.evaluate(() => window.__chrono.store.getState().playSpeed)
 console.log('   播放速度:', speedVal, speedVal === 5 ? '✓' : '✗')
 await page.select('#speed-select', '1')
+// 同时代视图：按大洲分节并置代表事件
+await page.click('#snapshot-view [data-view="sync"]')
+await new Promise((r) => setTimeout(r, 400))
+const syncInfo = await page.evaluate(() => {
+  const sections = [...document.querySelectorAll('#slice-list .sync-section')].length
+  const rows = document.querySelectorAll('#slice-list .slice-row').length
+  const heads = [...document.querySelectorAll('#slice-list .sync-cont')].map((b) => b.textContent?.trim().split(/\s/)[0])
+  return { sections, rows, heads }
+})
+console.log('   同时代视图:', JSON.stringify(syncInfo), syncInfo.sections >= 3 && syncInfo.rows >= 3 ? '✓' : '✗')
+await shot('09d-snapshot-sync')
+// 大洲标题 → 回列表视图并写入该洲筛选
+await page.click('#slice-list .sync-cont')
+await new Promise((r) => setTimeout(r, 400))
+const syncJump = await page.evaluate(() => ({
+  view: document.querySelector('#snapshot-view .snap-sort-btn.is-active')?.getAttribute('data-view'),
+  filter: window.__chrono.store.getState().continentFilter,
+}))
+console.log('   同时代跳列表:', JSON.stringify(syncJump), syncJump.view === 'list' && syncJump.filter ? '✓' : '✗')
+// 还原：清筛选回列表
+await page.evaluate(() => {
+  window.__chrono.store.getState().setContinentFilter(null)
+  document.querySelector('#snapshot-view [data-view="list"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+})
+await new Promise((r) => setTimeout(r, 300))
 // 关闭面板
 await page.click('#slice-toggle')
 await new Promise((r) => setTimeout(r, 400))

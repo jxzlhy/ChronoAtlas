@@ -903,6 +903,66 @@ body.ready .continent-nav {
   border-color: var(--accent-border);
 }
 
+/* 同时代视图：大洲分节并置 */
+.sync-section {
+  padding: 4px 4px 2px;
+}
+
+.sync-section + .sync-section {
+  border-top: 1px solid var(--border);
+}
+
+.sync-head {
+  display: flex;
+  align-items: center;
+  padding: 3px 6px 5px;
+}
+
+.sync-cont {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sync-cont:hover {
+  background: var(--accent-soft);
+}
+
+.sync-cont-en {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.sync-cont-count {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.sync-more {
+  width: 100%;
+  padding: 4px 6px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sync-more:hover {
+  color: var(--accent);
+}
+
 .snap-chip {
   display: inline-flex;
   align-items: center;
@@ -1263,12 +1323,13 @@ body.ready .timeline-wrap {
     display: none;
   }
 
-  /* 快照面板小屏收敛：年代/提示/排序/速度让位于列表 */
+  /* 快照面板小屏收敛：年代/提示/排序/视图切换/速度让位于列表 */
   .era-readout,
   .slice-head-era,
   .slice-head-hint,
   .snapshot-blurb,
   .snapshot-sort,
+  .snapshot-view,
   .speed-label {
     display: none;
   }
