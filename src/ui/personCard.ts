@@ -2,6 +2,12 @@ import { appStore, type AppState, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { PEOPLE } from '../data/people'
 
+/** 人物卡罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
+let compassRef: HTMLElement | null = null
+export function getPersonCompassEl(): HTMLElement | null {
+  return compassRef
+}
+
 /**
  * 人物档案卡（V1.0-M5，总任务书 §8.1/8.2）：人物作为独立探索入口。
  * 中英姓名 / 生卒 / 双语简介 / 人物时间线（挂接事件按年代排序，点击跳转）/
@@ -36,6 +42,11 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
 
     return `
       <button class="pc-close" type="button" data-close aria-label="关闭人物档案">×</button>
+      <div class="ec-compass" hidden title="指向主要事件棱柱 · Points to the pillar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v16" /><path d="m6 9 6-6 6 6" />
+        </svg>
+      </div>
       <div class="pc-badge">人物 · Figure</div>
       <h3 class="pc-name">${p.name.zh}</h3>
       <div class="pc-name-en">${p.name.en}</div>
@@ -86,6 +97,7 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     const p = pid ? PEOPLE.find((x) => x.id === pid) : undefined
     if (!p) {
       // 关闭：恢复事件卡的可见性（若仍有选中事件）
+      compassRef = null
       card.classList.remove('show')
       window.setTimeout(() => {
         if (!appStore.getState().selectedPersonId) {
@@ -96,6 +108,7 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
       return
     }
     card.innerHTML = render(p.id)
+    compassRef = card.querySelector('.ec-compass')
     card.hidden = false
     eventCard.hidden = true // 人物卡与事件卡同位互斥
     requestAnimationFrame(() => card.classList.add('show'))

@@ -349,11 +349,12 @@ const personCardOpen = await page.evaluate(() => ({
   open: !document.getElementById('person-card')?.hidden,
   pid: window.__chrono.store.getState().selectedPersonId,
   name: document.querySelector('.pc-name')?.textContent?.trim(),
+  compass: !document.querySelector('#person-card .ec-compass')?.hidden,
 }))
 console.log(
   '   搜索直达人物卡:',
   JSON.stringify(personCardOpen),
-  personCardOpen.open && personCardOpen.pid === 'li-hongzhang' ? '✓' : '✗',
+  personCardOpen.open && personCardOpen.pid === 'li-hongzhang' && personCardOpen.compass ? '✓' : '✗',
 )
 await shot('15-person-search')
 // 同事件人物：卡内 chips 切换到另一人物

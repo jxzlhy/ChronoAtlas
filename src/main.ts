@@ -12,7 +12,7 @@ import { PEOPLE } from './data/people'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
 import { initEventCard, getCompassEl } from './ui/eventCard'
-import { initPersonCard } from './ui/personCard'
+import { initPersonCard, getPersonCompassEl } from './ui/personCard'
 import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
 import { initSnapshot } from './ui/snapshot'
@@ -207,11 +207,26 @@ function boot(): void {
     pillars.update(dt, clock.elapsedTime)
     arcs.update(dt, clock.elapsedTime)
     hotspots.update(dt, clock.elapsedTime)
-    // 卡片罗盘：指向选中棱柱的屏幕方向（3D-2D 空间连接）
+    // 卡片罗盘：指向选中棱柱（事件卡=选中事件；人物卡=人物主事件）
+    const s2 = appStore.getState()
     const compassEl = getCompassEl()
-    const sid = appStore.getState().selectedId
-    if (compassEl && sid) {
-      const target = pillars.projectScreen(sid, globe.camera, globe.renderer.domElement)
+    const personCompass = getPersonCompassEl()
+    if (personCompass && s2.selectedPersonId) {
+      const person = PEOPLE.find((x) => x.id === s2.selectedPersonId)
+      const anchorId = person?.eventIds[0]
+      const target = anchorId ? pillars.projectScreen(anchorId, globe.camera, globe.renderer.domElement) : null
+      if (target) {
+        const cardRect = personCompass.parentElement!.getBoundingClientRect()
+        const angle =
+          (Math.atan2(target.y - (cardRect.top + 40), target.x - (cardRect.left + cardRect.width / 2)) * 180) / Math.PI +
+          90
+        personCompass.style.setProperty('--ec-angle', `${angle.toFixed(1)}deg`)
+        personCompass.hidden = false
+      } else {
+        personCompass.hidden = true
+      }
+    } else if (compassEl && s2.selectedId) {
+      const target = pillars.projectScreen(s2.selectedId, globe.camera, globe.renderer.domElement)
       if (target) {
         const cardRect = compassEl.parentElement!.getBoundingClientRect()
         const cx = cardRect.left + cardRect.width / 2
