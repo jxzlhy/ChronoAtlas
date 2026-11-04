@@ -6,6 +6,7 @@ import { CameraRig } from './scene/CameraRig'
 import { LinkArcs } from './scene/LinkArcs'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
+import { LINKS } from './data/links'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
 import { initEventCard } from './ui/eventCard'
@@ -180,6 +181,7 @@ function boot(): void {
     },
     store: appStore,
     events: EVENTS,
+    links: LINKS,
   }
 
   // ---- 就绪：收起加载层，入场飞行 ----

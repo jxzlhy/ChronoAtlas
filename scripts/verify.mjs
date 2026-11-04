@@ -264,6 +264,23 @@ const linksInfo = await page.evaluate(() => ({
 console.log('   关联线:', JSON.stringify(linksInfo))
 if (linksInfo.arcs < 3) throw new Error(`弧线数异常: ${linksInfo.arcs}（期望 ≥3 的多跳长河）`)
 await shot('11-link-arcs')
+// 弧线跳数切换：一跳数应等于直接邻居数
+const hasDepthBtn = await page.evaluate(() => !!document.querySelector('.ec-depth-btn'))
+const hop1 = { hasDepthBtn }
+if (hasDepthBtn) {
+  await page.click('.ec-depth-btn[data-depth="1"]')
+  await new Promise((r) => setTimeout(r, 700))
+  hop1.count = await page.evaluate(() => window.__chrono.arcsCount())
+  hop1.expect = await page.evaluate(() => {
+    const st = window.__chrono.store.getState()
+    return window.__chrono.links.filter((l) => l.from === st.selectedId || l.to === st.selectedId).length
+  })
+  console.log('   一跳弧线:', JSON.stringify(hop1), hop1.count === hop1.expect ? '✓' : '✗')
+  await page.click('.ec-depth-btn[data-depth="3"]')
+  await new Promise((r) => setTimeout(r, 700))
+  const back = await page.evaluate(() => window.__chrono.arcsCount())
+  console.log('   恢复三跳:', back, back >= linksInfo.arcs ? '✓' : '✗')
+}
 const firstEffect = linksInfo.effects[0]
 if (firstEffect) {
   await page.click(`[data-goto="${firstEffect}"]`)

@@ -4,6 +4,7 @@ import { EVENTS, EVENT_TYPES } from '../data/events'
 import { LINKS } from '../data/links'
 import { PEOPLE } from '../data/people'
 import { SOURCES } from '../data/sources'
+import { KIND_COLOR } from '../scene/LinkArcs'
 
 /** 关系类型的双语短标签（tooltip 前缀，区分因果与关联） */
 const KIND_LABEL: Record<LinkKind, { zh: string; en: string }> = {
@@ -120,6 +121,28 @@ export function initEventCard(
     const causes = LINKS.filter((l) => l.to === ev.id)
     const effects = LINKS.filter((l) => l.from === ev.id)
 
+    // 弧线图例 + 跳数切换（有直接关系时才显示）
+    const kinds = [...new Set([...causes, ...effects].map((l) => l.kind))]
+    const depth = appStore.getState().arcsDepth
+    const arcsSection = (): string => {
+      if (kinds.length === 0) return ''
+      return `
+        <div class="ec-arcs">
+          <div class="ec-arcs-legend">
+            ${kinds
+              .map(
+                (k) =>
+                  `<span class="ec-arc-item" title="${KIND_LABEL[k].en}"><i style="--k:${KIND_COLOR[k]}" aria-hidden="true"></i>${KIND_LABEL[k].zh}</span>`,
+              )
+              .join('')}
+          </div>
+          <div class="ec-arcs-depth" role="group" aria-label="关系弧线跳数">
+            <button class="ec-depth-btn${depth === 1 ? ' is-active' : ''}" type="button" data-depth="1" title="1 hop">1 跳</button>
+            <button class="ec-depth-btn${depth === 3 ? ' is-active' : ''}" type="button" data-depth="3" title="3 hops">3 跳</button>
+          </div>
+        </div>`
+    }
+
     card.innerHTML = `
       <button class="ec-close" type="button" data-close aria-label="关闭事件卡片">×</button>
       <div class="ec-type">${type.zh} · ${type.en}</div>
@@ -133,6 +156,7 @@ export function initEventCard(
       ${figuresSection()}
       ${section('前因', 'Origins', 'ec-chip--cause', causes)}
       ${section('后果', 'Legacies', 'ec-chip--effect', effects)}
+      ${arcsSection()}
       ${sourcesSection()}
       <button class="ec-locate" type="button" data-locate>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -168,6 +192,13 @@ export function initEventCard(
     const target = e.target as HTMLElement
     if (target.closest('[data-close]')) {
       appStore.getState().select(null)
+      return
+    }
+    const depthBtn = target.closest<HTMLElement>('[data-depth]')
+    if (depthBtn?.dataset.depth) {
+      // 跳数切换 → store（LinkArcs 订阅重建弧线），并重绘按钮激活态
+      appStore.getState().setArcsDepth(depthBtn.dataset.depth === '1' ? 1 : 3)
+      if (current) render(current)
       return
     }
     const personBtn = target.closest<HTMLElement>('[data-person]')

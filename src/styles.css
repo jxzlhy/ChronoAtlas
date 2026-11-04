@@ -625,6 +625,64 @@ body.ready .continent-nav {
   background: color-mix(in srgb, var(--chip-color) 26%, transparent);
 }
 
+/* 弧线图例 + 跳数切换 */
+.ec-arcs {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ec-arcs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.ec-arc-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.ec-arc-item i {
+  width: 14px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--k, var(--accent));
+  box-shadow: 0 0 6px color-mix(in srgb, var(--k, var(--accent)) 70%, transparent);
+}
+
+.ec-arcs-depth {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ec-depth-btn {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.ec-depth-btn:hover {
+  color: var(--text);
+}
+
+.ec-depth-btn.is-active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
 /* 参考资料：紧凑列表，外链悬停提亮 */
 .ec-sources {
   list-style: none;

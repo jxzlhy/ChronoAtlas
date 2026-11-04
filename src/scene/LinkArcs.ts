@@ -3,6 +3,7 @@ import { appStore } from '../store'
 import { EVENTS } from '../data/events'
 import { LINKS } from '../data/links'
 import { latLonToVec3 } from './latLon'
+import type { LinkKind } from '../data/model'
 
 interface Arc {
   tube: THREE.Mesh
@@ -14,25 +15,45 @@ interface Arc {
   baseOpacity: number
 }
 
-const CAUSE_COLOR = new THREE.Color('#a78bfa') // 前因（过去）紫
-const EFFECT_COLOR = new THREE.Color('#22d3ee') // 后果（未来）青
-const DEPTH_OPACITY = [0, 0.65, 0.34, 0.16] // 相对选中事件的链路深度 → 弧线透明度
-const MAX_DEPTH = 3
+/** 关系类型 → 弧线颜色（与事件卡图例一致；方向仍由光点流动表达） */
+export const KIND_COLOR: Record<LinkKind, string> = {
+  'direct-cause': '#22d3ee',
+  'indirect-influence': '#a78bfa',
+  background: '#f59e0b',
+  related: '#94a3b8',
+  reaction: '#f472b6',
+  continuation: '#34d399',
+}
 
-/** 选中事件的多跳关联：事件 id → { 深度, 方向 }（方向相对选中事件） */
+/** 关系类型 → 弧线粗细（直接因果最粗最醒目） */
+const KIND_RADIUS: Record<LinkKind, number> = {
+  'direct-cause': 0.0045,
+  'indirect-influence': 0.0035,
+  background: 0.0028,
+  related: 0.0028,
+  reaction: 0.0032,
+  continuation: 0.0032,
+}
+
+const DEPTH_OPACITY = [0, 0.65, 0.34, 0.16] // 相对选中事件的链路深度 → 弧线透明度
+
+/** 选中事件的多跳关联：事件 id → { 深度, 方向, 直连边的类型 } */
 interface Hop {
   depth: number
   dir: 'cause' | 'effect'
+  kind: LinkKind
 }
 
 /**
- * 事件关联弧线："历史长河"模式 — 以选中事件为原点沿因果图 BFS 至多三跳，
- * 前因紫色、后果青色，透明度随深度衰减，光点只在一跳弧线上流动。
+ * 事件关联弧线："历史长河"模式 — 以选中事件为原点沿因果图 BFS，
+ * 跳数由 store.arcsDepth 控制（1=直接关系，3=长河）；颜色按关系类型 kind
+ * 区分（事件卡内有图例），透明度随深度衰减，光点只在一跳弧线上流动。
  */
 export class LinkArcs {
   readonly root = new THREE.Group()
   private arcs: Arc[] = []
   private currentId: string | null = null
+  private currentDepth: 1 | 3 = 3
   private readonly reducedMotion: boolean
 
   constructor(scene: THREE.Scene) {
@@ -41,7 +62,11 @@ export class LinkArcs {
     scene.add(this.root)
 
     appStore.subscribe((s) => {
-      if (s.selectedId !== this.currentId) this.showFor(s.selectedId)
+      // 仅在选中或跳数变化时重建（hover/年份变化不触发，避免频繁 dispose/建几何体）
+      if (s.selectedId !== this.currentId || s.arcsDepth !== this.currentDepth) {
+        this.currentDepth = s.arcsDepth
+        this.showFor(s.selectedId, s.arcsDepth)
+      }
     })
   }
 
@@ -50,7 +75,7 @@ export class LinkArcs {
     return this.arcs.length
   }
 
-  private showFor(id: string | null): void {
+  private showFor(id: string | null, depth = 3): void {
     this.currentId = id
     this.disposeArcs()
     if (!id) {
@@ -58,26 +83,24 @@ export class LinkArcs {
       return
     }
 
-    // BFS：沿因果图扩散至多 MAX_DEPTH 跳，方向沿边传播
+    // BFS：沿因果图扩散至多 depth 跳，方向沿边传播；kind 取直连该节点的那条边
     const hops = new Map<string, Hop>()
-    hops.set(id, { depth: 0, dir: 'cause' })
+    hops.set(id, { depth: 0, dir: 'cause', kind: 'direct-cause' })
     let frontier: string[] = [id]
-    for (let depth = 1; depth <= MAX_DEPTH && frontier.length > 0; depth++) {
+    for (let d = 1; d <= depth && frontier.length > 0; d++) {
       const next: string[] = []
       for (const cur of frontier) {
-        const dir = hops.get(cur)!.dir
         for (const link of LINKS) {
           let other: string | null = null
-          let otherDir: 'cause' | 'effect' = dir
+          let otherDir: 'cause' | 'effect' = 'cause'
           if (link.from === cur) {
             other = link.to
             otherDir = 'effect'
           } else if (link.to === cur) {
             other = link.from
-            otherDir = 'cause'
           }
           if (!other || hops.has(other)) continue
-          hops.set(other, { depth, dir: otherDir })
+          hops.set(other, { depth: d, dir: otherDir, kind: link.kind })
           next.push(other)
         }
       }
@@ -107,8 +130,9 @@ export class LinkArcs {
     const lift = 1 + 0.12 + 0.25 * (angle / Math.PI)
     const curve = new THREE.QuadraticBezierCurve3(a, mid.multiplyScalar(lift), b)
 
-    const color = hop.dir === 'effect' ? EFFECT_COLOR : CAUSE_COLOR
-    const baseOpacity = DEPTH_OPACITY[Math.min(hop.depth, MAX_DEPTH)]
+    const color = new THREE.Color(KIND_COLOR[hop.kind])
+    const radius = KIND_RADIUS[hop.kind]
+    const baseOpacity = DEPTH_OPACITY[Math.min(hop.depth, 3)]
 
     const material = new THREE.MeshBasicMaterial({
       color,
@@ -117,7 +141,7 @@ export class LinkArcs {
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     })
-    const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.0035, 6, false), material)
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, radius, 6, false), material)
 
     // 光点只在一跳弧线上流动，避免多跳后画面杂乱
     const withMarker = hop.depth === 1

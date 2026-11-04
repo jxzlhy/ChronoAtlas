@@ -15,6 +15,8 @@ export interface AppState {
   /** 快照面板筛选：null = 不过滤；影响地球棱柱明暗与随机发现 */
   typeFilter: EventType | null
   continentFilter: ContinentKey | null
+  /** 关系弧线跳数（1 = 直接关系，3 = 长河多跳） */
+  arcsDepth: 1 | 3
   setYear: (y: number) => void
   setPlaying: (p: boolean) => void
   togglePlay: () => void
@@ -24,6 +26,7 @@ export interface AppState {
   setHover: (id: string | null) => void
   setTypeFilter: (t: EventType | null) => void
   setContinentFilter: (c: ContinentKey | null) => void
+  setArcsDepth: (d: 1 | 3) => void
 }
 
 export const YEAR_MIN = 1750
@@ -38,6 +41,7 @@ export const appStore = createStore<AppState>()((set) => ({
   hoverId: null,
   typeFilter: null,
   continentFilter: null,
+  arcsDepth: 3,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
@@ -47,6 +51,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setHover: (hoverId) => set({ hoverId }),
   setTypeFilter: (typeFilter) => set({ typeFilter }),
   setContinentFilter: (continentFilter) => set({ continentFilter }),
+  setArcsDepth: (arcsDepth) => set({ arcsDepth }),
 }))
 
 /** 事件是否落在当前年份窗口内（windowSize 极大时视为全部显示） */
