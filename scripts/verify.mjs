@@ -472,8 +472,25 @@ const kbN2 = await page.evaluate(() => window.__chronoNetwork.open())
 await page.keyboard.press('r')
 await new Promise((r) => setTimeout(r, 1600))
 const kbR = await page.evaluate(() => window.__chrono.store.getState().selectedId)
-const kbOk = kbH.on && kbH.zones > 0 && kbN1 && !kbN2 && !!kbR
-console.log('   快捷键 N/H/R:', JSON.stringify({ h: kbH, n: kbN1 && !kbN2, r: kbR }), kbOk ? '✓' : '✗')
+// P 键切快照面板
+await page.keyboard.press('p')
+await new Promise((r) => setTimeout(r, 500))
+const kbP1 = await page.evaluate(() => !document.getElementById('slice-panel')?.hidden)
+await page.keyboard.press('p')
+await new Promise((r) => setTimeout(r, 400))
+const kbP2 = await page.evaluate(() => !document.getElementById('slice-panel')?.hidden)
+// ←→ 年份步进
+const yearBefore = await page.evaluate(() => window.__chrono.store.getState().year)
+await page.keyboard.press('ArrowRight')
+await new Promise((r) => setTimeout(r, 150))
+const yearAfter = await page.evaluate(() => window.__chrono.store.getState().year)
+const kbOk =
+  kbH.on && kbH.zones > 0 && kbN1 && !kbN2 && !!kbR && kbP1 && !kbP2 && yearAfter === yearBefore + 1
+console.log(
+  '   快捷键 N/H/R/P/←→:',
+  JSON.stringify({ h: kbH.on, n: kbN1 && !kbN2, r: !!kbR, p: kbP1 && !kbP2, arrow: yearAfter === yearBefore + 1 }),
+  kbOk ? '✓' : '✗',
+)
 
 // 12.9 音效开关：点击 → store.soundOn + aria；再点关
 await page.click('#sound-toggle')
@@ -487,9 +504,25 @@ await new Promise((r) => setTimeout(r, 300))
 const sndOff = await page.evaluate(() => window.__chrono.store.getState().soundOn)
 console.log('   音效开关:', JSON.stringify({ sndOn, sndOff }), sndOn.on && sndOn.pressed === 'true' && !sndOff ? '✓' : '✗')
 
-// 13. 移动端视口
+// 13. 移动端视口 + 罗盘移动端行为
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))
+// 选中一个事件，检查罗盘元素在移动端存在且行为合理（显示或出屏隐藏皆合法）
+await page.evaluate(() => {
+  window.__chrono.store.getState().setYear(1839)
+  window.__chrono.goTo('first-opium-war')
+})
+await new Promise((r) => setTimeout(r, 2200))
+const mobileCompass = await page.evaluate(() => {
+  const compass = document.querySelector('#event-card .ec-compass')
+  if (!compass) return { exists: false }
+  return {
+    exists: true,
+    visible: !compass.hidden,
+    angle: compass.style.getPropertyValue('--ec-angle') || null,
+  }
+})
+console.log('   移动端罗盘:', JSON.stringify(mobileCompass), mobileCompass.exists ? '✓' : '✗')
 await shot('17-mobile')
 
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
