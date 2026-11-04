@@ -167,7 +167,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     }
     const sections = DATA_CONTINENTS.filter((c) => (byCont.get(c)?.length ?? 0) > 0)
     if (sections.length === 0) {
-      return '<div class="slice-empty">该筛选下没有活跃事件，试试其他类型或大洲。</div>'
+      return '<div class="slice-empty">该筛选下没有活跃事件，试试其他类型或大洲。<span class="slice-empty-en">No active events under this filter — try another type or continent.</span></div>'
     }
     return sections
       .map((c) => {
@@ -250,7 +250,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
 
     if (filtered.length === 0) {
       list.innerHTML =
-        '<div class="slice-empty">该筛选下没有活跃事件，试试其他类型或大洲。</div>'
+        '<div class="slice-empty">该筛选下没有活跃事件，试试其他类型或大洲。<span class="slice-empty-en">No active events under this filter — try another type or continent.</span></div>'
       return
     }
     list.innerHTML = filtered

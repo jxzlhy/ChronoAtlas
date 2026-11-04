@@ -57,7 +57,7 @@ export function initSearch(onGo: (ev: HistoryEvent) => void, onPerson: (pid: str
 
     if (hits.length === 0) {
       panel.innerHTML =
-        '<div class="search-empty">没有找到匹配的事件或人物，换个关键词试试？</div>'
+        '<div class="search-empty">没有找到匹配的事件或人物，换个关键词试试？<span class="search-empty-en">No matching events or figures — try another keyword.</span></div>'
     } else {
       panel.innerHTML = hits
         .slice(0, 8)

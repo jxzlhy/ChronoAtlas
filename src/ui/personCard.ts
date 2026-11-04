@@ -10,6 +10,8 @@ import { PEOPLE } from '../data/people'
 export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
   const card = document.getElementById('person-card') as HTMLElement
   const eventCard = document.getElementById('event-card') as HTMLElement
+  card.setAttribute('role', 'dialog')
+  card.setAttribute('aria-label', '人物档案 · Person profile')
 
   const render = (pid: string): string => {
     const p = PEOPLE.find((x) => x.id === pid)
@@ -78,6 +80,13 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
 
   appStore.subscribe(apply)
   apply(appStore.getState()) // 初始同步（URL hash p= 恢复）
+
+  // Esc 关闭（与快照面板/因果网络一致）
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && appStore.getState().selectedPersonId) {
+      appStore.getState().selectPerson(null)
+    }
+  })
 
   card.addEventListener('click', (e) => {
     const target = e.target as HTMLElement

@@ -1326,6 +1326,53 @@ body.ready .continent-nav {
   text-align: center;
 }
 
+.slice-empty-en,
+.search-empty-en {
+  display: block;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: color-mix(in srgb, var(--text-muted) 70%, transparent);
+}
+
+/* 统一细滚动条：切片面板 / 人物时间线 / 搜索结果 / 网络浮层 */
+.slice-list,
+.pc-timeline,
+.search-results,
+.network-stage {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 180, 255, 0.28) transparent;
+}
+
+.slice-list::-webkit-scrollbar,
+.pc-timeline::-webkit-scrollbar,
+.search-results::-webkit-scrollbar,
+.network-stage::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.slice-list::-webkit-scrollbar-thumb,
+.pc-timeline::-webkit-scrollbar-thumb,
+.search-results::-webkit-scrollbar-thumb,
+.network-stage::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 180, 255, 0.28);
+}
+
+.slice-list::-webkit-scrollbar-thumb:hover,
+.pc-timeline::-webkit-scrollbar-thumb:hover,
+.search-results::-webkit-scrollbar-thumb:hover,
+.network-stage::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 180, 255, 0.45);
+}
+
+.slice-list::-webkit-scrollbar-track,
+.pc-timeline::-webkit-scrollbar-track,
+.search-results::-webkit-scrollbar-track,
+.network-stage::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* ---------- 因果网络 ---------- */
 
 /* 开关按钮：右上角与随机发现同列 */
