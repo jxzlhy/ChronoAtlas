@@ -367,6 +367,35 @@ await new Promise((r) => setTimeout(r, 600))
 const after = await page.evaluate(() => window.__chrono.hotspotsCount())
 console.log('   热区模式:', JSON.stringify({ before, on, after }), on.pressed === 'true' && on.zones > 0 && after === 0 ? '✓' : '✗')
 
+// 12.7 二维因果网络：打开 → 节点/连线数 → 点击节点选中同步 → 关闭
+await page.waitForFunction(() => document.body.classList.contains('ready'), { timeout: 40000 })
+await page.click('#network-toggle')
+await new Promise((r) => setTimeout(r, 700))
+const netInfo = await page.evaluate(() => {
+  const net = window.__chronoNetwork
+  return { open: net.open(), nodes: net.nodes(), links: net.links(), visible: !document.getElementById('network-overlay').hidden }
+})
+console.log('   因果网络:', JSON.stringify(netInfo))
+if (!netInfo.open || netInfo.nodes !== 119 || netInfo.links !== 32)
+  throw new Error(`因果网络异常: ${JSON.stringify(netInfo)}`)
+await shot('19-network')
+// 点击"洋务运动"节点（坐标由布局暴露），选中应同步 store
+await page.evaluate(() => {
+  const p = window.__chronoNetwork.nodePos('self-strengthening-movement')
+  const el = document.getElementById('network-canvas')
+  const opts = { bubbles: true, clientX: p.x, clientY: p.y }
+  el.dispatchEvent(new PointerEvent('pointerdown', opts))
+  el.dispatchEvent(new PointerEvent('pointerup', opts))
+})
+await new Promise((r) => setTimeout(r, 500))
+const netSel = await page.evaluate(() => window.__chrono.store.getState().selectedId)
+console.log('   网络选中:', netSel, netSel === 'self-strengthening-movement' ? '✓' : '✗')
+await shot('19b-network-select')
+await page.click('#network-close')
+await new Promise((r) => setTimeout(r, 400))
+const netClosed = await page.evaluate(() => !document.getElementById('network-overlay').hidden)
+console.log('   网络关闭:', netClosed ? '✗ 仍打开' : '✓')
+
 // 13. 移动端视口
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))

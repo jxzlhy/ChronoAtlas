@@ -52,6 +52,33 @@
         </svg>
       </button>
 
+      <!-- 二维因果网络 -->
+      <button id="network-toggle" class="network-toggle" type="button" aria-pressed="false" aria-label="打开二维因果网络视图" title="因果网络 · Causal Web">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="5.5" cy="6" r="2.2" /><circle cx="18.5" cy="5" r="2.2" /><circle cx="12" cy="13" r="2.6" /><circle cx="5" cy="18.5" r="2.2" /><circle cx="19" cy="18" r="2.2" />
+          <path d="M7.4 7.1 10 11.2M16.3 6.3l-3 4.6M10.3 14.8 6.6 17.1M13.9 14.6l3.5 2.4" />
+        </svg>
+      </button>
+
+      <!-- 因果网络浮层 -->
+      <div id="network-overlay" class="network-overlay" hidden role="dialog" aria-label="二维因果网络视图">
+        <div class="network-head">
+          <div class="network-title">因果网络 · Causal Web<span class="network-sub">与地球共享数据与状态 · 双击节点前后探索</span></div>
+          <button id="network-open-globe" class="network-open" type="button" hidden>在地球上打开 · Open on globe</button>
+          <button id="network-close" class="network-close" type="button" aria-label="关闭因果网络视图">×</button>
+        </div>
+        <div class="network-stage"><canvas id="network-canvas"></canvas></div>
+        <div class="network-legend">
+          <span class="network-legend-title">关系 · Links</span>
+          <span class="legend-item"><i style="background:#22d3ee"></i>直接因果</span>
+          <span class="legend-item"><i style="background:#a78bfa"></i>间接影响</span>
+          <span class="legend-item"><i style="background:#f59e0b"></i>背景条件</span>
+          <span class="legend-item"><i style="background:#34d399"></i>延续发展</span>
+          <span class="legend-item"><i style="background:#f472b6"></i>回应反应</span>
+          <span class="legend-item"><i style="background:#94a3b8"></i>历史关联</span>
+        </div>
+      </div>
+
       <!-- 大洲快速定位 -->
       <nav id="continent-nav" class="continent-nav" aria-label="大洲快速定位">
         <button type="button" data-continent="north">正北</button>

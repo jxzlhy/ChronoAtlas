@@ -23,8 +23,9 @@ src/
 └── ui/
     ├── timeline.ts         # 拖动/自动播放/窗口/键盘/密度条(点击跳年)/年代提示
     ├── search.ts           # 中英模糊搜索（事件+人物）
-    ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips(含关系类型 tooltip)/参考资料外链
-    ├── snapshot.ts         # "世界快照"面板：时代分期/类型筛选 chips/大洲概览 chips(飞行+过滤)/事件列表
+    ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips(含关系类型 tooltip)/参考资料外链/弧线图例
+    ├── snapshot.ts         # "世界快照"面板：时代分期/类型筛选 chips/大洲概览 chips(飞行+过滤)/排序/同时代对比
+    ├── network.ts          # 二维因果网络：力导向布局/平移缩放/节点拖拽/选中联动 store（共享数据）
     ├── continents.ts       # 大洲 ghost 按钮
     └── legend.ts           # 分类图例 + 热区模式开关
 scripts/
@@ -46,7 +47,7 @@ scripts/
 
 - **DOM id 契约**：`#scene-container #loading #webgl-error #search-input #search-clear #search-results #random-btn #continent-nav #event-card #legend #year-range #play-btn #year-readout #era-readout #timeline-density #window-select #slice-toggle #active-count #slice-panel #slice-year #snapshot-era #snapshot-blurb #snapshot-types #snapshot-continents #slice-list`。
 - **URL hash 契约**：`#y=<年>&ev=<id>`；启动恢复（main.ts）+ replaceState 写回。
-- **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, hotspotsCount, store, events, links }`。
+- **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, hotspotsCount, perf, store, events, links }` + `__chronoNetwork = { open, nodes, links, nodePos }`。
 - **拾取**：pointer 位移 ≤8px 判点击；空白点击取消选中。
 - **数据完整性**：任何数据改动后跑 `npm run validate:data`（重复 ID/悬空引用/双语/来源/年代/生卒冲突 + 数据画像）。
 - **来源纪律**：sourceIds 只指向 sources.ts 中已人工验证 URL 的条目；`review: 'reviewed'` 必须以已验证来源或复核为前提，缺省 = 待核实。

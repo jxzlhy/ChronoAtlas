@@ -1185,6 +1185,147 @@ body.ready .continent-nav {
   text-align: center;
 }
 
+/* ---------- 因果网络 ---------- */
+
+/* 开关按钮：右上角与随机发现同列 */
+.network-toggle {
+  position: absolute;
+  top: 18px;
+  right: 64px;
+  z-index: 30;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.network-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+.network-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
+.network-toggle.is-open {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
+/* 浮层：位于搜索/时间轴之上、加载层之下 */
+.network-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  background: rgba(4, 6, 14, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.network-overlay[hidden] {
+  display: none;
+}
+
+.network-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.network-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.network-sub {
+  margin-left: 10px;
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.network-open {
+  padding: 5px 13px;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.network-open:hover {
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.network-close {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.network-close:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.network-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.network-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.network-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.network-legend-title {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
 /* ---------- 时间轴 ---------- */
 
 .timeline-wrap {
@@ -1440,6 +1581,22 @@ body.ready .timeline-wrap {
   .snapshot-view,
   .speed-label {
     display: none;
+  }
+
+  /* 因果网络开关随机发现按钮下方，浮层头部收敛 */
+  .network-toggle {
+    top: 62px;
+    right: 18px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .network-sub {
+    display: none;
+  }
+
+  .network-title {
+    font-size: 12.5px;
   }
 
   .slice-list {
