@@ -39,7 +39,7 @@ const KIND_ZH: Record<string, { zh: string; en: string }> = {
  * 与 3D 地球共享同一套数据与 store（selectedId 双向同步），不维护第二套关系数据。
  * 力导向布局只计算一次（数据集静态）；支持平移/缩放/节点拖拽/悬停/选中。
  */
-export function initNetwork(): void {
+export function initNetwork(onPause?: () => void, onResume?: () => void): void {
   const toggle = document.getElementById('network-toggle') as HTMLButtonElement
   const overlay = document.getElementById('network-overlay') as HTMLElement
   const canvas = document.getElementById('network-canvas') as HTMLCanvasElement
@@ -376,9 +376,12 @@ export function initNetwork(): void {
     toggle.classList.toggle('is-open', v)
     hideLinkInfo()
     if (v) {
+      onPause?.() // 浮层完全遮挡地球，暂停 3D 渲染循环省电
       resize()
       dirty = true
       requestFrame()
+    } else {
+      onResume?.()
     }
   }
 

@@ -140,6 +140,10 @@ function boot(): void {
   // ---- 人物档案卡（人物作为独立探索入口）----
   initPersonCard(goToEvent)
 
+  // 网络浮层打开时暂停地球渲染循环（浮层全遮挡，省电）
+  const pauseRender = (): void => globe.renderer.setAnimationLoop(null)
+  const resumeRender = (): void => globe.renderer.setAnimationLoop(renderLoop)
+
   // ---- 随机发现（尊重当前时间窗口与快照筛选）----
   ;(document.getElementById('random-btn') as HTMLButtonElement).addEventListener('click', () => {
     const s = appStore.getState()
@@ -152,7 +156,7 @@ function boot(): void {
 
   initTimeline()
   initLegend()
-  initNetwork()
+  initNetwork(pauseRender, resumeRender)
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数
   initSnapshot(goToEvent, (key) => {
     const c = CONTINENTS[key]
