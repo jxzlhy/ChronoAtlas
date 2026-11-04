@@ -4,7 +4,7 @@ import { Globe } from './scene/Globe'
 import { EventPillars } from './scene/EventPillars'
 import { CameraRig } from './scene/CameraRig'
 import { LinkArcs } from './scene/LinkArcs'
-import { appStore, isActive, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
+import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
@@ -126,10 +126,10 @@ function boot(): void {
     goToEvent,
   )
 
-  // ---- 随机发现 ----
+  // ---- 随机发现（尊重当前时间窗口与快照筛选）----
   ;(document.getElementById('random-btn') as HTMLButtonElement).addEventListener('click', () => {
     const s = appStore.getState()
-    const pool = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize))
+    const pool = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize) && matchesFilters(ev, s))
     const source = pool.length > 0 ? pool : EVENTS
     const ev = source[Math.floor(Math.random() * source.length)]
     s.select(ev.id)

@@ -867,6 +867,42 @@ body.ready .continent-nav {
   padding-bottom: 4px;
 }
 
+.snapshot-sort {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 16px 6px;
+}
+
+.snap-sort-label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-right: 3px;
+}
+
+.snap-sort-btn {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.snap-sort-btn:hover {
+  color: var(--text);
+  background: rgba(148, 180, 255, 0.08);
+}
+
+.snap-sort-btn.is-active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
 .snap-chip {
   display: inline-flex;
   align-items: center;
@@ -1227,11 +1263,13 @@ body.ready .timeline-wrap {
     display: none;
   }
 
-  /* 快照面板小屏收敛：年代/提示让位于列表 */
+  /* 快照面板小屏收敛：年代/提示/排序/速度让位于列表 */
   .era-readout,
   .slice-head-era,
   .slice-head-hint,
-  .snapshot-blurb {
+  .snapshot-blurb,
+  .snapshot-sort,
+  .speed-label {
     display: none;
   }
 

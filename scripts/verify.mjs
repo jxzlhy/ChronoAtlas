@@ -12,7 +12,11 @@ const outDir = resolve(process.argv.includes('--out') ? process.argv[process.arg
 mkdirSync(outDir, { recursive: true })
 
 const errors = []
+const envWarnings = []
 const logs = []
+
+// 沙箱代理对 CDN 的拦截属环境抖动（应用已设计降级），与应用错误区分开
+const ENV_NET_RE = /ERR_TUNNEL_CONNECTION_FAILED|ERR_INTERNET_DISCONNECTED|ERR_NAME_NOT_RESOLVED|ERR_PROXY/
 
 // 服务器自愈：dev server 不在时自动拉起（脱离进程组，不随脚本退出）
 async function ensureServer(url) {
@@ -62,7 +66,10 @@ const page = await browser.newPage()
 page.on('console', (msg) => {
   const entry = `[${msg.type()}] ${msg.text()}`
   logs.push(entry)
-  if (msg.type() === 'error') errors.push(entry)
+  if (msg.type() === 'error') {
+    if (ENV_NET_RE.test(msg.text())) envWarnings.push(entry)
+    else errors.push(entry)
+  }
 })
 page.on('pageerror', (err) => errors.push(`[pageerror] ${err.message}`))
 
@@ -170,17 +177,36 @@ const warFilter = await page.evaluate(() => {
 console.log('   类型筛选(战争):', JSON.stringify(warFilter), warFilter.allWar && warFilter.rows > 0 ? '✓' : '✗')
 await shot('09b-snapshot-filter')
 await page.click('#snapshot-types [data-type="all"]')
-// 大洲筛选：点击"亚洲"，行应只剩亚洲事件（并用 data 属性校验飞行回调在 main 中装配）
+// 大洲筛选：点击"亚洲"，行应只剩亚洲事件，且全局筛选写入 store（联动地球）
 await page.click('#snapshot-continents [data-continent="asia"]')
 await new Promise((r) => setTimeout(r, 400))
 const contInfo = await page.evaluate(() => {
   const rows = [...document.querySelectorAll('#slice-list .slice-row')]
   const ids = rows.map((r) => r.getAttribute('data-id'))
   const events = window.__chrono.events
-  return { rows: rows.length, allAsia: ids.every((id) => events.find((e) => e.id === id)?.continent === 'asia') }
+  const st = window.__chrono.store.getState()
+  return {
+    rows: rows.length,
+    allAsia: ids.every((id) => events.find((e) => e.id === id)?.continent === 'asia'),
+    storeFilter: st.continentFilter,
+  }
 })
-console.log('   大洲筛选(亚洲):', JSON.stringify(contInfo), contInfo.allAsia && contInfo.rows > 0 ? '✓' : '✗')
+console.log('   大洲筛选(亚洲):', JSON.stringify(contInfo), contInfo.allAsia && contInfo.storeFilter === 'asia' ? '✓' : '✗')
 await shot('09c-snapshot-continent')
+// 排序切换：按时间排序后首行应为最早开始的活跃事件
+await page.click('#snapshot-sort [data-sort="time"]')
+await new Promise((r) => setTimeout(r, 300))
+const sortInfo = await page.evaluate(() => {
+  const ids = [...document.querySelectorAll('#slice-list .slice-row')].map((r) => r.getAttribute('data-id'))
+  const st = window.__chrono.store.getState()
+  const events = window.__chrono.events
+  const active = events
+    .filter((e) => e.start - st.windowSize <= st.year && st.year <= e.end + st.windowSize && e.continent === st.continentFilter)
+    .sort((a, b) => a.start - b.start)
+  return { first: ids[0], expect: active[0]?.id ?? null }
+})
+console.log('   排序(时间):', JSON.stringify(sortInfo), sortInfo.first === sortInfo.expect ? '✓' : '✗')
+await page.click('#snapshot-sort [data-sort="importance"]')
 // 复点取消筛选，行点击定位
 await page.click('#snapshot-continents [data-continent="asia"]')
 await new Promise((r) => setTimeout(r, 300))
@@ -190,6 +216,12 @@ if (sliceInfo.rows > 0) {
   const sel = await page.evaluate(() => window.__chrono.store.getState().selectedId)
   console.log('   面板选中:', sel, sel === sliceInfo.first ? '✓' : '✗ 与首行不一致')
 }
+// 播放速度：选择 5× 写入 store
+await page.select('#speed-select', '5')
+await new Promise((r) => setTimeout(r, 200))
+const speedVal = await page.evaluate(() => window.__chrono.store.getState().playSpeed)
+console.log('   播放速度:', speedVal, speedVal === 5 ? '✓' : '✗')
+await page.select('#speed-select', '1')
 // 关闭面板
 await page.click('#slice-toggle')
 await new Promise((r) => setTimeout(r, 400))
@@ -276,10 +308,10 @@ await new Promise((r) => setTimeout(r, 1200))
 await shot('17-mobile')
 
 // 汇总
-const report = { errors, logsCount: logs.length, logsTail: logs.slice(-12) }
+const report = { errors, envWarnings, logsCount: logs.length, logsTail: logs.slice(-12) }
 writeFileSync(resolve(outDir, 'report.json'), JSON.stringify(report, null, 2))
 console.log('\n=== 验证报告 ===')
-console.log('控制台错误数:', errors.length)
+console.log('控制台错误数:', errors.length, '· 环境网络警告:', envWarnings.length)
 for (const e of errors.slice(0, 10)) console.log('  ', e)
 
 await browser.close()

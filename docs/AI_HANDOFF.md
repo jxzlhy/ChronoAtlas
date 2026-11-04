@@ -2,7 +2,7 @@
 
 ## 30 秒了解
 
-ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。17 步无头验证 + 0 控制台错误。当前 **V0.11.0**：V1.0「THE LIVING HISTORY」GOAL MODE（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md）；M1 数据基建 ✅，M2 世界快照 I ✅（时代分期/类型与洲筛选 chips/密度条/年代提示），下一站 M2 II（同时代对比/排序切换/筛选联动地球，见 ROADMAP）。
+ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。20+ 步无头验证 + 0 控制台错误（沙箱 CDN 抖动归为环境警告）。当前 **V0.12.0**：V1.0「THE LIVING HISTORY」GOAL MODE（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md）；M1 数据基建 ✅，M2 世界快照 I+II ✅（时代分期/类型与洲筛选 chips 联动地球/排序切换/密度条/年代提示/播放速度），下一站 M2 III 同时代对比（见 ROADMAP）。
 
 ## ⚠️ 工作区警示（远端备份已配置：github.com/jxzlhy/ChronoAtlas）
 

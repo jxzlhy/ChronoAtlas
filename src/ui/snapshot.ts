@@ -1,4 +1,4 @@
-import { appStore, isActive, type HistoryEvent } from '../store'
+import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { eraOf } from '../data/eras'
 import type { ContinentKey, EventType } from '../data/model'
@@ -8,9 +8,20 @@ import type { ContinentKey, EventType } from '../data/model'
  * - 头部：公元年份 + 时代名 + 一句话时代背景
  * - 年份概览：类型统计 chips（可筛选）
  * - 大洲概览：有活跃事件的各大洲 chips（点击飞往 + 筛选）
- * - 事件列表：按重要度/时间排序，点击定位，悬停联动地球
- * 筛选为面板局部 UI 状态（不进全局 store、不进 URL）。
+ * - 排序切换：重要度 / 时间 / 地理 / 类型
+ * - 事件列表：点击定位，悬停联动地球
+ * 类型/大洲筛选写入全局 store（联动地球棱柱明暗与随机发现）；
+ * 排序为面板局部 UI 状态。二者均不进 URL。
  */
+
+type SortBy = 'importance' | 'time' | 'geo' | 'type'
+
+const SORT_LABEL: Record<SortBy, { zh: string; en: string }> = {
+  importance: { zh: '重要度', en: 'Importance' },
+  time: { zh: '时间', en: 'Time' },
+  geo: { zh: '地理', en: 'Geography' },
+  type: { zh: '类型', en: 'Type' },
+}
 
 const DATA_CONTINENTS: ContinentKey[] = [
   'asia',
@@ -41,11 +52,11 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   const blurbEl = document.getElementById('snapshot-blurb') as HTMLElement
   const typesEl = document.getElementById('snapshot-types') as HTMLElement
   const contEl = document.getElementById('snapshot-continents') as HTMLElement
+  const sortEl = document.getElementById('snapshot-sort') as HTMLElement
 
   let open = false
   let signature = ''
-  let typeFilter: EventType | null = null
-  let contFilter: ContinentKey | null = null
+  let sortBy: SortBy = 'importance'
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -62,7 +73,19 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       ? { zh: '全部', en: 'All', color: 'var(--accent)' }
       : EVENT_TYPES[t]
 
-  const renderTypes = (counts: Map<EventType | null, number>): void => {
+  const renderSort = (): void => {
+    const keys: SortBy[] = ['importance', 'time', 'geo', 'type']
+    sortEl.innerHTML =
+      `<span class="snap-sort-label">排序 · Sort</span>` +
+      keys
+        .map(
+          (k) =>
+            `<button class="snap-sort-btn${sortBy === k ? ' is-active' : ''}" type="button" data-sort="${k}" title="${SORT_LABEL[k].en}">${SORT_LABEL[k].zh}</button>`,
+        )
+        .join('')
+  }
+
+  const renderTypes = (counts: Map<EventType | null, number>, typeFilter: EventType | null): void => {
     const keys: (EventType | null)[] = [null, 'politics', 'war', 'science', 'economy', 'ideas', 'exploration', 'society']
     typesEl.innerHTML = keys
       .map((k) => {
@@ -79,7 +102,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       .join('')
   }
 
-  const renderContinents = (counts: Map<ContinentKey, number>): void => {
+  const renderContinents = (counts: Map<ContinentKey, number>, contFilter: ContinentKey | null): void => {
     const chips = DATA_CONTINENTS.map((c) => {
       const n = counts.get(c) ?? 0
       const label = CONTINENT_LABEL[c]
@@ -94,10 +117,29 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     contEl.innerHTML = chips
   }
 
+  const sortEvents = (rows: HistoryEvent[]): HistoryEvent[] => {
+    const rows2 = [...rows]
+    if (sortBy === 'importance') {
+      rows2.sort((a, b) => b.importance - a.importance || a.start - b.start)
+    } else if (sortBy === 'time') {
+      rows2.sort((a, b) => a.start - b.start || b.importance - a.importance)
+    } else if (sortBy === 'geo') {
+      rows2.sort(
+        (a, b) =>
+          DATA_CONTINENTS.indexOf(a.continent) - DATA_CONTINENTS.indexOf(b.continent) ||
+          a.start - b.start,
+      )
+    } else {
+      const order: EventType[] = ['politics', 'war', 'science', 'economy', 'ideas', 'exploration', 'society']
+      rows2.sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type) || a.start - b.start)
+    }
+    return rows2
+  }
+
   const render = (force = false): void => {
     const s = appStore.getState()
-    // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选
-    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${typeFilter}|${contFilter}`
+    // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选/排序
+    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}`
     if (!force && next === signature) return
     signature = next
 
@@ -110,11 +152,11 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
 
     const active = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize))
 
-    // 类型统计：null = 全部
+    // 类型统计（未筛选口径）；null = 全部
     const typeCounts = new Map<EventType | null, number>()
     typeCounts.set(null, active.length)
     for (const ev of active) typeCounts.set(ev.type, (typeCounts.get(ev.type) ?? 0) + 1)
-    renderTypes(typeCounts)
+    renderTypes(typeCounts, s.typeFilter)
 
     // 大洲统计（仅六大洲；极地/南极不入 chips）
     const contCounts = new Map<ContinentKey, number>()
@@ -123,11 +165,10 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
         contCounts.set(ev.continent, (contCounts.get(ev.continent) ?? 0) + 1)
       }
     }
-    renderContinents(contCounts)
+    renderContinents(contCounts, s.continentFilter)
+    renderSort()
 
-    const filtered = active
-      .filter((ev) => (typeFilter === null || ev.type === typeFilter) && (contFilter === null || ev.continent === contFilter))
-      .sort((a, b) => b.importance - a.importance || a.start - b.start)
+    const filtered = sortEvents(active.filter((ev) => matchesFilters(ev, s)))
     countEl.textContent = String(active.length)
 
     if (filtered.length === 0) {
@@ -158,20 +199,28 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     const chip = (e.target as HTMLElement).closest<HTMLElement>('[data-type]')
     if (!chip?.dataset.type) return
     const key = chip.dataset.type === 'all' ? null : (chip.dataset.type as EventType)
-    typeFilter = typeFilter === key ? null : key
-    render(true)
+    const s = appStore.getState()
+    // 写入全局 store：地球棱柱明暗与随机发现随之联动
+    s.setTypeFilter(s.typeFilter === key ? null : key)
   })
 
   contEl.addEventListener('click', (e) => {
     const chip = (e.target as HTMLElement).closest<HTMLElement>('[data-continent]')
     if (!chip?.dataset.continent) return
     const key = chip.dataset.continent as ContinentKey
-    if (contFilter === key) {
-      contFilter = null
+    const s = appStore.getState()
+    if (s.continentFilter === key) {
+      s.setContinentFilter(null)
     } else {
-      contFilter = key
+      s.setContinentFilter(key)
       onFlyContinent(key) // 地球镜头飞往该大洲（复用大洲导航参数）
     }
+  })
+
+  sortEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-sort]')
+    if (!btn?.dataset.sort) return
+    sortBy = btn.dataset.sort as SortBy
     render(true)
   })
 

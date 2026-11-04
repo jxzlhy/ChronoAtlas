@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { appStore, isActive, type HistoryEvent } from '../store'
+import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { latLonToVec3 } from './latLon'
 
@@ -75,11 +75,12 @@ export class EventPillars {
   }
 
   private recalcTargets(): void {
-    const { year, windowSize, selectedId, hoverId } = appStore.getState()
+    const s = appStore.getState()
     for (const e of this.entries) {
-      const active = isActive(e.ev, year, windowSize)
-      const selected = selectedId === e.ev.id
-      const hovered = hoverId === e.ev.id
+      // 年份窗口 + 快照筛选（类型/大洲）共同决定棱柱是否升起
+      const active = isActive(e.ev, s.year, s.windowSize) && matchesFilters(e.ev, s)
+      const selected = s.selectedId === e.ev.id
+      const hovered = s.hoverId === e.ev.id
       this.targets.set(e.ev.id, {
         pillarScale: active ? PILLAR_HEIGHT[e.ev.importance - 1] : 0.0001,
         pillarOpacity: active ? (selected ? 0.95 : hovered ? 0.8 : 0.58) : 0,

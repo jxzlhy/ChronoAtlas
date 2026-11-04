@@ -40,10 +40,15 @@ export function initTimeline(): void {
   const yearText = document.querySelector('#year-readout b') as HTMLElement
   const eraText = document.getElementById('era-readout') as HTMLElement
   const windowSelect = document.getElementById('window-select') as HTMLSelectElement
+  const speedSelect = document.getElementById('speed-select') as HTMLSelectElement
 
   range.min = String(YEAR_MIN)
   range.max = String(YEAR_MAX)
   buildDensity()
+
+  speedSelect.addEventListener('change', () => {
+    appStore.getState().setPlaySpeed(Number(speedSelect.value) as 1 | 2 | 5)
+  })
 
   range.addEventListener('input', () => {
     appStore.getState().setYear(Number(range.value))
@@ -60,11 +65,11 @@ export function initTimeline(): void {
     appStore.getState().setWindowSize(Number(windowSelect.value))
   })
 
-  // 自动播放：约每 110ms 推进一年
+  // 自动播放：1× 约 110ms 推进一年，2×/5× 按倍率加速
   let last = 0
   const step = (now: number): void => {
     const s = appStore.getState()
-    if (s.playing && now - last >= 110) {
+    if (s.playing && now - last >= 110 / s.playSpeed) {
       last = now
       s.setYear(s.year >= YEAR_MAX ? YEAR_MIN : s.year + 1)
     } else if (!s.playing) {
@@ -92,12 +97,13 @@ export function initTimeline(): void {
     appStore.getState().setYear(next)
   })
 
-  const sync = (s: { year: number; playing: boolean; windowSize: number }): void => {
+  const sync = (s: { year: number; playing: boolean; windowSize: number; playSpeed: number }): void => {
     yearText.textContent = String(s.year)
     const era = eraOf(s.year)
     eraText.textContent = `· ${era.name.zh}`
     eraText.title = era.name.en
     if (Number(range.value) !== s.year) range.value = String(s.year)
+    if (Number(speedSelect.value) !== s.playSpeed) speedSelect.value = String(s.playSpeed)
     playBtn.classList.toggle('is-playing', s.playing)
     playBtn.setAttribute('aria-label', s.playing ? '暂停时间演进' : '播放时间演进')
   }
