@@ -1,4 +1,4 @@
-import type { Bilingual, EventType, HistoryEvent } from '../store'
+import type { Bilingual, EventType, HistoryEvent } from './model'
 
 /** 事件类型的展示名与主题色 */
 export const EVENT_TYPES: Record<EventType, { zh: string; en: string; color: string }> = {
@@ -25,13 +25,17 @@ export const CONTINENTS: Record<string, Bilingual & { lat: number; lon: number; 
 
 /**
  * 精选历史事件数据集（公元 1750–1911）。
- * 字段：双语标题 / 起止年份 / 坐标 / 双语地点 / 类型 / 重要度(1-3) / 双语描述。
+ * 字段见 model.ts#HistoryEvent：双语标题 / 起止年份 / 坐标 / 大洲 / 双语地点 /
+ * 类型 / 重要度(1-3) / 双语描述；可选精度、来源与审核状态。
+ * - sourceIds 仅挂接已人工验证 URL 的资料（sources.ts）；
+ * - review: 'reviewed' 表示已挂来源并复核；缺省 = 待核实，不伪装完成。
  */
 export const EVENTS: HistoryEvent[] = [
   {
     id: 'encyclopedie',
     title: { zh: '《百科全书》编纂出版', en: 'The Encyclopédie' },
     start: 1751, end: 1772, lat: 48.86, lon: 2.35,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'ideas', importance: 2,
     desc: {
@@ -43,8 +47,12 @@ export const EVENTS: HistoryEvent[] = [
     id: 'seven-years-war',
     title: { zh: '七年战争', en: 'The Seven Years\' War' },
     start: 1756, end: 1763, lat: 50.8, lon: 8.6,
+    continent: 'europe',
+    geoPrecision: 'multi',
     place: { zh: '欧洲 · 中欧', en: 'Central Europe' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-seven-years-war'],
+    review: 'reviewed',
     desc: {
       zh: '英普对阵法奥俄的全球性战争，战火波及欧洲、北美与印度，战后英国一跃成为海上殖民霸主。',
       en: 'A truly global conflict between Britain–Prussia and France–Austria–Russia, fought across Europe, North America and India. Britain emerged as the dominant colonial sea power.',
@@ -54,8 +62,13 @@ export const EVENTS: HistoryEvent[] = [
     id: 'industrial-revolution',
     title: { zh: '工业革命', en: 'The Industrial Revolution' },
     start: 1760, end: 1840, lat: 52.9, lon: -1.9,
+    continent: 'europe',
+    geoPrecision: 'region',
+    timePrecision: 'circa',
     place: { zh: '英国 · 伯明翰一带', en: 'Birmingham, Britain' },
     type: 'economy', importance: 3,
+    sourceIds: ['brit-industrial-revolution'],
+    review: 'reviewed',
     desc: {
       zh: '从棉纺织业开始的机器生产变革由英国蔓延至欧陆与北美，工厂、铁路与城市化彻底重塑了人类的生产与生活方式。',
       en: 'Beginning in British cotton manufacturing, mechanized production spread across Europe and North America. Factories, railways and urbanization permanently reshaped human life.',
@@ -65,6 +78,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'social-contract',
     title: { zh: '《社会契约论》发表', en: 'The Social Contract' },
     start: 1762, end: 1762, lat: 46.2, lon: 6.14,
+    continent: 'europe',
     place: { zh: '日内瓦 / 阿姆斯特丹', en: 'Geneva / Amsterdam' },
     type: 'ideas', importance: 2,
     desc: {
@@ -76,8 +90,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'watt-steam-engine',
     title: { zh: '瓦特改良蒸汽机', en: 'Watt\'s Improved Steam Engine' },
     start: 1769, end: 1785, lat: 55.86, lon: -4.25,
+    continent: 'europe',
     place: { zh: '英国 · 格拉斯哥', en: 'Glasgow, Scotland' },
     type: 'science', importance: 3,
+    sourceIds: ['brit-james-watt'],
+    review: 'reviewed',
     desc: {
       zh: '瓦特为蒸汽机加装分离冷凝器，热效率大幅提升，人类第一次拥有了可随处部署的强大动力源。',
       en: 'By adding a separate condenser, James Watt dramatically improved steam efficiency, giving humanity its first universally deployable power source.',
@@ -87,6 +104,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'cooks-voyages',
     title: { zh: '库克船长太平洋远航', en: 'Cook\'s Pacific Voyages' },
     start: 1768, end: 1779, lat: -33.87, lon: 151.2,
+    continent: 'oceania',
+    geoPrecision: 'multi',
     place: { zh: '太平洋 · 悉尼至夏威夷', en: 'Pacific Ocean' },
     type: 'exploration', importance: 2,
     desc: {
@@ -98,6 +117,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'poland-partitions',
     title: { zh: '瓜分波兰', en: 'The Partitions of Poland' },
     start: 1772, end: 1795, lat: 52.23, lon: 21.01,
+    continent: 'europe',
     place: { zh: '波兰 · 华沙', en: 'Warsaw, Poland' },
     type: 'politics', importance: 2,
     desc: {
@@ -109,6 +129,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'pugachev-rebellion',
     title: { zh: '普加乔夫起义', en: 'Pugachev\'s Rebellion' },
     start: 1773, end: 1775, lat: 51.53, lon: 46.03,
+    continent: 'europe',
     place: { zh: '俄罗斯 · 伏尔加河流域', en: 'Volga Region, Russia' },
     type: 'war', importance: 1,
     desc: {
@@ -120,8 +141,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'us-independence',
     title: { zh: '美国独立战争', en: 'American Revolutionary War' },
     start: 1775, end: 1783, lat: 39.95, lon: -75.16,
+    continent: 'north-america',
     place: { zh: '北美 · 费城', en: 'Philadelphia, North America' },
     type: 'politics', importance: 3,
+    sourceIds: ['brit-declaration-independence'],
+    review: 'reviewed',
     desc: {
       zh: '十三殖民地发表《独立宣言》并击败英国军队，建立美利坚合众国，成为近代第一个大型共和制国家。',
       en: 'Thirteen colonies declared independence, defeated Britain and founded the United States — the first large modern republic.',
@@ -131,8 +155,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'wealth-of-nations',
     title: { zh: '《国富论》出版', en: 'The Wealth of Nations' },
     start: 1776, end: 1776, lat: 56.07, lon: -3.3,
+    continent: 'europe',
     place: { zh: '苏格兰 · 柯科迪', en: 'Kirkcaldy, Scotland' },
     type: 'ideas', importance: 3,
+    sourceIds: ['brit-wealth-of-nations'],
+    review: 'reviewed',
     desc: {
       zh: '亚当·斯密阐述分工、市场与"看不见的手"，现代经济学由此诞生。',
       en: 'Adam Smith described division of labour, markets and the "invisible hand", founding modern economics.',
@@ -142,6 +169,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'first-fleet',
     title: { zh: '第一舰队抵达澳大利亚', en: 'The First Fleet reaches Australia' },
     start: 1788, end: 1788, lat: -33.87, lon: 151.21,
+    continent: 'oceania',
     place: { zh: '澳大利亚 · 悉尼', en: 'Sydney, Australia' },
     type: 'exploration', importance: 2,
     desc: {
@@ -153,8 +181,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'french-revolution',
     title: { zh: '法国大革命', en: 'The French Revolution' },
     start: 1789, end: 1799, lat: 48.86, lon: 2.35,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'politics', importance: 3,
+    sourceIds: ['brit-french-revolution'],
+    review: 'reviewed',
     desc: {
       zh: '攻占巴士底狱、《人权宣言》与共和国的建立震撼整个欧洲，"自由、平等、博爱"从此成为现代政治的通用语。',
       en: 'The storming of the Bastille, the Declaration of the Rights of Man and the fall of the monarchy shook Europe and made "liberty, equality, fraternity" the language of modern politics.',
@@ -164,6 +195,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'haitian-revolution',
     title: { zh: '海地革命', en: 'The Haitian Revolution' },
     start: 1791, end: 1804, lat: 18.54, lon: -72.34,
+    continent: 'north-america',
     place: { zh: '海地 · 太子港', en: 'Port-au-Prince, Haiti' },
     type: 'politics', importance: 2,
     desc: {
@@ -175,8 +207,12 @@ export const EVENTS: HistoryEvent[] = [
     id: 'napoleonic-wars',
     title: { zh: '拿破仑战争', en: 'The Napoleonic Wars' },
     start: 1803, end: 1815, lat: 48.85, lon: 2.3,
+    continent: 'europe',
+    geoPrecision: 'multi',
     place: { zh: '欧洲 · 巴黎', en: 'Paris, Europe' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-napoleonic-wars'],
+    review: 'reviewed',
     desc: {
       zh: '拿破仑率法军横扫欧陆，从特拉法加到滑铁卢，十年战火既输出革命法典，也埋下民族主义的种子。',
       en: 'From Trafalgar to Waterloo, Napoleon\'s campaigns redrew Europe, spreading revolutionary law while sowing the seeds of nationalism.',
@@ -186,6 +222,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'lewis-clark',
     title: { zh: '刘易斯与克拉克远征', en: 'Lewis and Clark Expedition' },
     start: 1804, end: 1806, lat: 38.63, lon: -90.2,
+    continent: 'north-america',
     place: { zh: '北美 · 圣路易斯', en: 'St. Louis, USA' },
     type: 'exploration', importance: 1,
     desc: {
@@ -197,6 +234,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'muhammad-ali-reforms',
     title: { zh: '穆罕默德·阿里统治下的埃及改革', en: 'Egypt Reforms under Muhammad Ali' },
     start: 1805, end: 1848, lat: 30.04, lon: 31.24,
+    continent: 'africa',
     place: { zh: '埃及 · 开罗', en: 'Cairo, Egypt' },
     type: 'politics', importance: 2,
     desc: {
@@ -208,6 +246,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'latin-american-independence',
     title: { zh: '拉丁美洲独立战争', en: 'Spanish American Wars of Independence' },
     start: 1810, end: 1825, lat: 10.49, lon: -66.88,
+    continent: 'south-america',
+    geoPrecision: 'multi',
     place: { zh: '委内瑞拉 · 加拉加斯', en: 'Caracas, Venezuela' },
     type: 'politics', importance: 2,
     desc: {
@@ -219,6 +259,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'congress-vienna',
     title: { zh: '维也纳会议', en: 'The Congress of Vienna' },
     start: 1814, end: 1815, lat: 48.2, lon: 16.37,
+    continent: 'europe',
     place: { zh: '奥地利 · 维也纳', en: 'Vienna, Austria' },
     type: 'politics', importance: 2,
     desc: {
@@ -230,6 +271,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'stockton-darlington',
     title: { zh: '世界首条公共蒸汽铁路', en: 'First Public Steam Railway' },
     start: 1825, end: 1825, lat: 54.57, lon: -1.31,
+    continent: 'europe',
     place: { zh: '英国 · 斯托克顿', en: 'Stockton, England' },
     type: 'science', importance: 2,
     desc: {
@@ -241,6 +283,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'monroe-doctrine',
     title: { zh: '门罗主义', en: 'The Monroe Doctrine' },
     start: 1823, end: 1823, lat: 38.9, lon: -77.04,
+    continent: 'north-america',
     place: { zh: '美国 · 华盛顿', en: 'Washington, USA' },
     type: 'politics', importance: 1,
     desc: {
@@ -252,6 +295,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'slavery-abolition-act',
     title: { zh: '英国《废奴法案》', en: 'Slavery Abolition Act 1833' },
     start: 1833, end: 1838, lat: 51.5, lon: -0.12,
+    continent: 'europe',
     place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'society', importance: 2,
     desc: {
@@ -263,8 +307,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'first-opium-war',
     title: { zh: '第一次鸦片战争', en: 'The First Opium War' },
     start: 1839, end: 1842, lat: 23.13, lon: 113.26,
+    continent: 'asia',
     place: { zh: '中国 · 广州', en: 'Guangzhou, China' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-opium-wars'],
+    review: 'reviewed',
     desc: {
       zh: '虎门销烟引来的英国远征军以坚船利炮敲开清朝国门，《南京条约》割让香港，中国近代史自此揭开屈辱与变革交织的一页。',
       en: 'Lin Zexu\'s destruction of opium at Humen triggered a British expedition; the Treaty of Nanjing ceded Hong Kong and opened China\'s "century of humiliation".',
@@ -274,6 +321,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'first-telegraph',
     title: { zh: '首条实用电磁电报线', en: 'First Practical Telegraph Line' },
     start: 1844, end: 1844, lat: 39.29, lon: -76.62,
+    continent: 'north-america',
     place: { zh: '美国 · 巴尔的摩', en: 'Baltimore, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -285,6 +333,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'irish-famine',
     title: { zh: '爱尔兰大饥荒', en: 'The Great Irish Famine' },
     start: 1845, end: 1852, lat: 53.35, lon: -6.26,
+    continent: 'europe',
     place: { zh: '爱尔兰 · 都柏林', en: 'Dublin, Ireland' },
     type: 'society', importance: 2,
     desc: {
@@ -296,6 +345,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'great-exhibition',
     title: { zh: '首届万国工业博览会', en: 'The Great Exhibition' },
     start: 1851, end: 1851, lat: 51.51, lon: -0.13,
+    continent: 'europe',
     place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'economy', importance: 2,
     desc: {
@@ -307,8 +357,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'communist-manifesto',
     title: { zh: '《共产党宣言》发表', en: 'The Communist Manifesto' },
     start: 1848, end: 1848, lat: 51.5, lon: -0.12,
+    continent: 'europe',
     place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'ideas', importance: 3,
+    sourceIds: ['brit-communist-manifesto'],
+    review: 'reviewed',
     desc: {
       zh: '马克思与恩格斯写下"一个幽灵，共产主义的幽灵，在欧洲游荡"，这份纲领深刻影响了此后一个多世纪的世界政治。',
       en: '"A spectre is haunting Europe" — Marx and Engels\' pamphlet became one of the most influential political texts of the following century.',
@@ -318,6 +371,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'spring-of-nations',
     title: { zh: '1848 年欧洲革命', en: 'The Revolutions of 1848' },
     start: 1848, end: 1849, lat: 48.21, lon: 16.37,
+    continent: 'europe',
+    geoPrecision: 'multi',
     place: { zh: '欧洲 · 维也纳', en: 'Vienna, Europe' },
     type: 'politics', importance: 2,
     desc: {
@@ -329,6 +384,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'crimean-war',
     title: { zh: '克里米亚战争', en: 'The Crimean War' },
     start: 1853, end: 1856, lat: 44.62, lon: 33.53,
+    continent: 'europe',
     place: { zh: '克里米亚 · 塞瓦斯托波尔', en: 'Sevastopol, Crimea' },
     type: 'war', importance: 2,
     desc: {
@@ -340,6 +396,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'perry-expedition',
     title: { zh: '黑船来航', en: 'Perry\'s Expedition to Japan' },
     start: 1853, end: 1854, lat: 35.45, lon: 139.75,
+    continent: 'asia',
     place: { zh: '日本 · 江户湾', en: 'Edo Bay, Japan' },
     type: 'politics', importance: 2,
     desc: {
@@ -351,6 +408,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'indian-rebellion',
     title: { zh: '印度民族大起义', en: 'The Indian Rebellion of 1857' },
     start: 1857, end: 1858, lat: 28.61, lon: 77.21,
+    continent: 'asia',
     place: { zh: '印度 · 德里', en: 'Delhi, India' },
     type: 'war', importance: 2,
     desc: {
@@ -362,8 +420,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'origin-of-species',
     title: { zh: '《物种起源》出版', en: 'On the Origin of Species' },
     start: 1859, end: 1859, lat: 51.5, lon: -0.12,
+    continent: 'europe',
     place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'science', importance: 3,
+    sourceIds: ['brit-origin-of-species'],
+    review: 'reviewed',
     desc: {
       zh: '达尔文以自然选择解释生命演化，"物竞天择"的思想重塑了生物学，也震荡了整个时代的世界观。',
       en: 'Darwin\'s theory of evolution by natural selection revolutionized biology and shook the worldview of an entire era.',
@@ -373,6 +434,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'italian-unification',
     title: { zh: '意大利统一', en: 'The Italian Unification' },
     start: 1861, end: 1871, lat: 41.9, lon: 12.5,
+    continent: 'europe',
     place: { zh: '意大利 · 罗马', en: 'Rome, Italy' },
     type: 'politics', importance: 2,
     desc: {
@@ -384,8 +446,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'us-civil-war',
     title: { zh: '美国内战', en: 'The American Civil War' },
     start: 1861, end: 1865, lat: 38.9, lon: -77.04,
+    continent: 'north-america',
     place: { zh: '美国 · 华盛顿', en: 'Washington, USA' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-american-civil-war'],
+    review: 'reviewed',
     desc: {
       zh: '南北战争以六十余万人的伤亡维系了联邦完整，《解放宣言》废除了奴隶制，美国由此走上工业化快车道。',
       en: 'The costliest war in American history preserved the Union and abolished slavery through the Emancipation Proclamation, clearing the way for the Gilded Age.',
@@ -395,6 +460,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'self-strengthening-movement',
     title: { zh: '洋务运动', en: 'The Self-Strengthening Movement' },
     start: 1861, end: 1895, lat: 31.23, lon: 121.47,
+    continent: 'asia',
     place: { zh: '中国 · 上海', en: 'Shanghai, China' },
     type: 'politics', importance: 2,
     desc: {
@@ -406,6 +472,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'red-cross-founding',
     title: { zh: '红十字国际委员会创立', en: 'Founding of the Red Cross' },
     start: 1863, end: 1863, lat: 46.2, lon: 6.14,
+    continent: 'europe',
     place: { zh: '瑞士 · 日内瓦', en: 'Geneva, Switzerland' },
     type: 'society', importance: 2,
     desc: {
@@ -417,6 +484,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'transatlantic-cable',
     title: { zh: '跨大西洋电报电缆', en: 'The Transatlantic Telegraph Cable' },
     start: 1866, end: 1866, lat: 47.93, lon: -53.96,
+    continent: 'north-america',
     place: { zh: '纽芬兰 · 心安港', en: 'Heart\'s Content, Newfoundland' },
     type: 'science', importance: 2,
     desc: {
@@ -428,6 +496,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'canadian-confederation',
     title: { zh: '加拿大联邦成立', en: 'The Canadian Confederation' },
     start: 1867, end: 1867, lat: 45.42, lon: -75.7,
+    continent: 'north-america',
     place: { zh: '加拿大 · 渥太华', en: 'Ottawa, Canada' },
     type: 'politics', importance: 1,
     desc: {
@@ -439,8 +508,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'meiji-restoration',
     title: { zh: '明治维新', en: 'The Meiji Restoration' },
     start: 1868, end: 1889, lat: 35.68, lon: 139.69,
+    continent: 'asia',
     place: { zh: '日本 · 东京', en: 'Tokyo, Japan' },
     type: 'politics', importance: 3,
+    sourceIds: ['brit-meiji-restoration'],
+    review: 'reviewed',
     desc: {
       zh: '明治政府"富国强兵、殖产兴业、文明开化"，短短一代人时间里完成了从封建幕藩体制到工业强国的转身。',
       en: 'Under the slogans "rich country, strong army", Japan industrialized with astonishing speed, transforming from feudal shogunate to modern power within a generation.',
@@ -450,6 +522,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'periodic-table',
     title: { zh: '门捷列夫元素周期表', en: 'The Periodic Table' },
     start: 1869, end: 1869, lat: 59.93, lon: 30.34,
+    continent: 'europe',
     place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'science', importance: 2,
     desc: {
@@ -461,8 +534,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'suez-canal',
     title: { zh: '苏伊士运河通航', en: 'The Suez Canal Opens' },
     start: 1869, end: 1869, lat: 30.7, lon: 32.34,
+    continent: 'africa',
     place: { zh: '埃及 · 苏伊士', en: 'Suez, Egypt' },
     type: 'economy', importance: 3,
+    sourceIds: ['brit-suez-canal'],
+    review: 'reviewed',
     desc: {
       zh: '历经十年开凿的运河沟通地中海与红海，欧亚航程缩短近万公里，全球贸易的血管被重新接驳。',
       en: 'Ten years of excavation joined the Mediterranean to the Red Sea, shortening the Europe–Asia voyage by thousands of kilometres and rewiring global trade.',
@@ -472,6 +548,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'franco-prussian-war',
     title: { zh: '普法战争', en: 'The Franco-Prussian War' },
     start: 1870, end: 1871, lat: 49.7, lon: 4.94,
+    continent: 'europe',
     place: { zh: '法国 · 色当', en: 'Sedan, France' },
     type: 'war', importance: 2,
     desc: {
@@ -483,6 +560,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'telephone',
     title: { zh: '电话的发明', en: 'The Invention of the Telephone' },
     start: 1876, end: 1876, lat: 42.36, lon: -71.06,
+    continent: 'north-america',
     place: { zh: '美国 · 波士顿', en: 'Boston, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -494,6 +572,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'light-bulb',
     title: { zh: '爱迪生白炽灯', en: 'Edison\'s Incandescent Lamp' },
     start: 1879, end: 1882, lat: 40.52, lon: -74.31,
+    continent: 'north-america',
     place: { zh: '美国 · 门洛帕克', en: 'Menlo Park, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -505,8 +584,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'berlin-conference',
     title: { zh: '柏林会议', en: 'The Berlin Conference' },
     start: 1884, end: 1885, lat: 50.85, lon: 4.35,
+    continent: 'europe',
     place: { zh: '比利时 · 布鲁塞尔', en: 'Brussels, Belgium' },
     type: 'politics', importance: 3,
+    sourceIds: ['brit-berlin-conference'],
+    review: 'reviewed',
     desc: {
       zh: '列强围桌瓜分非洲，划定势力范围与"有效占领"规则，非洲大陆的边界由此被遥远的欧洲谈判桌改写。',
       en: 'The European powers drew up rules for the Scramble for Africa; the continent\'s borders were rewritten around distant negotiating tables.',
@@ -516,6 +598,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'automobile',
     title: { zh: '奔驰发明汽车', en: 'The Benz Automobile' },
     start: 1885, end: 1888, lat: 49.49, lon: 8.47,
+    continent: 'europe',
     place: { zh: '德国 · 曼海姆', en: 'Mannheim, Germany' },
     type: 'science', importance: 2,
     desc: {
@@ -527,6 +610,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'eiffel-tower',
     title: { zh: '埃菲尔铁塔落成', en: 'The Eiffel Tower Completed' },
     start: 1889, end: 1889, lat: 48.86, lon: 2.29,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'society', importance: 1,
     desc: {
@@ -538,6 +622,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'nz-suffrage',
     title: { zh: '新西兰女性获得选举权', en: 'New Zealand Women\'s Suffrage' },
     start: 1893, end: 1893, lat: -41.29, lon: 174.78,
+    continent: 'oceania',
     place: { zh: '新西兰 · 惠灵顿', en: 'Wellington, New Zealand' },
     type: 'society', importance: 2,
     desc: {
@@ -549,8 +634,12 @@ export const EVENTS: HistoryEvent[] = [
     id: 'sino-japanese-war',
     title: { zh: '甲午战争', en: 'The First Sino-Japanese War' },
     start: 1894, end: 1895, lat: 37.5, lon: 122.2,
+    continent: 'asia',
+    geoPrecision: 'region',
     place: { zh: '中国 · 黄海 / 威海卫', en: 'Yellow Sea / Weihaiwei' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-first-sino-japanese-war'],
+    review: 'reviewed',
     desc: {
       zh: '北洋水师全军覆没，《马关条约》割让台湾，东亚百年格局由此逆转，也直接刺激了戊戌变法与日本扩张主义。',
       en: 'The destruction of the Beiyang Fleet and the Treaty of Shimonoseki reversed East Asia\'s balance of power, spurting Chinese reform and Japanese expansionism.',
@@ -560,6 +649,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'marconi-radio',
     title: { zh: '无线电报实验成功', en: 'Marconi\'s Wireless Telegraphy' },
     start: 1895, end: 1901, lat: 44.49, lon: 11.34,
+    continent: 'europe',
     place: { zh: '意大利 · 博洛尼亚', en: 'Bologna, Italy' },
     type: 'science', importance: 2,
     desc: {
@@ -571,6 +661,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'first-olympics',
     title: { zh: '首届现代奥运会', en: 'The First Modern Olympics' },
     start: 1896, end: 1896, lat: 37.98, lon: 23.73,
+    continent: 'europe',
     place: { zh: '希腊 · 雅典', en: 'Athens, Greece' },
     type: 'society', importance: 2,
     desc: {
@@ -582,6 +673,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'hundred-days-reform',
     title: { zh: '戊戌变法', en: 'The Hundred Days\' Reform' },
     start: 1898, end: 1898, lat: 39.9, lon: 116.4,
+    continent: 'asia',
     place: { zh: '中国 · 北京', en: 'Beijing, China' },
     type: 'politics', importance: 2,
     desc: {
@@ -593,6 +685,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'radium-discovery',
     title: { zh: '居里夫妇发现镭', en: 'The Discovery of Radium' },
     start: 1898, end: 1903, lat: 48.85, lon: 2.35,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -604,6 +697,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'eight-nation-alliance',
     title: { zh: '八国联军侵华', en: 'The Eight-Nation Alliance' },
     start: 1900, end: 1901, lat: 39.9, lon: 116.4,
+    continent: 'asia',
     place: { zh: '中国 · 北京', en: 'Beijing, China' },
     type: 'war', importance: 2,
     desc: {
@@ -615,6 +709,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'quantum-hypothesis',
     title: { zh: '普朗克量子假说', en: 'Planck\'s Quantum Hypothesis' },
     start: 1900, end: 1900, lat: 52.52, lon: 13.4,
+    continent: 'europe',
     place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'science', importance: 2,
     desc: {
@@ -626,6 +721,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'freud-dreams',
     title: { zh: '《梦的解析》出版', en: 'The Interpretation of Dreams' },
     start: 1900, end: 1900, lat: 48.21, lon: 16.37,
+    continent: 'europe',
     place: { zh: '奥地利 · 维也纳', en: 'Vienna, Austria' },
     type: 'ideas', importance: 1,
     desc: {
@@ -637,6 +733,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'australian-federation',
     title: { zh: '澳大利亚联邦成立', en: 'The Australian Federation' },
     start: 1901, end: 1901, lat: -37.81, lon: 144.96,
+    continent: 'oceania',
     place: { zh: '澳大利亚 · 墨尔本', en: 'Melbourne, Australia' },
     type: 'politics', importance: 1,
     desc: {
@@ -648,8 +745,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'wright-flight',
     title: { zh: '莱特兄弟首次动力飞行', en: 'The Wright Brothers\' First Flight' },
     start: 1903, end: 1903, lat: 36.02, lon: -75.67,
+    continent: 'north-america',
     place: { zh: '美国 · 基蒂霍克', en: 'Kitty Hawk, USA' },
     type: 'science', importance: 3,
+    sourceIds: ['brit-wright-brothers'],
+    review: 'reviewed',
     desc: {
       zh: '"飞行者一号"在沙丘上摇晃飞行了 12 秒 36 米，人类千年的飞天梦想自此有了第一台真正可操控的动力飞行器。',
       en: 'The Wright Flyer lurched into the air for twelve seconds and 36 metres — the first sustained, controlled powered flight in human history.',
@@ -659,6 +759,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'russo-japanese-war',
     title: { zh: '日俄战争', en: 'The Russo-Japanese War' },
     start: 1904, end: 1905, lat: 38.8, lon: 121.24,
+    continent: 'asia',
     place: { zh: '中国 · 旅顺', en: 'Lüshun (Port Arthur), China' },
     type: 'war', importance: 2,
     desc: {
@@ -670,6 +771,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'panama-canal',
     title: { zh: '巴拿马运河开工', en: 'The Panama Canal Begins' },
     start: 1904, end: 1914, lat: 9.08, lon: -79.68,
+    continent: 'north-america',
     place: { zh: '巴拿马 · 巴拿马城', en: 'Panama City, Panama' },
     type: 'economy', importance: 2,
     desc: {
@@ -681,8 +783,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'special-relativity',
     title: { zh: '狭义相对论发表', en: 'Special Relativity' },
     start: 1905, end: 1905, lat: 46.95, lon: 7.45,
+    continent: 'europe',
     place: { zh: '瑞士 · 伯尔尼', en: 'Bern, Switzerland' },
     type: 'science', importance: 3,
+    sourceIds: ['brit-relativity'],
+    review: 'reviewed',
     desc: {
       zh: '专利局职员爱因斯坦一年内连发数篇论文，用相对论与光量子重新定义了时间、空间与能量。',
       en: 'In his "miracle year", patent clerk Albert Einstein redefined space, time and energy with special relativity and the light quantum.',
@@ -692,6 +797,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'model-t',
     title: { zh: '福特 T 型车下线', en: 'The Ford Model T' },
     start: 1908, end: 1911, lat: 42.32, lon: -83.04,
+    continent: 'north-america',
     place: { zh: '美国 · 底特律', en: 'Detroit, USA' },
     type: 'economy', importance: 2,
     desc: {
@@ -703,6 +809,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'mexican-revolution',
     title: { zh: '墨西哥革命爆发', en: 'The Mexican Revolution' },
     start: 1910, end: 1920, lat: 19.43, lon: -99.13,
+    continent: 'north-america',
     place: { zh: '墨西哥 · 墨西哥城', en: 'Mexico City, Mexico' },
     type: 'politics', importance: 2,
     desc: {
@@ -714,6 +821,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'amundsen-south-pole',
     title: { zh: '阿蒙森抵达南极点', en: 'Amundsen Reaches the South Pole' },
     start: 1911, end: 1911, lat: -89.9, lon: 0,
+    continent: 'antarctica',
     place: { zh: '南极点', en: 'South Pole' },
     type: 'exploration', importance: 2,
     desc: {
@@ -725,8 +833,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'xinhai-revolution',
     title: { zh: '辛亥革命', en: 'The Xinhai Revolution' },
     start: 1911, end: 1912, lat: 30.55, lon: 114.31,
+    continent: 'asia',
     place: { zh: '中国 · 武昌', en: 'Wuchang, China' },
     type: 'politics', importance: 3,
+    sourceIds: ['wiki-1911-revolution'],
+    review: 'reviewed',
     desc: {
       zh: '武昌城头一声枪响，各省纷纷响应，延续两千余年的帝制在次年落幕，亚洲第一个共和国——中华民国宣告成立。',
       en: 'The Wuchang Uprising toppled two millennia of imperial rule; in 1912 the Republic of China, Asia\'s first republic, was proclaimed.',
@@ -736,8 +847,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'louisiana-purchase',
     title: { zh: '路易斯安那购地', en: 'The Louisiana Purchase' },
     start: 1803, end: 1803, lat: 38.63, lon: -90.2,
+    continent: 'north-america',
     place: { zh: '美国 · 圣路易斯', en: 'St. Louis, USA' },
     type: 'politics', importance: 3,
+    sourceIds: ['brit-louisiana-purchase'],
+    review: 'reviewed',
     desc: {
       zh: '美国以 1500 万美元从拿破仑手中购得密西西比河以西 214 万平方公里土地，国土一夜之间翻倍。',
       en: 'The United States bought 2.1 million square kilometres west of the Mississippi from Napoleon for $15 million, doubling its territory overnight.',
@@ -747,8 +861,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'taiping-rebellion',
     title: { zh: '太平天国运动', en: 'The Taiping Rebellion' },
     start: 1850, end: 1864, lat: 32.06, lon: 118.79,
+    continent: 'asia',
     place: { zh: '中国 · 南京', en: 'Nanjing, China' },
     type: 'war', importance: 3,
+    sourceIds: ['brit-taiping-rebellion'],
+    review: 'reviewed',
     desc: {
       zh: '洪秀全以拜上帝会起事，定都天京，纵横十八省，是人类历史上伤亡最惨重的内战之一，也彻底动摇了清王朝的根基。',
       en: 'Hong Xiuquan\'s God-Worshipping Society took Nanjing and swept eighteen provinces — one of the bloodiest civil wars in human history, fatally weakening the Qing.',
@@ -758,6 +875,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'greek-independence',
     title: { zh: '希腊独立战争', en: 'The Greek War of Independence' },
     start: 1821, end: 1830, lat: 37.98, lon: 23.73,
+    continent: 'europe',
     place: { zh: '希腊 · 伯罗奔尼撒', en: 'Peloponnese, Greece' },
     type: 'war', importance: 2,
     desc: {
@@ -769,6 +887,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'brazil-independence',
     title: { zh: '巴西独立', en: 'The Independence of Brazil' },
     start: 1822, end: 1822, lat: -22.9, lon: -43.2,
+    continent: 'south-america',
     place: { zh: '巴西 · 里约热内卢', en: 'Rio de Janeiro, Brazil' },
     type: 'politics', importance: 2,
     desc: {
@@ -780,6 +899,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'tanzimat',
     title: { zh: '奥斯曼坦志麦特改革', en: 'The Ottoman Tanzimat Reforms' },
     start: 1839, end: 1876, lat: 41.0, lon: 28.98,
+    continent: 'europe',
     place: { zh: '奥斯曼 · 伊斯坦布尔', en: 'Istanbul, Ottoman Empire' },
     type: 'politics', importance: 2,
     desc: {
@@ -791,6 +911,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'treaty-ganghwa',
     title: { zh: '江华条约', en: 'The Treaty of Ganghwa' },
     start: 1876, end: 1876, lat: 37.45, lon: 126.7,
+    continent: 'asia',
     place: { zh: '朝鲜 · 江华岛', en: 'Ganghwa, Korea' },
     type: 'politics', importance: 1,
     desc: {
@@ -802,6 +923,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'congress-of-berlin',
     title: { zh: '柏林会议（1878）', en: 'The Congress of Berlin' },
     start: 1878, end: 1878, lat: 52.52, lon: 13.4,
+    continent: 'europe',
     place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'politics', importance: 2,
     desc: {
@@ -813,6 +935,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'paris-commune',
     title: { zh: '巴黎公社', en: 'The Paris Commune' },
     start: 1871, end: 1871, lat: 48.86, lon: 2.35,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'politics', importance: 2,
     desc: {
@@ -824,6 +947,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'adwa',
     title: { zh: '阿杜瓦战役', en: 'The Battle of Adwa' },
     start: 1896, end: 1896, lat: 14.16, lon: 38.9,
+    continent: 'africa',
     place: { zh: '埃塞俄比亚 · 阿杜瓦', en: 'Adwa, Ethiopia' },
     type: 'war', importance: 2,
     desc: {
@@ -835,6 +959,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'zulu-kingdom',
     title: { zh: '祖鲁王国崛起', en: 'The Rise of the Zulu Kingdom' },
     start: 1816, end: 1828, lat: -28.5, lon: 31.4,
+    continent: 'africa',
     place: { zh: '南部非洲 · 夸祖鲁', en: 'KwaZulu, Southern Africa' },
     type: 'war', importance: 1,
     desc: {
@@ -846,6 +971,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'sokoto-caliphate',
     title: { zh: '索科托哈里发国建立', en: 'The Sokoto Caliphate' },
     start: 1804, end: 1804, lat: 13.06, lon: 5.24,
+    continent: 'africa',
     place: { zh: '西非 · 索科托', en: 'Sokoto, West Africa' },
     type: 'politics', importance: 1,
     desc: {
@@ -857,6 +983,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'fall-of-khartoum',
     title: { zh: '喀土穆陷落', en: 'The Fall of Khartoum' },
     start: 1884, end: 1885, lat: 15.5, lon: 32.56,
+    continent: 'africa',
     place: { zh: '苏丹 · 喀土穆', en: 'Khartoum, Sudan' },
     type: 'war', importance: 2,
     desc: {
@@ -868,6 +995,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'boer-war',
     title: { zh: '第二次布尔战争', en: 'The Second Boer War' },
     start: 1899, end: 1902, lat: -26.2, lon: 28.04,
+    continent: 'africa',
+    geoPrecision: 'region',
     place: { zh: '南部非洲 · 德兰士瓦', en: 'Transvaal, Southern Africa' },
     type: 'war', importance: 2,
     desc: {
@@ -879,6 +1008,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'triple-alliance-war',
     title: { zh: '三国同盟战争', en: 'The Paraguayan War' },
     start: 1864, end: 1870, lat: -25.28, lon: -57.63,
+    continent: 'south-america',
+    geoPrecision: 'region',
     place: { zh: '南美 · 巴拉圭', en: 'Paraguay, South America' },
     type: 'war', importance: 1,
     desc: {
@@ -890,6 +1021,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'pacific-war',
     title: { zh: '南美太平洋战争', en: 'The War of the Pacific' },
     start: 1879, end: 1883, lat: -20.2, lon: -70.15,
+    continent: 'south-america',
+    geoPrecision: 'region',
     place: { zh: '南美 · 阿塔卡马', en: 'Atacama, South America' },
     type: 'war', importance: 1,
     desc: {
@@ -901,6 +1034,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'singapore-founding',
     title: { zh: '莱佛士建立新加坡', en: 'Raffles Founds Singapore' },
     start: 1819, end: 1819, lat: 1.29, lon: 103.85,
+    continent: 'asia',
     place: { zh: '东南亚 · 新加坡', en: 'Singapore, Southeast Asia' },
     type: 'economy', importance: 1,
     desc: {
@@ -912,6 +1046,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'java-war',
     title: { zh: '爪哇战争', en: 'The Java War' },
     start: 1825, end: 1830, lat: -7.8, lon: 110.36,
+    continent: 'asia',
     place: { zh: '东南亚 · 爪哇', en: 'Java, Southeast Asia' },
     type: 'war', importance: 1,
     desc: {
@@ -923,6 +1058,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'philippines-1898',
     title: { zh: '美西战争与马尼拉湾', en: 'The Spanish–American War' },
     start: 1898, end: 1898, lat: 14.6, lon: 120.98,
+    continent: 'asia',
     place: { zh: '东南亚 · 马尼拉湾', en: 'Manila Bay, Philippines' },
     type: 'war', importance: 2,
     desc: {
@@ -934,6 +1070,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'indian-national-congress',
     title: { zh: '印度国民大会党成立', en: 'The Indian National Congress Founded' },
     start: 1885, end: 1885, lat: 19.08, lon: 72.88,
+    continent: 'asia',
     place: { zh: '印度 · 孟买', en: 'Bombay, India' },
     type: 'politics', importance: 1,
     desc: {
@@ -945,6 +1082,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'bessemer-process',
     title: { zh: '贝塞麦炼钢法', en: 'The Bessemer Process' },
     start: 1856, end: 1856, lat: 53.38, lon: -1.47,
+    continent: 'europe',
     place: { zh: '英国 · 谢菲尔德', en: 'Sheffield, England' },
     type: 'economy', importance: 2,
     desc: {
@@ -956,6 +1094,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'mendel-genetics',
     title: { zh: '孟德尔豌豆实验', en: 'Mendel\'s Pea Experiments' },
     start: 1866, end: 1866, lat: 49.2, lon: 16.6,
+    continent: 'europe',
     place: { zh: '奥地利 · 布尔诺', en: 'Brno, Austria' },
     type: 'science', importance: 1,
     desc: {
@@ -967,6 +1106,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'pasteur-vaccine',
     title: { zh: '巴斯德狂犬疫苗', en: 'Pasteur\'s Rabies Vaccine' },
     start: 1885, end: 1885, lat: 48.85, lon: 2.3,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -978,6 +1118,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'dreyfus-affair',
     title: { zh: '德雷福斯案件', en: 'The Dreyfus Affair' },
     start: 1894, end: 1906, lat: 48.86, lon: 2.35,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'society', importance: 1,
     desc: {
@@ -989,6 +1130,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'social-insurance',
     title: { zh: '俾斯麦社会保险立法', en: 'Bismarck\'s Social Insurance' },
     start: 1883, end: 1889, lat: 52.52, lon: 13.4,
+    continent: 'europe',
     place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'society', importance: 1,
     desc: {
@@ -1000,6 +1142,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'new-zealand-wars',
     title: { zh: '新西兰土地战争', en: 'The New Zealand Wars' },
     start: 1845, end: 1872, lat: -39.0, lon: 174.2,
+    continent: 'oceania',
     place: { zh: '新西兰 · 塔拉纳基', en: 'Taranaki, New Zealand' },
     type: 'war', importance: 1,
     desc: {
@@ -1011,8 +1154,12 @@ export const EVENTS: HistoryEvent[] = [
     id: 'transcontinental-railroad',
     title: { zh: '美国跨大陆铁路通车', en: 'The Transcontinental Railroad' },
     start: 1869, end: 1869, lat: 41.69, lon: -112.45,
+    continent: 'north-america',
+    geoPrecision: 'region',
     place: { zh: '美国 · 普罗蒙特里峰会', en: 'Promontory, USA' },
     type: 'economy', importance: 3,
+    sourceIds: ['brit-transcontinental-railroad'],
+    review: 'reviewed',
     desc: {
       zh: '联合太平洋与中央太平洋两线在犹他州金钉合龙，华工与爱尔兰工人的汗水把大洋到大海的车程从六个月压缩到一周。',
       en: 'Union Pacific and Central Pacific met at the Golden Spike; Chinese and Irish labor cut the coast-to-coast journey from six months to a week.',
@@ -1022,8 +1169,11 @@ export const EVENTS: HistoryEvent[] = [
     id: 'emancipation-serfs',
     title: { zh: '俄国农奴制废除', en: 'The Emancipation of the Serfs' },
     start: 1861, end: 1861, lat: 55.75, lon: 37.62,
+    continent: 'europe',
     place: { zh: '俄罗斯 · 莫斯科', en: 'Moscow, Russia' },
     type: 'politics', importance: 3,
+    sourceIds: ['wiki-emancipation-1861'],
+    review: 'reviewed',
     desc: {
       zh: '亚历山大二世签署解放宣言，2300 万农奴获得自由，俄国踏上迟到的近代化之路，也为日后的革命埋下伏笔。',
       en: 'Alexander II freed 23 million serfs, setting Russia on a belated path to modernity — and toward future revolution.',
@@ -1033,6 +1183,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'decembrist-revolt',
     title: { zh: '十二月党人起义', en: 'The Decembrist Revolt' },
     start: 1825, end: 1825, lat: 59.93, lon: 30.34,
+    continent: 'europe',
     place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'politics', importance: 2,
     desc: {
@@ -1044,6 +1195,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'trans-siberian',
     title: { zh: '西伯利亚大铁路开工', en: 'The Trans-Siberian Railway' },
     start: 1891, end: 1904, lat: 43.12, lon: 131.89,
+    continent: 'asia',
+    geoPrecision: 'region',
     place: { zh: '俄罗斯 · 海参崴', en: 'Vladivostok, Russia' },
     type: 'economy', importance: 2,
     desc: {
@@ -1055,6 +1208,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'revolution-1905',
     title: { zh: '1905 年俄国革命', en: 'The Revolution of 1905' },
     start: 1905, end: 1905, lat: 59.93, lon: 30.34,
+    continent: 'europe',
     place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'politics', importance: 2,
     desc: {
@@ -1066,6 +1220,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'satsuma-rebellion',
     title: { zh: '西南战争', en: 'The Satsuma Rebellion' },
     start: 1877, end: 1877, lat: 31.6, lon: 130.56,
+    continent: 'asia',
     place: { zh: '日本 · 鹿儿岛', en: 'Kagoshima, Japan' },
     type: 'war', importance: 1,
     desc: {
@@ -1077,6 +1232,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'zuozongtang-xinjiang',
     title: { zh: '左宗棠收复新疆', en: 'Zuo Zongtang Recovers Xinjiang' },
     start: 1876, end: 1878, lat: 43.83, lon: 87.62,
+    continent: 'asia',
+    geoPrecision: 'region',
     place: { zh: '中国 · 新疆', en: 'Xinjiang, China' },
     type: 'war', importance: 1,
     desc: {
@@ -1088,6 +1245,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'jingzhang-railway',
     title: { zh: '京张铁路建成', en: 'The Jingzhang Railway' },
     start: 1905, end: 1909, lat: 40.77, lon: 114.88,
+    continent: 'asia',
     place: { zh: '中国 · 张家口', en: 'Zhangjiakou, China' },
     type: 'science', importance: 1,
     desc: {
@@ -1099,6 +1257,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'indian-railways',
     title: { zh: '印度首条铁路通车', en: 'India\'s First Railway' },
     start: 1853, end: 1853, lat: 19.08, lon: 72.88,
+    continent: 'asia',
     place: { zh: '印度 · 孟买', en: 'Bombay, India' },
     type: 'economy', importance: 1,
     desc: {
@@ -1110,6 +1269,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'kimberley-diamonds',
     title: { zh: '金伯利钻石矿发现', en: 'Diamonds at Kimberley' },
     start: 1867, end: 1867, lat: -28.73, lon: 24.77,
+    continent: 'africa',
     place: { zh: '南部非洲 · 金伯利', en: 'Kimberley, Southern Africa' },
     type: 'economy', importance: 1,
     desc: {
@@ -1121,6 +1281,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'persian-oil',
     title: { zh: '中东第一口油井', en: 'The Middle East\'s First Oil Well' },
     start: 1908, end: 1908, lat: 31.94, lon: 49.3,
+    continent: 'asia',
     place: { zh: '波斯 · 马斯吉德苏莱曼', en: 'Masjed Soleyman, Persia' },
     type: 'economy', importance: 2,
     desc: {
@@ -1132,6 +1293,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'seneca-falls',
     title: { zh: '塞尼卡福尔斯女权大会', en: 'The Seneca Falls Convention' },
     start: 1848, end: 1848, lat: 42.91, lon: -76.8,
+    continent: 'north-america',
     place: { zh: '美国 · 塞尼卡福尔斯', en: 'Seneca Falls, USA' },
     type: 'society', importance: 2,
     desc: {
@@ -1143,6 +1305,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'wspu-suffrage',
     title: { zh: '英国妇女社会政治联盟成立', en: 'The WSPU Founded' },
     start: 1903, end: 1911, lat: 53.48, lon: -2.24,
+    continent: 'europe',
     place: { zh: '英国 · 曼彻斯特', en: 'Manchester, Britain' },
     type: 'society', importance: 2,
     desc: {
@@ -1154,6 +1317,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'impressionism-exhibition',
     title: { zh: '首届印象派画展', en: 'The First Impressionist Exhibition' },
     start: 1874, end: 1874, lat: 48.86, lon: 2.34,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'ideas', importance: 1,
     desc: {
@@ -1165,6 +1329,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'cinema-lumiere',
     title: { zh: '电影诞生', en: 'The Birth of Cinema' },
     start: 1895, end: 1895, lat: 48.87, lon: 2.33,
+    continent: 'europe',
     place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -1176,6 +1341,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'x-rays',
     title: { zh: '伦琴发现X射线', en: 'Röntgen Discovers X-Rays' },
     start: 1895, end: 1895, lat: 49.79, lon: 9.95,
+    continent: 'europe',
     place: { zh: '德国 · 维尔茨堡', en: 'Würzburg, Germany' },
     type: 'science', importance: 2,
     desc: {
@@ -1187,6 +1353,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'nobel-prizes',
     title: { zh: '首届诺贝尔奖颁发', en: 'The First Nobel Prizes' },
     start: 1901, end: 1901, lat: 59.33, lon: 18.07,
+    continent: 'europe',
     place: { zh: '瑞典 · 斯德哥尔摩', en: 'Stockholm, Sweden' },
     type: 'society', importance: 1,
     desc: {
@@ -1198,6 +1365,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'lister-antiseptic',
     title: { zh: '李斯特抗菌外科', en: 'Lister\'s Antiseptic Surgery' },
     start: 1867, end: 1867, lat: 55.86, lon: -4.25,
+    continent: 'europe',
     place: { zh: '英国 · 格拉斯哥', en: 'Glasgow, Britain' },
     type: 'science', importance: 2,
     desc: {
@@ -1209,6 +1377,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'maxwell-equations',
     title: { zh: '麦克斯韦电磁方程组', en: 'Maxwell\'s Equations' },
     start: 1865, end: 1865, lat: 52.21, lon: 0.12,
+    continent: 'europe',
     place: { zh: '英国 · 剑桥', en: 'Cambridge, Britain' },
     type: 'science', importance: 2,
     desc: {
@@ -1220,6 +1389,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'stanley-livingstone',
     title: { zh: '斯坦利找到利文斯通', en: 'Stanley Finds Livingstone' },
     start: 1871, end: 1871, lat: -4.91, lon: 29.67,
+    continent: 'africa',
     place: { zh: '东非 · 乌吉吉', en: 'Ujiji, East Africa' },
     type: 'exploration', importance: 1,
     desc: {
@@ -1231,6 +1401,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'peary-north-pole',
     title: { zh: '皮尔里远征北极点', en: 'Peary\'s North Pole Expedition' },
     start: 1909, end: 1909, lat: 89.9, lon: -45,
+    continent: 'polar',
+    timePrecision: 'circa',
     place: { zh: '北极点', en: 'The North Pole' },
     type: 'exploration', importance: 1,
     desc: {
@@ -1242,6 +1414,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'brazil-abolition',
     title: { zh: '巴西《黄金法案》废除奴隶制', en: 'Brazil\'s Golden Law' },
     start: 1888, end: 1888, lat: -22.91, lon: -43.17,
+    continent: 'south-america',
     place: { zh: '巴西 · 里约热内卢', en: 'Rio de Janeiro, Brazil' },
     type: 'society', importance: 2,
     desc: {
@@ -1253,6 +1426,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'hawaii-overthrow',
     title: { zh: '夏威夷王国覆灭', en: 'The Overthrow of Hawaii' },
     start: 1893, end: 1893, lat: 21.31, lon: -157.86,
+    continent: 'oceania',
     place: { zh: '太平洋 · 檀香山', en: 'Honolulu, Hawaii' },
     type: 'politics', importance: 1,
     desc: {
@@ -1264,6 +1438,8 @@ export const EVENTS: HistoryEvent[] = [
     id: 'congo-free-state',
     title: { zh: '刚果自由邦暴政', en: 'The Congo Free State Atrocities' },
     start: 1885, end: 1908, lat: -4.32, lon: 15.31,
+    continent: 'africa',
+    geoPrecision: 'country',
     place: { zh: '中非 · 刚果', en: 'Congo, Central Africa' },
     type: 'society', importance: 2,
     desc: {
@@ -1275,6 +1451,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'bosnian-annexation',
     title: { zh: '波斯尼亚危机', en: 'The Bosnian Annexation Crisis' },
     start: 1908, end: 1908, lat: 43.86, lon: 18.41,
+    continent: 'europe',
     place: { zh: '巴尔干 · 萨拉热窝', en: 'Sarajevo, Balkans' },
     type: 'politics', importance: 1,
     desc: {
@@ -1286,6 +1463,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'young-turks',
     title: { zh: '青年土耳其党革命', en: 'The Young Turk Revolution' },
     start: 1908, end: 1908, lat: 41.01, lon: 28.98,
+    continent: 'europe',
     place: { zh: '奥斯曼 · 伊斯坦布尔', en: 'Istanbul, Ottoman Empire' },
     type: 'politics', importance: 2,
     desc: {
@@ -1297,6 +1475,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'standard-oil',
     title: { zh: '标准石油公司成立', en: 'The Standard Oil Era' },
     start: 1870, end: 1870, lat: 41.5, lon: -81.69,
+    continent: 'north-america',
     place: { zh: '美国 · 克利夫兰', en: 'Cleveland, USA' },
     type: 'economy', importance: 1,
     desc: {
@@ -1308,6 +1487,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'haymarket-affair',
     title: { zh: '干草市场事件', en: 'The Haymarket Affair' },
     start: 1886, end: 1886, lat: 41.88, lon: -87.63,
+    continent: 'north-america',
     place: { zh: '美国 · 芝加哥', en: 'Chicago, USA' },
     type: 'society', importance: 1,
     desc: {
@@ -1319,6 +1499,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'ellis-island',
     title: { zh: '埃利斯岛移民站启用', en: 'Ellis Island Opens' },
     start: 1892, end: 1892, lat: 40.7, lon: -74.05,
+    continent: 'north-america',
     place: { zh: '美国 · 纽约', en: 'New York, USA' },
     type: 'society', importance: 1,
     desc: {
@@ -1330,6 +1511,7 @@ export const EVENTS: HistoryEvent[] = [
     id: 'russo-turkish-war-1877',
     title: { zh: '俄土战争（1877–1878）', en: 'The Russo-Turkish War' },
     start: 1877, end: 1878, lat: 43.42, lon: 24.61,
+    continent: 'europe',
     place: { zh: '巴尔干 · 普列文', en: 'Pleven, Balkans' },
     type: 'war', importance: 1,
     desc: {

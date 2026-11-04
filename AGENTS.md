@@ -4,7 +4,9 @@
 
 ## 工作循环
 
-发现机会 → 设计 → 实现 → `npx tsc --noEmit` → `node scripts/verify.mjs` → **亲自查看截图** → 修复 → git checkpoint → 更新 CHANGELOG/ROADMAP → 下一轮。
+发现机会 → 设计 → 实现 → `npx tsc --noEmit` → `npm run validate:data`（数据改动时）→ `node scripts/verify.mjs` → **亲自查看截图** → 修复 → git checkpoint → 更新 CHANGELOG/ROADMAP → 下一轮。
+
+V1.0 阶段遵循 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md（永久 GOAL MODE，自主迭代）。
 
 ## 硬性规则
 
@@ -17,9 +19,10 @@
 7. **CSS 纪律**：
    - 用 `[hidden]` 的元素若 CSS 设了 `display`，必须补 `[hidden] { display: none }`（踩坑：`.webgl-error` 曾遮罩全屏）。
    - z-index：canvas 0 < legend 15 < brand/continent 20 < event-card 25 < search/random/timeline 30 < loading 60 < webgl-error 70。
-8. **数据完整性**：新增 links/people 后跑悬空引用校验（见 AI_HANDOFF）。
-9. **依赖最小化**：three / gsap / zustand / puppeteer-core(dev)。
-10. **不覆盖用户数据**；verify-shots/ 可重新生成。
+8. **数据完整性**：任何数据改动后跑 `npm run validate:data`（悬空引用/双语/来源/年代/生卒冲突）。
+9. **来源纪律（V0.10 起）**：sourceIds 只挂已人工验证 URL 的条目（sources.ts）；禁止虚构链接；`review: 'reviewed'` 必须以已验证来源/复核为前提，缺省 = 待核实；关系 kind 必填，时间先后 ≠ 因果。
+10. **依赖最小化**：three / gsap / zustand / puppeteer-core(dev)。
+11. **不覆盖用户数据**；verify-shots/ 可重新生成。
 
 ## 踩坑记录
 

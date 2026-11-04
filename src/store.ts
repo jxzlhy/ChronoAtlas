@@ -1,31 +1,8 @@
 import { createStore } from 'zustand/vanilla'
+import type { Bilingual, ContinentKey, EventType, HistoryEvent } from './data/model'
 
-export type EventType =
-  | 'politics'
-  | 'war'
-  | 'science'
-  | 'economy'
-  | 'ideas'
-  | 'exploration'
-  | 'society'
-
-export interface Bilingual {
-  zh: string
-  en: string
-}
-
-export interface HistoryEvent {
-  id: string
-  title: Bilingual
-  start: number
-  end: number
-  lat: number
-  lon: number
-  place: Bilingual
-  type: EventType
-  importance: 1 | 2 | 3
-  desc: Bilingual
-}
+// 数据模型统一移至 src/data/model.ts；此处重导出以兼容既有引用
+export type { Bilingual, ContinentKey, EventType, HistoryEvent } from './data/model'
 
 export interface AppState {
   year: number

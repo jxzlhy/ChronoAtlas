@@ -1,7 +1,19 @@
 import { appStore, type AppState, type HistoryEvent } from '../store'
+import type { LinkKind } from '../data/model'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { LINKS } from '../data/links'
 import { PEOPLE } from '../data/people'
+import { SOURCES } from '../data/sources'
+
+/** 关系类型的双语短标签（tooltip 前缀，区分因果与关联） */
+const KIND_LABEL: Record<LinkKind, { zh: string; en: string }> = {
+  'direct-cause': { zh: '直接因果', en: 'Direct cause' },
+  'indirect-influence': { zh: '间接影响', en: 'Indirect influence' },
+  background: { zh: '背景条件', en: 'Background' },
+  related: { zh: '历史关联', en: 'Related' },
+  reaction: { zh: '回应反应', en: 'Reaction' },
+  continuation: { zh: '延续发展', en: 'Continuation' },
+}
 
 /** 右侧双语事件卡片，由选中状态驱动；前因/后果 chips + 相关人物（可展开详情） */
 export function initEventCard(
@@ -17,8 +29,12 @@ export function initEventCard(
     const years = ev.start === ev.end ? `${ev.start}` : `${ev.start} – ${ev.end}`
     card.style.setProperty('--type-color', type.color)
 
-    const chip = (other: HistoryEvent, cls: string, tip: { zh: string; en: string }): string =>
-      `<button class="ec-chip ${cls}" type="button" data-goto="${other.id}" data-tooltip="${tip.zh} — ${tip.en}">${other.title.zh}</button>`
+    const chip = (
+      other: HistoryEvent,
+      cls: string,
+      tip: { zh: string; en: string; kind?: LinkKind },
+    ): string =>
+      `<button class="ec-chip ${cls}" type="button" data-goto="${other.id}" data-tooltip="${tip.kind ? `${KIND_LABEL[tip.kind].zh}：${tip.zh} — ${tip.en}` : `${tip.zh} — ${tip.en}`}">${other.title.zh}</button>`
 
     const section = (
       labelZh: string,
@@ -81,6 +97,26 @@ export function initEventCard(
         </div>`
     }
 
+    // 参考资料：只显示已挂接且在 registry 中可解析的来源
+    const sources = (ev.sourceIds ?? [])
+      .map((sid) => SOURCES.find((s) => s.id === sid))
+      .filter((s) => s !== undefined)
+    const sourcesSection = (): string => {
+      if (sources.length === 0) return ''
+      return `
+        <div class="ec-links">
+          <div class="ec-links-label">参考资料 · Sources</div>
+          <ul class="ec-sources">
+            ${sources
+              .map(
+                (s) =>
+                  `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name.en} — ${s.publisher.en}">${s.name.zh}<span class="ec-source-pub">${s.publisher.zh}</span></a></li>`,
+              )
+              .join('')}
+          </ul>
+        </div>`
+    }
+
     const causes = LINKS.filter((l) => l.to === ev.id)
     const effects = LINKS.filter((l) => l.from === ev.id)
 
@@ -97,6 +133,7 @@ export function initEventCard(
       ${figuresSection()}
       ${section('前因', 'Origins', 'ec-chip--cause', causes)}
       ${section('后果', 'Legacies', 'ec-chip--effect', effects)}
+      ${sourcesSection()}
       <button class="ec-locate" type="button" data-locate>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <circle cx="12" cy="12" r="3" />

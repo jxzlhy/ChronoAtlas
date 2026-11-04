@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## V0.10.0 — V1.0 数据基建（2026-11-05）
+
+依据 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md 启动 V1.0「THE LIVING HISTORY」，本轮完成 M1（Historical Intelligence · 历史数据基础设施）：
+
+- **统一数据模型 `src/data/model.ts`**：HistoryEvent 扩展 continent（必填）/ timePrecision / geoPrecision / tags / sourceIds / review；EventLink 扩展 kind（六类：直接因果/间接影响/背景/关联/回应/延续）/ review；Person、Source 定义收口。store.ts 重导出保持兼容。
+- **参考资料体系 `src/data/sources.ts`**：22 条来源全部挂接 importance=3 事件，URL（Britannica 20 + Wikipedia 2）于 2026-11-05 逐一人工验证可达，禁止虚构；来源覆盖 22/119，importance=3 覆盖 22/22。
+- **关系类型逐条人工复核**：32 条因果链按"严格区分时间先后与因果"归类（direct-cause 12 / indirect-influence 9 / background 10 / continuation 1），克里米亚→红十字改为间接影响并修正说明文字。
+- **数据校验脚本化 `npm run validate:data`**：重复 ID/悬空引用/年代坐标/类型大洲/双语完整性/关系类型/来源白名单/人物生卒冲突，输出数据画像（当前 0 错误 3 提示）。
+- **大洲标注 119/119**：逐条人工复核（含极地 polar / antarctica 特殊键），为 M2 世界快照的大洲分组铺路。
+- **事件卡 UI**：新增「参考资料 · Sources」外链节；前因/后果 chips 的 tooltip 标注关系类型。
+- 验证：`npm run validate:data` 0 错误 + `npx tsc --noEmit` 0 错误 + 17 步回归全过 + 0 控制台错误 + 截图复核（来源节实拍）。
+
 ## V0.9.0 — 内容扩容 II + 灾后重建（2026-11-05）
 
 - **事件 89 → 119**（+30）：俄国线（十二月党人/农奴解放/西伯利亚铁路/1905 革命）、美国线（跨大陆铁路/标准石油/干草市场/埃利斯岛/夏威夷）、女性叙事（塞尼卡福尔斯/WSPU）、科学史（麦克斯韦/李斯特/伦琴/电影/诺贝尔奖/孟德尔巴斯德补链）、殖民与抵抗（刚果自由邦/金伯利/波斯石油/波斯尼亚危机/青年土耳其）。

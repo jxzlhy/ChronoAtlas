@@ -1,14 +1,15 @@
 {
   "name": "chrono-atlas",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "ChronoAtlas · 动态历史地球 — a 3D dynamic history globe (1750–1911)",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:data": "node --experimental-strip-types scripts/validate-data.mjs"
   },
   "dependencies": {
     "gsap": "^3.12.5",

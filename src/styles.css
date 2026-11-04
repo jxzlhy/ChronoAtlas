@@ -625,6 +625,42 @@ body.ready .continent-nav {
   background: color-mix(in srgb, var(--chip-color) 26%, transparent);
 }
 
+/* 参考资料：紧凑列表，外链悬停提亮 */
+.ec-sources {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ec-sources a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  max-width: 100%;
+  font-size: 11.5px;
+  color: var(--text);
+  opacity: 0.82;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.ec-sources a:hover {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.ec-source-pub {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .ec-person {
   margin-top: 9px;
   padding: 10px 12px;

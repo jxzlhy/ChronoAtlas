@@ -4,14 +4,15 @@
 
 > 灵感来源：抖音 @Cyber航说《24小时，我用智能体做了一个3D历史地图》（VibeCoding大赏）。本项目为其独立复刻与再创作。
 
-**规模**：119 条双语事件 · 32 条因果链 · 46 位双语人物 · 七类事件体系
+**规模**：119 条双语事件 · 32 条因果链（六类关系） · 46 位双语人物 · 22 条已验证参考资料 · 七类事件体系
 
 ## 快速开始
 
 ```bash
 npm install
-npm run dev        # http://127.0.0.1:5173
-npm run typecheck  # tsc --noEmit
+npm run dev            # http://127.0.0.1:5173
+npm run typecheck      # tsc --noEmit
+npm run validate:data  # 数据完整性校验 + 数据画像
 node scripts/verify.mjs   # 无头 Chrome 端到端验证（17 步，自带 dev server 自愈）
 ```
 
@@ -23,8 +24,8 @@ node scripts/verify.mjs   # 无头 Chrome 端到端验证（17 步，自带 dev 
 | 六棱柱事件层 | 按类型着色、按重要度定高，欠阻尼弹簧生长，选中呼吸脉冲 |
 | 时间轴 1750–1911 | 渐变轨道拖动 / ▶ 自动播放 / 时间窗口 ±5/±10/±20/全部 / ←→ 键微调 |
 | **此刻世界** | 点击"N 个事件活跃"展开当前年份切片清单，悬停行联动地球高亮 |
-| 双语事件卡 | 类型徽章、中英标题、中英描述、星级、定位按钮 |
-| **历史长河** | 32 条因果链：前因紫/后果青 chips 沿链跳转，BFS 多跳发光弧线随深度衰减 |
+| 双语事件卡 | 类型徽章、中英标题、中英描述、星级、定位按钮、参考资料外链、相关人物 |
+| **历史长河** | 32 条因果链（六类关系，tooltip 标注类型）：前因紫/后果青 chips 沿链跳转，BFS 多跳发光弧线随深度衰减 |
 | **人物层** | 46 位双语人物：搜索直达、事件卡"相关人物"展开详情与他事件跳转 |
 | 搜索 | 中英模糊匹配事件+人物，`/` 聚焦，回车跳转 |
 | URL 分享 | `#y=1850&ev=<id>` 实时同步，刷新/分享精确还原 |
@@ -36,11 +37,11 @@ node scripts/verify.mjs   # 无头 Chrome 端到端验证（17 步，自带 dev 
 - [AGENTS.md](./AGENTS.md) — AI 开发协作规范（含踩坑记录）
 - [CHANGELOG.md](./CHANGELOG.md) — 版本演进
 - [ROADMAP.md](./ROADMAP.md) — 迭代方向与当前进度
-- [docs/](./docs/) — PROJECT_CONTEXT / ARCHITECTURE / AI_HANDOFF / 自主开发协议
+- [docs/](./docs/) — PROJECT_CONTEXT / ARCHITECTURE / AI_HANDOFF / V1.0 总任务书 / 自主开发协议
 
 ## 验证门槛
 
-`npx tsc --noEmit` + `node scripts/verify.mjs`（17 步交互剧本 + 0 控制台错误）+ 截图人工复核。
+`npx tsc --noEmit` + `npm run validate:data`（数据改动时）+ `node scripts/verify.mjs`（17 步交互剧本 + 0 控制台错误）+ 截图人工复核。
 
 ## License
 

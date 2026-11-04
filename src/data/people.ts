@@ -1,16 +1,10 @@
-import type { Bilingual } from '../store'
+import type { Person } from './model'
 
 /**
  * 历史人物层：与事件挂接，供搜索与事件卡"相关人物"展示。
  * eventIds 第一个为主事件（搜索跳转目标）。
  */
-export interface Person {
-  id: string
-  name: Bilingual
-  life: string
-  bio: Bilingual
-  eventIds: string[]
-}
+export type { Person }
 
 export const PEOPLE: Person[] = [
   {

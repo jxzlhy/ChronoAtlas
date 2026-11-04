@@ -18,4 +18,4 @@
 
 ## 里程碑
 
-V0.1 核心体验 ✅ → V0.2 完整度 ✅ → V0.3 视觉 ✅ → V0.4 切片器 ✅ → V0.5 因果 ✅ → V0.6 人物 ✅ → V0.7 长河 ✅ → V0.8 扩容 I ✅ → V0.9 扩容 II+重建 ✅ → V1.0 冲刺（见 ROADMAP）
+V0.1 核心体验 ✅ → V0.2 完整度 ✅ → V0.3 视觉 ✅ → V0.4 切片器 ✅ → V0.5 因果 ✅ → V0.6 人物 ✅ → V0.7 长河 ✅ → V0.8 扩容 I ✅ → V0.9 扩容 II+重建 ✅ → **V1.0「THE LIVING HISTORY」进行中**（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md；M1 数据基建 ✅，下一站 M2 世界快照）

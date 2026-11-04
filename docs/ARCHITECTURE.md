@@ -4,12 +4,14 @@
 index.html                  # 全部 UI 骨架，id 契约见下
 src/
 ├── main.ts                 # 装配根：场景 + UI + 拾取 + 主循环 + hash 同步 + 调试钩子(__chrono)
-├── store.ts                # zustand vanilla：year/playing/windowSize/selectedId/hoverId
+├── store.ts                # zustand vanilla：year/playing/windowSize/selectedId/hoverId（数据类型重导出自 data/model）
 ├── styles.css              # 深空玻璃拟态视觉体系
 ├── data/
-│   ├── events.ts           # EVENTS(119条) / EVENT_TYPES(七类+色) / CONTINENTS(定位参数)
-│   ├── links.ts            # LINKS(32条因果边: from/to/双语关系说明)
-│   └── people.ts           # PEOPLE(46位双语人物: 生卒年/简介/挂接事件)
+│   ├── model.ts            # 统一数据模型：HistoryEvent/EventLink(kind)/Person/Source + 精度与审核状态
+│   ├── events.ts           # EVENTS(119条，含大洲/精度/来源) / EVENT_TYPES(七类+色) / CONTINENTS(定位参数)
+│   ├── links.ts            # LINKS(32条因果边: from/to/kind六类/双语说明/审核状态)
+│   ├── people.ts           # PEOPLE(46位双语人物: 生卒年/简介/挂接事件)
+│   └── sources.ts          # SOURCES(22条已验证参考资料: 双语名称/机构/URL/类型)
 ├── scene/
 │   ├── Globe.ts            # renderer/camera/controls/贴图三源降级/大气 shader/星空/Bloom
 │   ├── EventPillars.ts     # 119×(地块+棱柱)，欠阻尼弹簧缓动，raycaster 拾取
@@ -19,12 +21,13 @@ src/
 └── ui/
     ├── timeline.ts         # 拖动/自动播放/窗口/键盘
     ├── search.ts           # 中英模糊搜索（事件+人物）
-    ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips
+    ├── eventCard.ts        # 双语事件卡：人物详情/前因后果 chips(含关系类型 tooltip)/参考资料外链
     ├── slice.ts            # "此刻世界"切片面板 + 活跃计数
     ├── continents.ts       # 大洲 ghost 按钮
     └── legend.ts           # 分类图例
 scripts/
 ├── verify.mjs              # 无头端到端验证（17 步剧本 + 服务器自愈）
+├── validate-data.mjs       # 数据校验（npm run validate:data）：引用/类型/双语/来源/年代画像
 └── diag-webgl.mjs          # WebGL/控制台诊断
 ```
 
@@ -43,7 +46,9 @@ scripts/
 - **URL hash 契约**：`#y=<年>&ev=<id>`；启动恢复（main.ts）+ replaceState 写回。
 - **调试钩子**：`__chrono = { pause, resume, capture, goTo, arcsCount, store, events }`。
 - **拾取**：pointer 位移 ≤8px 判点击；空白点击取消选中。
-- **数据完整性**：改 links/people 后运行悬空引用校验（node + import 三数据文件比对 id 集）。
+- **数据完整性**：任何数据改动后跑 `npm run validate:data`（重复 ID/悬空引用/双语/来源/年代/生卒冲突 + 数据画像）。
+- **来源纪律**：sourceIds 只指向 sources.ts 中已人工验证 URL 的条目；`review: 'reviewed'` 必须以已验证来源或复核为前提，缺省 = 待核实。
+- **关系纪律**：LINKS 的 kind 必填（六类），时间先后 ≠ 因果；direct-cause 的前项起始年晚于后项会被校验器警告。
 
 ## 渲染管线
 

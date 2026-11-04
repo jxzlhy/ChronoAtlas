@@ -2,7 +2,7 @@
 
 ## 30 秒了解
 
-ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。17 步无头验证 + 0 控制台错误。当前 V0.9.0；下一步见 ROADMAP（内容扩容 III / InstancedMesh / 面板过滤）。
+ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。17 步无头验证 + 0 控制台错误。当前 **V0.10.0**：已进入 V1.0「THE LIVING HISTORY」GOAL MODE（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md），M1 数据基建完成（统一模型 + 22 条已验证来源 + 关系六类复核 + validate:data），下一步 M2 世界历史快照（见 ROADMAP）。
 
 ## ⚠️ 工作区警示（远端备份已配置：github.com/jxzlhy/ChronoAtlas）
 
@@ -13,16 +13,23 @@ draft 工作区曾被宿主整体回收（V0.9 时发生）。若再次发现目
 1. `npm install`
 2. `npm run dev` → http://127.0.0.1:5173
 3. `node scripts/verify.mjs` → 查看 `verify-shots/*.png`
-4. 读 ARCHITECTURE + AGENTS + ROADMAP，选任务开工
+4. 读 ARCHITECTURE + AGENTS + ROADMAP + V1.0 总任务书，选任务开工
 
 ## 验证门槛（每轮必须）
 
 ```bash
-npx tsc --noEmit          # 0 错误
-node scripts/verify.mjs   # 17 步 + 0 控制台错误
+npx tsc --noEmit            # 0 错误
+npm run validate:data       # 数据校验 0 错误（数据改动必跑）
+node scripts/verify.mjs     # 17 步 + 0 控制台错误
 ```
 
-数据改动加跑悬空引用校验（node --experimental-strip-types import 三数据文件比对 id）。UI 改动必须 Read 截图。
+UI 改动必须 Read 截图。
+
+## 数据纪律（V0.10 起）
+
+- 数据模型统一在 `src/data/model.ts`；事件必有 `continent`；来源只挂已人工验证 URL 的条目（sources.ts），禁止虚构链接。
+- `review: 'reviewed'` 仅限挂接已验证来源/经复核的条目；缺省 = 待核实，不伪装完成。
+- 关系 `kind` 必填，严格区分时间先后与因果（六类见 model.ts）。
 
 ## 环境坑
 
