@@ -11,7 +11,7 @@ export function initLegend(): void {
         .join('')}
     </div>
     <button id="hotspot-toggle" class="hotspot-toggle" type="button" aria-pressed="false"
-            title="Hotspots: density of curated events, not historical probability">
+            title="热区：已收录事件的空间密度，非历史概率 · Hotspots (H)">
       <i aria-hidden="true"></i>热区 · Hotspots
     </button>`
 

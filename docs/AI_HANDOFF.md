@@ -2,7 +2,7 @@
 
 ## 30 秒了解
 
-ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。20+ 步无头验证 + 0 控制台错误（沙箱 CDN 抖动归为环境警告）+ 性能门槛（drawCalls ≤150）。当前 **V0.20.0**：V1.0「THE LIVING HISTORY」GOAL MODE（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md）；M1 数据基建 ✅，M2 世界快照 ✅，M3 动态地球（弧线/热区/InstancedMesh 195→20）✅，M4 因果网络 I+II ✅，M5 人物系统（档案卡+同事件人物派生）✅、M6 UX 打磨 I/II ✅，下一站 M5 II 人物轨迹/M3 路线模式（均待外网恢复以验证新来源）或内容扩容 III（见 ROADMAP）。
+ChronoAtlas：单页 3D 历史地球（1750–1911，119 条双语事件 + 32 条因果链 + 46 位人物），Vite+TS+Three.js+GSAP+zustand，无后端。20+ 步无头验证 + 0 控制台错误（沙箱 CDN 抖动归为环境警告）+ 性能门槛（drawCalls ≤150）。当前 **V0.20.0**：V1.0「THE LIVING HISTORY」GOAL MODE（总任务书 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md）；M1 数据基建 ✅，M2 世界快照 ✅，M3 动态地球（弧线/热区/InstancedMesh 195→20）✅，M4 因果网络 I+II ✅，M5 人物系统（档案卡+同事件人物派生）✅、M6 UX 打磨 I/II ✅，M6-III 快捷键 ✅；内容扩容 III 验证队列已预生成（docs/SOURCE_VALIDATION_QUEUE.md），外网恢复后按清单逐条验证 URL 开工（见 ROADMAP）。
 
 ## ⚠️ 工作区警示（远端备份已配置：github.com/jxzlhy/ChronoAtlas）
 

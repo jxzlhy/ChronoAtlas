@@ -445,6 +445,27 @@ await new Promise((r) => setTimeout(r, 400))
 const netClosed = await page.evaluate(() => !document.getElementById('network-overlay').hidden)
 console.log('   网络关闭:', netClosed ? '✗ 仍打开' : '✓')
 
+// 12.8 键盘快捷键：H 热区 / N 网络 / R 随机（输入框外生效）
+await page.keyboard.press('h')
+await new Promise((r) => setTimeout(r, 700))
+const kbH = await page.evaluate(() => ({
+  on: window.__chrono.store.getState().hotspotsOn,
+  zones: window.__chrono.hotspotsCount(),
+}))
+await page.keyboard.press('h')
+await new Promise((r) => setTimeout(r, 400))
+await page.keyboard.press('n')
+await new Promise((r) => setTimeout(r, 600))
+const kbN1 = await page.evaluate(() => window.__chronoNetwork.open())
+await page.keyboard.press('n')
+await new Promise((r) => setTimeout(r, 400))
+const kbN2 = await page.evaluate(() => window.__chronoNetwork.open())
+await page.keyboard.press('r')
+await new Promise((r) => setTimeout(r, 1600))
+const kbR = await page.evaluate(() => window.__chrono.store.getState().selectedId)
+const kbOk = kbH.on && kbH.zones > 0 && kbN1 && !kbN2 && !!kbR
+console.log('   快捷键 N/H/R:', JSON.stringify({ h: kbH, n: kbN1 && !kbN2, r: kbR }), kbOk ? '✓' : '✗')
+
 // 13. 移动端视口
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))

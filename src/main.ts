@@ -157,6 +157,28 @@ function boot(): void {
   initTimeline()
   initLegend()
   initNetwork(pauseRender, resumeRender)
+
+  // ---- 全局键盘快捷键（输入框/下拉内不触发；/ 聚焦搜索与 ←→ 年份在各自模块）----
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return
+    const target = e.target as HTMLElement | null
+    if (
+      target &&
+      (target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement)
+    ) {
+      return
+    }
+    const s = appStore.getState()
+    if (e.key === 'n' || e.key === 'N') {
+      ;(document.getElementById('network-toggle') as HTMLButtonElement)?.click()
+    } else if (e.key === 'h' || e.key === 'H') {
+      s.setHotspotsOn(!s.hotspotsOn)
+    } else if (e.key === 'r' || e.key === 'R') {
+      ;(document.getElementById('random-btn') as HTMLButtonElement)?.click()
+    }
+  })
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数
   initSnapshot(goToEvent, (key) => {
     const c = CONTINENTS[key]
