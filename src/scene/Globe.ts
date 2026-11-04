@@ -132,8 +132,8 @@ export class Globe {
 
   /**
    * 地表贴图加载：window load 之后再启动（不阻塞页面 load 事件），
-   * 每个候选源 12 秒超时；全部失败则降级为线框球。ready 一旦结算，迟到
-   * 的贴图仍会被应用。
+   * 三个候选源并行尝试（每个 12 秒超时），首个成功者胜出——断网时降级
+   * 判定最长 12s（串行方案需 36s）。ready 一旦结算，迟到的贴图仍会被应用。
    */
   private initEarthSurface(): Promise<'texture' | 'fallback'> {
     return new Promise((resolve) => {
@@ -162,28 +162,35 @@ export class Globe {
       const start = (): void => {
         const loader = new THREE.TextureLoader()
         loader.setCrossOrigin('anonymous')
-        let index = 0
-        const tryNext = (): void => {
-          if (index >= TEXTURE_URLS.length) {
-            settle('fallback')
-            return
-          }
-          const url = TEXTURE_URLS[index++]
-          const timer = window.setTimeout(() => tryNext(), 12000)
-          loader.load(
-            url,
+        const attempt = (url: string): Promise<THREE.Texture> =>
+          new Promise((res, rej) => {
+            const timer = window.setTimeout(() => rej(new Error('timeout')), 12000)
+            loader.load(
+              url,
+              (texture) => {
+                window.clearTimeout(timer)
+                res(texture)
+              },
+              undefined,
+              () => {
+                window.clearTimeout(timer)
+                rej(new Error('failed'))
+              },
+            )
+          })
+        // 并行竞赛：首个成功 settle；全部失败 → 降级线框球
+        let failures = 0
+        for (const url of TEXTURE_URLS) {
+          attempt(url).then(
             (texture) => {
-              window.clearTimeout(timer)
-              applyTexture(texture)
+              if (!settled) applyTexture(texture)
             },
-            undefined,
             () => {
-              window.clearTimeout(timer)
-              tryNext()
+              failures++
+              if (failures === TEXTURE_URLS.length) settle('fallback')
             },
           )
         }
-        tryNext()
       }
 
       if (document.readyState === 'complete') {
