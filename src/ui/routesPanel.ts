@@ -53,6 +53,7 @@ export function initRoutesPanel(
     }
   }
   toggle.addEventListener('click', () => setOpen(!open))
+  panel.querySelector('[data-routes-close]')?.addEventListener('click', () => setOpen(false))
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) setOpen(false)
   })

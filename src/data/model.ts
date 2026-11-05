@@ -63,10 +63,27 @@ export interface HistoryEvent {
   importance: 1 | 2 | 3
   desc: Bilingual
   tags?: string[]
+  /** 文明/文化圈标签（PHASE D 起步）：取值见 CIVILIZATIONS，学术通行的宽口径，不包装争议 */
+  civilizations?: string[]
   /** 参考资料引用（sources.ts 中的 id），须经人工验证 URL 后才可挂接 */
   sourceIds?: string[]
   review?: ReviewStatus
 }
+
+/** 文明/文化圈清单（PHASE D 起步）：宽口径历史概念，非政治实体 */
+export const CIVILIZATIONS = [
+  'chinese', // 中华
+  'ottoman', // 奥斯曼/伊斯兰
+  'european', // 欧洲基督教世界
+  'russian', // 俄罗斯
+  'indian', // 南亚
+  'japanese', // 日本
+  'african', // 非洲诸文明
+  'latin-american', // 拉丁美洲
+  'north-american', // 北美
+  'islamic-world', // 更广伊斯兰世界（与 ottoman 有交集时按主文明取一）
+] as const
+export type Civilization = (typeof CIVILIZATIONS)[number]
 
 /**
  * 关系类型：严格区分"时间先后"与"因果"。

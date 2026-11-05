@@ -622,7 +622,7 @@ await page.click('#routes-detail [data-reset]')
 await page.click('[data-routes-close]')
 await new Promise((r) => setTimeout(r, 400))
 
-// 13. 移动端视口 + 罗盘移动端行为
+// 13. 移动端视口 + 罗盘移动端行为 + 航线全屏模态（PHASE H QA 扩展）
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))
 // 选中一个事件，检查罗盘元素在移动端存在且行为合理（显示或出屏隐藏皆合法）
@@ -641,6 +641,28 @@ const mobileCompass = await page.evaluate(() => {
   }
 })
 console.log('   移动端罗盘:', JSON.stringify(mobileCompass), mobileCompass.exists ? '✓' : '✗')
+// 航线面板移动端全屏化（V0.33.0 修复回归保险）：宽度应等于视口
+const routesToggleState = await page.evaluate(() => ({
+  aria: document.getElementById('routes-toggle')?.getAttribute('aria-expanded'),
+  panelHidden: document.getElementById('routes-panel')?.hidden,
+}))
+await page.evaluate(() => document.getElementById('routes-toggle').click())
+await new Promise((r) => setTimeout(r, 600))
+const mRoutes = await page.evaluate((pre) => {
+  const rp = document.getElementById('routes-panel').getBoundingClientRect()
+  return {
+    w: Math.round(rp.width),
+    vw: window.innerWidth,
+    full: Math.abs(rp.width - window.innerWidth) < 2,
+    hidden: document.getElementById('routes-panel')?.hidden,
+    aria: document.getElementById('routes-toggle')?.getAttribute('aria-expanded'),
+    preAria: pre.aria,
+    preHidden: pre.panelHidden,
+  }
+}, routesToggleState)
+console.log('   移动端航线全屏:', JSON.stringify(mRoutes), mRoutes.full ? '✓' : '✗')
+await page.evaluate(() => document.querySelector('[data-routes-close]')?.click())
+await new Promise((r) => setTimeout(r, 400))
 await shot('17-mobile')
 
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）

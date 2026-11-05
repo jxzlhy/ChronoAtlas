@@ -11,6 +11,7 @@ import { LINKS } from '../src/data/links.ts'
 import { PEOPLE, PERSON_LINKS } from '../src/data/people.ts'
 import { SOURCES } from '../src/data/sources.ts'
 import { ROUTES } from '../src/data/routes.ts'
+import { CIVILIZATIONS } from '../src/data/model.ts'
 
 const CONTINENT_KEYS = new Set([
   'asia', 'europe', 'africa', 'north-america', 'south-america', 'oceania', 'antarctica', 'polar',
@@ -55,6 +56,9 @@ for (const ev of EVENTS) {
     err(`${tag} 时间精度非法: ${ev.timePrecision}`)
   if (ev.geoPrecision !== undefined && !GEO_PRECISIONS.has(ev.geoPrecision))
     err(`${tag} 地理精度非法: ${ev.geoPrecision}`)
+  for (const c of ev.civilizations ?? []) {
+    if (!CIVILIZATIONS.includes(c)) err(`${tag} 文明标签非法: ${c}`)
+  }
   if (ev.review !== undefined && !['reviewed', 'pending'].includes(ev.review))
     err(`${tag} 审核状态非法: ${ev.review}`)
   if ((ev.review ?? 'pending') === 'reviewed' && (ev.sourceIds?.length ?? 0) === 0)
@@ -232,6 +236,10 @@ console.log(`孤立人物(零事件挂接): ${isolated}`)
 const withPlaces = PEOPLE.filter((x) => (x.places?.length ?? 0) > 0)
 console.log(`人物活动地点: ${withPlaces.length}/${PEOPLE.length} 位有据 (${pct(withPlaces.length, PEOPLE.length)}) · 共 ${PEOPLE.reduce((s, x) => s + (x.places?.length ?? 0), 0)} 个地点`)
 console.log(`人物关系: ${PERSON_LINKS.length} 条（有据对，无同时代硬连）`)
+const civStat = new Map()
+for (const ev of EVENTS) for (const c of ev.civilizations ?? []) civStat.set(c, (civStat.get(c) ?? 0) + 1)
+const civTagged = EVENTS.filter((e) => (e.civilizations?.length ?? 0) > 0).length
+console.log(`文明标签: ${civTagged}/${EVENTS.length} 事件已标注 (${pct(civTagged, EVENTS.length)}) · ${[...civStat].map(([k, v]) => `${k}=${v}`).join(' ') || '空'}`)
 
 console.log('\n=== 校验结果 ===')
 console.log(`errors: ${errors.length} · warnings: ${warnings.length}`)
