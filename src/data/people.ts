@@ -155,7 +155,7 @@ export const PEOPLE: Person[] = [
       zh: '克里米亚战地护理的改革者，现代护理学与卫生统计的奠基人。',
       en: 'Founder of modern nursing and health statistics, forged in Crimea.',
     },
-    eventIds: ['crimean-war'],
+    eventIds: ['nightingale-crimea', 'crimean-war'],
   },
   {
     id: 'li-hongzhang',
@@ -215,7 +215,7 @@ export const PEOPLE: Person[] = [
       zh: '戊戌变法的推动者，以公车上书开启清末改革议程。',
       en: 'Architect of the Hundred Days\' Reform movement.',
     },
-    eventIds: ['hundred-days-reform'],
+    eventIds: ['gongche-shangshu', 'hundred-days-reform'],
   },
   {
     id: 'bell',
@@ -245,7 +245,7 @@ export const PEOPLE: Person[] = [
       zh: '两度问鼎诺贝尔奖，放射性研究的开创者。',
       en: 'Two Nobel Prizes; pioneer of radioactivity research.',
     },
-    eventIds: ['radium-discovery'],
+    eventIds: ['nobel-marie-curie', 'radium-discovery'],
   },
   {
     id: 'planck',
@@ -285,7 +285,7 @@ export const PEOPLE: Person[] = [
       zh: '辛亥革命的精神领袖，亚洲第一个共和国的缔造者。',
       en: 'Spiritual leader of the Xinhai Revolution and the first Asian republic.',
     },
-    eventIds: ['xinhai-revolution'],
+    eventIds: ['tongmenghui', 'xinhai-revolution'],
   },
   {
     id: 'ford',

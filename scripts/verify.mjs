@@ -428,7 +428,7 @@ const netInfo = await page.evaluate(() => {
   return { open: net.open(), nodes: net.nodes(), links: net.links(), visible: !document.getElementById('network-overlay').hidden }
 })
 console.log('   因果网络:', JSON.stringify(netInfo))
-if (!netInfo.open || netInfo.nodes !== 119 || netInfo.links !== 32)
+if (!netInfo.open || netInfo.nodes !== 137 || netInfo.links !== 52)
   throw new Error(`因果网络异常: ${JSON.stringify(netInfo)}`)
 await shot('19-network')
 // 点击"洋务运动"节点（坐标由布局暴露），选中应同步 store
