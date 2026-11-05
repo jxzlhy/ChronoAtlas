@@ -3,6 +3,7 @@ import { PEOPLE } from '../data/people'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { SOURCES } from '../data/sources'
 import type { RoutePoint } from '../data/model'
+import { panelIn } from './motion'
 
 /**
  * 历史航线探索面板（PHASE B4/B5）：

@@ -1,6 +1,7 @@
 import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { eraOf } from '../data/eras'
+import { panelIn } from './motion'
 import type { ContinentKey, EventType } from '../data/model'
 
 /**
@@ -69,7 +70,10 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     panel.hidden = !v
     toggle.setAttribute('aria-expanded', String(v))
     toggle.classList.toggle('is-open', v)
-    if (v) render(true) // 打开时强制刷新（筛选可能已变）
+    if (v) {
+      render(true) // 打开时强制刷新（筛选可能已变）
+      panelIn(panel)
+    }
   }
 
   toggle.addEventListener('click', () => setOpen(!open))

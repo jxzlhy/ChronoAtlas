@@ -2,6 +2,7 @@ import { appStore, type AppState } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { LINKS } from '../data/links'
 import { KIND_COLOR } from '../scene/LinkArcs'
+import { panelIn } from './motion'
 
 interface NetNode {
   id: string
@@ -381,6 +382,7 @@ export function initNetwork(onPause?: () => void, onResume?: () => void): void {
       resize()
       dirty = true
       requestFrame()
+      panelIn(overlay)
     } else {
       onResume?.()
     }
