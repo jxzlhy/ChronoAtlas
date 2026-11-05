@@ -467,4 +467,49 @@ export const PEOPLE: Person[] = [
     },
     eventIds: ['panama-canal'],
   },
+  // ---- V0.26.0 人物扩容（仅补实际缺口 4 位；生卒为百科级常识，review: 'pending' 待来源验证升级）----
+  {
+    id: 'dalembert',
+    name: { zh: '达朗贝尔', en: 'Jean le Rond d\'Alembert' },
+    life: '1717 – 1783',
+    bio: {
+      zh: '法国数学家与启蒙哲人，狄德罗主编《百科全书》的合作者与科学条目主笔。',
+      en: 'French mathematician and philosophe, Diderot\'s co-editor and science contributor of the Encyclopédie.',
+    },
+    eventIds: ['encyclopedie'],
+    review: 'pending',
+  },
+  {
+    id: 'liang-qichao',
+    name: { zh: '梁启超', en: 'Liang Qichao' },
+    life: '1873 – 1929',
+    bio: {
+      zh: '戊戌变法主将与中国近代新闻舆论的开创者，一代知识分子的引路人。',
+      en: 'Reform leader and pioneer of modern Chinese journalism, guiding a generation of intellectuals.',
+    },
+    eventIds: ['hundred-days-reform'],
+    review: 'pending',
+  },
+  {
+    id: 'ito-hirobumi',
+    name: { zh: '伊藤博文', en: 'Itō Hirobumi' },
+    life: '1841 – 1909',
+    bio: {
+      zh: '明治宪法的主要起草人与首位内阁总理大臣，明治体制的总设计师之一。',
+      en: 'Principal drafter of the Meiji Constitution and first prime minister of Japan.',
+    },
+    eventIds: ['meiji-restoration'],
+    review: 'pending',
+  },
+  {
+    id: 'garibaldi',
+    name: { zh: '加里波第', en: 'Giuseppe Garibaldi' },
+    life: '1807 – 1882',
+    bio: {
+      zh: '率"千人远征"解放意大利南部的传奇将领，意大利统一运动的军事灵魂。',
+      en: 'Legendary general of the Expedition of the Thousand; military soul of Italian unification.',
+    },
+    eventIds: ['italian-unification'],
+    review: 'pending',
+  },
 ]

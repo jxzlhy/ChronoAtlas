@@ -369,6 +369,17 @@ if (peersInfo.count > 0 && peersInfo.first) {
   const switched = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
   console.log('   卡内切换:', switched, switched === peersInfo.first ? '✓' : '✗')
 }
+// 同事件人物激活（V0.26.0 人物扩容后）：狄德罗卡应出现达朗贝尔并卡内切换
+await page.evaluate(() => window.__chrono.store.getState().selectPerson('diderot'))
+await new Promise((r) => setTimeout(r, 700))
+const diderotPeers = await page.evaluate(() => ({
+  peers: [...document.querySelectorAll('#person-card .pc-chip')].map((b) => b.textContent?.trim()),
+}))
+console.log('   同事件人物(狄德罗):', JSON.stringify(diderotPeers), diderotPeers.peers.includes('达朗贝尔') ? '✓' : '✗')
+await page.click('#person-card [data-peer="dalembert"]')
+await new Promise((r) => setTimeout(r, 600))
+const peerSwitch = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
+console.log('   卡内切换(达朗贝尔):', peerSwitch, peerSwitch === 'dalembert' ? '✓' : '✗')
 await page.click('#person-card [data-close]')
 await new Promise((r) => setTimeout(r, 500))
 
