@@ -1,9 +1,11 @@
 /* ============================================================
    ChronoAtlas · 动态历史地球 — 视觉体系
    深空玻璃拟态 / 主题色：青蓝 #22d3ee
+   设计 Token（PHASE E2）：色彩 / 字阶 / 间距 / 圆角 / 动效 / 角色色
    ============================================================ */
 
 :root {
+  /* 表面与文字 */
   --bg: #04060e;
   --panel: rgba(9, 15, 28, 0.72);
   --panel-strong: rgba(11, 19, 34, 0.9);
@@ -11,13 +13,37 @@
   --border-strong: rgba(148, 180, 255, 0.26);
   --text: #e8eefc;
   --text-muted: #8fa3c8;
+  /* 主强调（青） */
   --accent: #22d3ee;
   --accent-soft: rgba(34, 211, 238, 0.16);
   --accent-border: rgba(34, 211, 238, 0.4);
-  --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  /* 角色色：人物紫 / 历史航线金 */
+  --person: var(--person);
+  --route: var(--route);
+  /* 字阶 */
+  --fs-xs: 10.5px;
+  --fs-sm: 11.5px;
+  --fs-md: 12.5px;
+  --fs-lg: 14px;
+  --fs-xl: 16px;
+  /* 间距 */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  /* 圆角与阴影 */
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 9px;
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  /* 动效：统一曲线与时长 */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.35s;
+  /* 焦点 */
+  --focus-ring: 2px solid var(--accent);
 }
 
 * {
@@ -103,7 +129,7 @@ button {
 }
 
 .loading-sub {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.34em;
   color: var(--text-muted);
 }
@@ -310,7 +336,7 @@ body.ready .search-wrap {
 
 .search-empty {
   padding: 16px;
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   color: var(--text-muted);
   text-align: center;
 }
@@ -376,13 +402,13 @@ body.ready .search-wrap {
   border-radius: 6px;
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: #f0abfc;
+  color: var(--person);
   background: rgba(240, 171, 252, 0.14);
   border: 1px solid rgba(240, 171, 252, 0.35);
 }
 
 .search-item-life {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   font-weight: 400;
   color: var(--text-muted);
   margin-left: 5px;
@@ -408,7 +434,7 @@ body.ready .search-wrap {
   cursor: pointer;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
 }
 
 .random-btn svg {
@@ -445,13 +471,13 @@ body.ready .continent-nav {
   border: 1px solid var(--border);
   background: rgba(9, 15, 28, 0.55);
   color: #b9c7e4;
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   letter-spacing: 0.06em;
   text-align: left;
   cursor: pointer;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .continent-nav button:hover {
@@ -528,7 +554,7 @@ body.ready .continent-nav {
 }
 
 .ec-meta {
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   letter-spacing: 0.04em;
 }
@@ -577,7 +603,7 @@ body.ready .continent-nav {
 }
 
 .ec-links-label {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.08em;
   color: var(--text-muted);
   margin-bottom: 7px;
@@ -593,7 +619,7 @@ body.ready .continent-nav {
   max-width: 100%;
   padding: 4px 11px;
   border-radius: 999px;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
@@ -602,7 +628,7 @@ body.ready .continent-nav {
   color: var(--chip-color);
   background: color-mix(in srgb, var(--chip-color) 13%, transparent);
   border: 1px solid color-mix(in srgb, var(--chip-color) 42%, transparent);
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .ec-chip:hover {
@@ -618,7 +644,7 @@ body.ready .continent-nav {
 }
 
 .ec-chip--person {
-  --chip-color: #f0abfc;
+  --chip-color: var(--person);
 }
 
 .ec-chip--person.is-open {
@@ -639,12 +665,12 @@ body.ready .continent-nav {
   margin-top: 6px;
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   background: rgba(148, 180, 255, 0.07);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .hotspot-toggle i {
@@ -652,7 +678,7 @@ body.ready .continent-nav {
   height: 8px;
   border-radius: 50%;
   background: color-mix(in srgb, #22d3ee 35%, transparent);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 
 .hotspot-toggle:hover {
@@ -709,7 +735,7 @@ body.ready .continent-nav {
   max-width: 100%;
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   color: var(--text);
   background: rgba(148, 180, 255, 0.08);
   border: 1px solid color-mix(in srgb, var(--k, var(--accent)) 45%, transparent);
@@ -718,7 +744,7 @@ body.ready .continent-nav {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .ec-journey-step:hover {
@@ -751,7 +777,7 @@ body.ready .continent-nav {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
@@ -771,12 +797,12 @@ body.ready .continent-nav {
 .ec-depth-btn {
   padding: 2px 9px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .ec-depth-btn:hover {
@@ -804,13 +830,13 @@ body.ready .continent-nav {
   align-items: baseline;
   gap: 7px;
   max-width: 100%;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   color: var(--text);
   opacity: 0.82;
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
 }
 
 .ec-sources a:hover {
@@ -819,7 +845,7 @@ body.ready .continent-nav {
 }
 
 .ec-source-pub {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -830,11 +856,11 @@ body.ready .continent-nav {
   display: inline-flex;
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.06em;
-  color: #f0abfc;
-  background: color-mix(in srgb, #f0abfc 13%, transparent);
-  border: 1px solid color-mix(in srgb, #f0abfc 42%, transparent);
+  color: var(--person);
+  background: color-mix(in srgb, var(--person) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--person) 42%, transparent);
 }
 
 .pc-name {
@@ -852,7 +878,7 @@ body.ready .continent-nav {
 
 .pc-life {
   margin-top: 5px;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   letter-spacing: 0.05em;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
@@ -860,13 +886,13 @@ body.ready .continent-nav {
 
 .pc-bio {
   margin: 10px 0 0;
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   line-height: 1.7;
 }
 
 .pc-bio-en {
   margin: 6px 0 0;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   line-height: 1.65;
   color: var(--text-muted);
 }
@@ -884,7 +910,7 @@ body.ready .continent-nav {
 
 .pc-links-label {
   margin-top: 14px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.08em;
   color: var(--text-muted);
   margin-bottom: 7px;
@@ -911,7 +937,7 @@ body.ready .continent-nav {
   color: var(--text);
   text-align: left;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .pc-tl-row:hover,
@@ -930,7 +956,7 @@ body.ready .continent-nav {
 
 .pc-tl-year {
   flex: none;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -943,14 +969,14 @@ body.ready .continent-nav {
 }
 
 .pc-tl-title {
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .pc-tl-sub {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -993,9 +1019,9 @@ body.ready .continent-nav {
   padding: 1px 7px;
   border-radius: 999px;
   font-size: 9.5px;
-  color: #f0abfc;
-  background: color-mix(in srgb, #f0abfc 12%, transparent);
-  border: 1px solid color-mix(in srgb, #f0abfc 35%, transparent);
+  color: var(--person);
+  background: color-mix(in srgb, var(--person) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--person) 35%, transparent);
 }
 
 .pc-place-role[data-role='birth'],
@@ -1057,9 +1083,9 @@ body.ready .continent-nav {
   padding: 1px 7px;
   border-radius: 999px;
   font-size: 9.5px;
-  color: #f0abfc;
-  background: color-mix(in srgb, #f0abfc 12%, transparent);
-  border: 1px solid color-mix(in srgb, #f0abfc 35%, transparent);
+  color: var(--person);
+  background: color-mix(in srgb, var(--person) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--person) 35%, transparent);
 }
 
 .pc-rel-name {
@@ -1078,7 +1104,7 @@ body.ready .continent-nav {
 .pc-rel-desc {
   flex: 1;
   min-width: 0;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -1096,20 +1122,20 @@ body.ready .continent-nav {
   max-width: 100%;
   padding: 4px 11px;
   border-radius: 999px;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
-  color: #f0abfc;
-  background: color-mix(in srgb, #f0abfc 13%, transparent);
-  border: 1px solid color-mix(in srgb, #f0abfc 42%, transparent);
-  transition: background 0.2s ease;
+  color: var(--person);
+  background: color-mix(in srgb, var(--person) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--person) 42%, transparent);
+  transition: background 0.2s var(--ease-out);
 }
 
 .pc-chip:hover {
-  background: color-mix(in srgb, #f0abfc 26%, transparent);
+  background: color-mix(in srgb, var(--person) 26%, transparent);
 }
 
 .pc-close {
@@ -1145,7 +1171,7 @@ body.ready .continent-nav {
   color: #7ee7f7;
   font-size: 12px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .ec-locate:hover {
@@ -1203,10 +1229,10 @@ body.ready .continent-nav {
   border-radius: 999px;
   background: transparent;
   color: var(--text-muted);
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .slice-toggle:hover {
@@ -1255,7 +1281,7 @@ body.ready .continent-nav {
 }
 
 .slice-head-title {
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   font-weight: 600;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -1273,7 +1299,7 @@ body.ready .continent-nav {
 
 .slice-head-hint {
   flex: none;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
@@ -1313,12 +1339,12 @@ body.ready .continent-nav {
 .snap-sort-btn {
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out);
 }
 
 .snap-sort-btn:hover {
@@ -1383,7 +1409,7 @@ body.ready .continent-nav {
   border: 0;
   background: transparent;
   color: var(--text-muted);
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   text-align: left;
   cursor: pointer;
 }
@@ -1404,7 +1430,7 @@ body.ready .continent-nav {
   background: color-mix(in srgb, var(--chip-color, #94b4ff) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--chip-color, #94b4ff) 34%, transparent);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .snap-chip:hover:not(:disabled) {
@@ -1486,7 +1512,7 @@ body.ready .continent-nav {
 }
 
 .slice-sub {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -1495,13 +1521,13 @@ body.ready .continent-nav {
 
 .slice-meta {
   flex: none;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
 .slice-empty {
   padding: 20px 16px;
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   color: var(--text-muted);
   text-align: center;
 }
@@ -1510,7 +1536,7 @@ body.ready .continent-nav {
 .search-empty-en {
   display: block;
   margin-top: 4px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: color-mix(in srgb, var(--text-muted) 70%, transparent);
 }
 
@@ -1572,7 +1598,7 @@ body.ready .continent-nav {
   -webkit-backdrop-filter: blur(14px);
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
 }
 
 .routes-toggle svg {
@@ -1705,7 +1731,7 @@ body.ready .continent-nav {
 }
 
 .rp-sub {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -1714,7 +1740,7 @@ body.ready .continent-nav {
 
 .rp-meta {
   flex: none;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 
@@ -1780,9 +1806,9 @@ body.ready .continent-nav {
   padding: 7px 10px;
   font-size: 11px;
   line-height: 1.6;
-  color: #f5c97b;
+  color: var(--route);
   background: rgba(245, 201, 123, 0.08);
-  border: 1px solid color-mix(in srgb, #f5c97b 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--route) 35%, transparent);
   border-radius: var(--radius-sm);
 }
 
@@ -1790,12 +1816,12 @@ body.ready .continent-nav {
   display: block;
   margin-top: 3px;
   font-size: 10px;
-  color: color-mix(in srgb, #f5c97b 65%, transparent);
+  color: color-mix(in srgb, var(--route) 65%, transparent);
 }
 
 .rp-links-label {
   margin-top: 12px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.08em;
   color: var(--text-muted);
   margin-bottom: 6px;
@@ -1820,9 +1846,9 @@ body.ready .continent-nav {
   border: 1px solid var(--accent-border);
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .rp-reset {
@@ -1922,7 +1948,7 @@ body.ready .continent-nav {
   -webkit-backdrop-filter: blur(14px);
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out), background 0.2s var(--ease-out);
 }
 
 .network-toggle svg {
@@ -1974,7 +2000,7 @@ body.ready .continent-nav {
 
 .network-sub {
   margin-left: 10px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   font-weight: 400;
   color: var(--text-muted);
   letter-spacing: 0.02em;
@@ -1986,9 +2012,9 @@ body.ready .continent-nav {
   border-radius: 999px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s var(--ease-out);
 }
 
 .network-open:hover {
@@ -2007,7 +2033,7 @@ body.ready .continent-nav {
   color: var(--text-muted);
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .network-close:hover {
@@ -2038,7 +2064,7 @@ body.ready .continent-nav {
 }
 
 .network-legend-title {
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.08em;
   color: var(--text-muted);
 }
@@ -2064,7 +2090,7 @@ body.ready .continent-nav {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--k, var(--accent));
   letter-spacing: 0.05em;
 }
@@ -2079,7 +2105,7 @@ body.ready .continent-nav {
 
 .nl-route {
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: var(--fs-md);
   font-weight: 600;
 }
 
@@ -2090,7 +2116,7 @@ body.ready .continent-nav {
 
 .nl-zh {
   margin: 7px 0 0;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   line-height: 1.6;
   color: var(--text);
 }
@@ -2141,7 +2167,7 @@ body.ready .timeline-wrap {
   background: rgba(148, 180, 255, 0.08);
   color: var(--text);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .play-btn:hover {
@@ -2198,7 +2224,7 @@ body.ready .timeline-wrap {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 11.5px;
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -2275,7 +2301,7 @@ body.ready .timeline-wrap {
   display: flex;
   justify-content: space-between;
   margin-top: 1px;
-  font-size: 10.5px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -2315,7 +2341,7 @@ body.ready .timeline-wrap {
 
   .continent-nav button {
     padding: 5px 11px;
-    font-size: 11.5px;
+    font-size: var(--fs-sm);
   }
 
   .event-card {
@@ -2372,7 +2398,7 @@ body.ready .timeline-wrap {
   }
 
   .network-title {
-    font-size: 12.5px;
+    font-size: var(--fs-md);
   }
 
   .slice-list {
@@ -2405,4 +2431,15 @@ body.ready .timeline-wrap {
   .event-card {
     transition: none;
   }
+}
+
+/* ---------- 全局可访问性（PHASE E5） ---------- */
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
