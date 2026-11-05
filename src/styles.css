@@ -957,6 +957,76 @@ body.ready .continent-nav {
   text-overflow: ellipsis;
 }
 
+/* 活动地图（PHASE C1）：有据地点行，点击飞往 */
+.pc-atlas-hint {
+  margin-left: 8px;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--text-muted) 65%, transparent);
+}
+
+.pc-atlas {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pc-place {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pc-place:hover {
+  background: rgba(240, 171, 252, 0.09);
+}
+
+.pc-place-role {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  color: #f0abfc;
+  background: color-mix(in srgb, #f0abfc 12%, transparent);
+  border: 1px solid color-mix(in srgb, #f0abfc 35%, transparent);
+}
+
+.pc-place-role[data-role='birth'],
+.pc-place-role[data-role='death'] {
+  color: #7dd3fc;
+  background: color-mix(in srgb, #7dd3fc 12%, transparent);
+  border-color: color-mix(in srgb, #7dd3fc 35%, transparent);
+}
+
+.pc-place-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pc-place-en {
+  margin-left: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.pc-place-year {
+  flex: none;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* 同事件人物 chips（卡内切换） */
 .pc-peers {
   display: flex;

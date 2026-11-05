@@ -6,6 +6,7 @@ import { CameraRig } from './scene/CameraRig'
 import { LinkArcs } from './scene/LinkArcs'
 import { HotZones } from './scene/HotZones'
 import { RouteArcs } from './scene/RouteArcs'
+import { PersonMarkers } from './scene/PersonMarkers'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
@@ -41,6 +42,7 @@ function boot(): void {
   const arcs = new LinkArcs(globe.scene)
   const hotspots = new HotZones(globe.scene)
   const routeArcs = new RouteArcs(globe.scene)
+  const personMarkers = new PersonMarkers(globe.scene)
 
   // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>&p=<人物>）----
   {
@@ -148,8 +150,12 @@ function boot(): void {
     goToEvent,
   )
 
-  // ---- 人物档案卡（人物作为独立探索入口）----
-  initPersonCard(goToEvent)
+  // ---- 人物档案卡（PHASE C1：活动地图紫点 + 地点点击飞往）----
+  initPersonCard(
+    goToEvent,
+    (lat, lon) => rig.flyTo(lat, lon, 2.0, 1.0),
+    (places) => personMarkers.setPlaces(places),
+  )
 
   // 网络浮层打开时暂停地球渲染循环（浮层全遮挡，省电）
   const pauseRender = (): void => globe.renderer.setAnimationLoop(null)

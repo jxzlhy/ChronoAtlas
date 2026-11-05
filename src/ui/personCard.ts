@@ -1,6 +1,7 @@
 import { appStore, type AppState, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { PEOPLE } from '../data/people'
+import type { PersonPlace } from '../data/model'
 
 /** 人物卡罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
 let compassRef: HTMLElement | null = null
@@ -8,12 +9,27 @@ export function getPersonCompassEl(): HTMLElement | null {
   return compassRef
 }
 
+const ROLE_ZH: Record<PersonPlace['role'], string> = {
+  birth: '出生',
+  death: '逝世',
+  active: '活动',
+  travel: '旅居',
+}
+
+/** 当前人物的活动地点（点击飞往用） */
+let currentPersonPlaces: PersonPlace[] | null = null
+
 /**
- * 人物档案卡（V1.0-M5，总任务书 §8.1/8.2）：人物作为独立探索入口。
- * 中英姓名 / 生卒 / 双语简介 / 人物时间线（挂接事件按年代排序，点击跳转）/
- * 活动地区（由挂接事件的地点归纳，不虚构轨迹）。与事件卡互斥显示（右侧同位）。
+ * 人物档案卡（V1.0-M5/C1）：人物作为独立探索入口。
+ * 中英姓名 / 生卒 / 双语简介 / 活动地图（有据地点，点击飞往，地球显示紫点）/
+ * 人物时间线（挂接事件按年代排序，点击跳转）/ 同事件人物。
+ * 与事件卡互斥显示（右侧同位）。
  */
-export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
+export function initPersonCard(
+  onGo: (ev: HistoryEvent) => void,
+  onFlyPlace: (lat: number, lon: number) => void,
+  onPlacesChange: (places: PersonPlace[] | null) => void,
+): void {
   const card = document.getElementById('person-card') as HTMLElement
   const eventCard = document.getElementById('event-card') as HTMLElement
   card.setAttribute('role', 'dialog')
@@ -53,7 +69,25 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
       <div class="pc-life">${p.life}</div>
       <p class="pc-bio">${p.bio.zh}</p>
       <p class="pc-bio-en">${p.bio.en}</p>
-      ${places.length > 0 ? `<div class="pc-places">活动地区 · Regions：${places.join(' / ')}</div>` : ''}
+      ${
+        p.places && p.places.length > 0
+          ? `<div class="pc-links-label">活动地图 · Atlas<span class="pc-atlas-hint">点击定位 · click to fly</span></div>
+       <div class="pc-atlas">
+         ${p.places
+           .map(
+             (pl, i) =>
+               `<button class="pc-place" type="button" data-place="${i}" title="${pl.precision === 'approx' ? '位置存在争议 / disputed' : ''}">
+                  <span class="pc-place-role" data-role="${pl.role}">${ROLE_ZH[pl.role]}</span>
+                  <span class="pc-place-name">${pl.name.zh}<span class="pc-place-en">${pl.name.en}</span></span>
+                  ${pl.year !== undefined ? `<span class="pc-place-year">${pl.year < 0 ? `${-pl.year} BCE` : pl.year}</span>` : ''}
+                </button>`,
+           )
+           .join('')}
+       </div>`
+          : places.length > 0
+            ? `<div class="pc-places">活动地区 · Regions：${places.join(' / ')}</div>`
+            : ''
+      }
       ${
         timeline.length > 0
           ? `<div class="pc-links-label">人物时间线 · Timeline</div>
@@ -98,6 +132,7 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     if (!p) {
       // 关闭：恢复事件卡的可见性（若仍有选中事件）
       compassRef = null
+      onPlacesChange(null)
       card.classList.remove('show')
       window.setTimeout(() => {
         if (!appStore.getState().selectedPersonId) {
@@ -109,6 +144,8 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     }
     card.innerHTML = render(p.id)
     compassRef = card.querySelector('.ec-compass')
+    currentPersonPlaces = p.places ?? null
+    onPlacesChange(p.places ?? null)
     card.hidden = false
     eventCard.hidden = true // 人物卡与事件卡同位互斥
     requestAnimationFrame(() => card.classList.add('show'))
@@ -128,6 +165,12 @@ export function initPersonCard(onGo: (ev: HistoryEvent) => void): void {
     const target = e.target as HTMLElement
     if (target.closest('[data-close]')) {
       appStore.getState().selectPerson(null)
+      return
+    }
+    const placeBtn = target.closest<HTMLElement>('[data-place]')
+    if (placeBtn?.dataset.place !== undefined && currentPersonPlaces) {
+      const pl = currentPersonPlaces[Number(placeBtn.dataset.place)]
+      if (pl) onFlyPlace(pl.lat, pl.lon)
       return
     }
     const peerBtn = target.closest<HTMLElement>('[data-peer]')

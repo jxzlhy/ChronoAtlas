@@ -105,8 +105,23 @@ export interface Person {
   bio: Bilingual
   /** 挂接事件；第一个为主事件（搜索跳转目标） */
   eventIds: string[]
+  /** 活动地点（PHASE C1）：生卒地/主要活动地，百科级常识坐标 */
+  places?: PersonPlace[]
   sourceIds?: string[]
   review?: ReviewStatus
+}
+
+/** 人物活动地点：不能当精确轨迹；连续路径不可靠时只列点 */
+export interface PersonPlace {
+  name: Bilingual
+  lat: number
+  lon: number
+  /** 该地相关的年份（生年/卒年/活动期起） */
+  year?: number
+  /** 地点性质：出生 / 逝世 / 主要活动 / 旅居 */
+  role: 'birth' | 'death' | 'active' | 'travel'
+  /** city=城市级（默认），approx=存在学术争议或为近似 */
+  precision?: 'city' | 'approx'
 }
 
 /** 参考资料类型 */

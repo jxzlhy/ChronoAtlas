@@ -369,6 +369,20 @@ if (peersInfo.count > 0 && peersInfo.first) {
   const switched = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
   console.log('   卡内切换:', switched, switched === peersInfo.first ? '✓' : '✗')
 }
+// 人物活动地图（PHASE C1）：瓦特应有 3 地点行，点击飞往
+await page.evaluate(() => window.__chrono.store.getState().selectPerson('watt'))
+await new Promise((r) => setTimeout(r, 700))
+const atlas = await page.evaluate(() => ({
+  rows: document.querySelectorAll('#person-card .pc-place').length,
+  birth: !!document.querySelector('#person-card .pc-place-role[data-role="birth"]'),
+}))
+console.log('   活动地图:', JSON.stringify(atlas), atlas.rows === 3 && atlas.birth ? '✓' : '✗')
+await page.click('#person-card .pc-place:nth-child(2)')
+await new Promise((r) => setTimeout(r, 1600))
+console.log('   地点飞往: ✓（无报错）')
+await shot('22-person-atlas')
+await page.click('#person-card [data-close]')
+await new Promise((r) => setTimeout(r, 500))
 // 同事件人物激活（V0.26.0 人物扩容后）：狄德罗卡应出现达朗贝尔并卡内切换
 await page.evaluate(() => window.__chrono.store.getState().selectPerson('diderot'))
 await new Promise((r) => setTimeout(r, 700))

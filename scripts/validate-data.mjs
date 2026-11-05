@@ -108,6 +108,18 @@ for (const p of PEOPLE) {
   }
 }
 
+// ---------- 人物活动地点（PHASE C1） ----------
+const PLACE_ROLES = new Set(['birth', 'death', 'active', 'travel'])
+for (const pr of PEOPLE) {
+  for (const pl of pr.places ?? []) {
+    const tag = `person:${pr.id}.place`
+    if (!Number.isFinite(pl.lat) || Math.abs(pl.lat) > 90) err(`${tag} 纬度非法: ${pl.lat}`)
+    if (!Number.isFinite(pl.lon) || Math.abs(pl.lon) > 180) err(`${tag} 经度非法: ${pl.lon}`)
+    if (!isBilingual(pl.name)) err(`${tag} 双语缺失`)
+    if (!PLACE_ROLES.has(pl.role)) err(`${tag} role 非法: ${pl.role}`)
+  }
+}
+
 // ---------- 来源 ----------
 const srcIds = new Set()
 for (const s of SOURCES) {
@@ -201,6 +213,8 @@ console.log(
 )
 const isolated = PEOPLE.filter((x) => x.eventIds.length === 0).length
 console.log(`孤立人物(零事件挂接): ${isolated}`)
+const withPlaces = PEOPLE.filter((x) => (x.places?.length ?? 0) > 0)
+console.log(`人物活动地点: ${withPlaces.length}/${PEOPLE.length} 位有据 (${pct(withPlaces.length, PEOPLE.length)}) · 共 ${PEOPLE.reduce((s, x) => s + (x.places?.length ?? 0), 0)} 个地点`)
 
 console.log('\n=== 校验结果 ===')
 console.log(`errors: ${errors.length} · warnings: ${warnings.length}`)

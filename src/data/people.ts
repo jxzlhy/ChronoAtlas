@@ -16,6 +16,10 @@ export const PEOPLE: Person[] = [
       en: 'French Enlightenment philosopher, chief editor of the Encyclopédie.',
     },
     eventIds: ['encyclopedie'],
+    places: [
+      { name: { zh: '朗格勒', en: 'Langres' }, lat: 47.86, lon: 5.33, year: 1713, role: 'birth' },
+      { name: { zh: '巴黎', en: 'Paris' }, lat: 48.86, lon: 2.35, year: 1742, role: 'active' },
+    ],
   },
   {
     id: 'rousseau',
@@ -46,6 +50,11 @@ export const PEOPLE: Person[] = [
       en: 'His separate condenser made steam power universally deployable.',
     },
     eventIds: ['watt-steam-engine', 'industrial-revolution'],
+    places: [
+      { name: { zh: '格里诺克', en: 'Greenock' }, lat: 55.95, lon: -4.76, year: 1736, role: 'birth' },
+      { name: { zh: '格拉斯哥', en: 'Glasgow' }, lat: 55.86, lon: -4.25, year: 1754, role: 'active' },
+      { name: { zh: '伯明翰', en: 'Birmingham' }, lat: 52.48, lon: -1.9, year: 1774, role: 'active' },
+    ],
   },
   {
     id: 'adam-smith',
@@ -126,6 +135,11 @@ export const PEOPLE: Person[] = [
       en: 'Explained evolution by natural selection, reshaping biology and worldview.',
     },
     eventIds: ['origin-of-species'],
+    places: [
+      { name: { zh: '什鲁斯伯里', en: 'Shrewsbury' }, lat: 52.71, lon: -2.75, year: 1809, role: 'birth' },
+      { name: { zh: '剑桥', en: 'Cambridge' }, lat: 52.2, lon: 0.12, year: 1828, role: 'active' },
+      { name: { zh: '唐恩村（唐恩小筑）', en: 'Downe (Down House)' }, lat: 51.33, lon: 0.18, year: 1842, role: 'active' },
+    ],
   },
   {
     id: 'marx',
@@ -136,6 +150,27 @@ export const PEOPLE: Person[] = [
       en: 'Co-author of the Communist Manifesto, shaping a century of politics.',
     },
     eventIds: ['communist-manifesto'],
+    places: [
+      { name: { zh: '特里尔', en: 'Trier' }, lat: 49.75, lon: 6.63, year: 1818, role: 'birth' },
+      { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1836, role: 'active' },
+      { name: { zh: '伦敦', en: 'London' }, lat: 51.5, lon: -0.12, year: 1849, role: 'active' },
+    ],
+  },
+  {
+    id: 'engels',
+    name: { zh: '恩格斯', en: 'Friedrich Engels' },
+    life: '1820 – 1895',
+    bio: {
+      zh: '马克思终身的合作者与支持者，《共产党宣言》合著者，《资本论》后续卷册的整理者。',
+      en: 'Marx\'s lifelong collaborator and supporter — co-author of the Manifesto and editor of Capital\'s later volumes.',
+    },
+    eventIds: ['communist-manifesto', 'paris-commune'],
+    places: [
+      { name: { zh: '巴门（伍珀塔尔）', en: 'Barmen (Wuppertal)' }, lat: 51.26, lon: 7.18, year: 1820, role: 'birth' },
+      { name: { zh: '曼彻斯特', en: 'Manchester' }, lat: 53.48, lon: -2.24, year: 1842, role: 'active' },
+      { name: { zh: '伦敦', en: 'London' }, lat: 51.5, lon: -0.12, year: 1870, role: 'active' },
+    ],
+    review: 'pending',
   },
   {
     id: 'perry',
@@ -156,6 +191,11 @@ export const PEOPLE: Person[] = [
       en: 'Founder of modern nursing and health statistics, forged in Crimea.',
     },
     eventIds: ['nightingale-crimea', 'crimean-war'],
+    places: [
+      { name: { zh: '佛罗伦萨', en: 'Florence' }, lat: 43.77, lon: 11.26, year: 1820, role: 'birth' },
+      { name: { zh: '伦敦', en: 'London' }, lat: 51.5, lon: -0.12, year: 1837, role: 'active' },
+      { name: { zh: '斯库塔里（伊斯坦布尔）', en: 'Scutari, Istanbul' }, lat: 41.03, lon: 28.98, year: 1854, role: 'travel' },
+    ],
   },
   {
     id: 'li-hongzhang',
@@ -186,6 +226,11 @@ export const PEOPLE: Person[] = [
       en: 'Iron Chancellor who unified Germany and chaired the Berlin Conference.',
     },
     eventIds: ['franco-prussian-war', 'berlin-conference'],
+    places: [
+      { name: { zh: '舍恩豪森', en: 'Schönhausen' }, lat: 52.47, lon: 11.4, year: 1815, role: 'birth' },
+      { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1849, role: 'active' },
+      { name: { zh: '腓特烈斯鲁', en: 'Friedrichsruh' }, lat: 52.5, lon: 13.55, year: 1898, role: 'death' },
+    ],
   },
   {
     id: 'meiji-emperor',
@@ -226,6 +271,10 @@ export const PEOPLE: Person[] = [
       en: 'Patented the telephone; the voice crossed continents in real time.',
     },
     eventIds: ['telephone'],
+    places: [
+      { name: { zh: '爱丁堡', en: 'Edinburgh', }, lat: 55.95, lon: -3.19, year: 1847, role: 'birth' },
+      { name: { zh: '波士顿（语音教学）', en: 'Boston (teaching speech)' }, lat: 42.36, lon: -71.06, year: 1871, role: 'active' },
+    ],
   },
   {
     id: 'edison',
@@ -236,6 +285,11 @@ export const PEOPLE: Person[] = [
       en: 'His Menlo Park lab delivered the lamp and the systems that powered it.',
     },
     eventIds: ['light-bulb'],
+    places: [
+      { name: { zh: '米兰（俄亥俄州）', en: 'Milan, Ohio' }, lat: 41.1, lon: -82.6, year: 1847, role: 'birth' },
+      { name: { zh: '门洛帕克（新泽西）', en: 'Menlo Park, NJ' }, lat: 40.52, lon: -74.31, year: 1876, role: 'active' },
+      { name: { zh: '西奥兰治', en: 'West Orange, NJ' }, lat: 40.79, lon: -74.24, year: 1887, role: 'active' },
+    ],
   },
   {
     id: 'curie',
@@ -246,6 +300,10 @@ export const PEOPLE: Person[] = [
       en: 'Two Nobel Prizes; pioneer of radioactivity research.',
     },
     eventIds: ['nobel-marie-curie', 'radium-discovery'],
+    places: [
+      { name: { zh: '华沙', en: 'Warsaw' }, lat: 52.23, lon: 21.01, year: 1867, role: 'birth' },
+      { name: { zh: '巴黎（索邦）', en: 'Paris (Sorbonne)' }, lat: 48.85, lon: 2.35, year: 1891, role: 'active' },
+    ],
   },
   {
     id: 'planck',
@@ -286,6 +344,12 @@ export const PEOPLE: Person[] = [
       en: 'Spiritual leader of the Xinhai Revolution and the first Asian republic.',
     },
     eventIds: ['tongmenghui', 'xinhai-revolution'],
+    places: [
+      { name: { zh: '香山翠亨', en: 'Cuiheng, Xiangshan' }, lat: 22.44, lon: 113.53, year: 1866, role: 'birth' },
+      { name: { zh: '檀香山', en: 'Honolulu' }, lat: 21.31, lon: -157.86, year: 1879, role: 'travel' },
+      { name: { zh: '东京', en: 'Tokyo' }, lat: 35.68, lon: 139.7, year: 1905, role: 'active' },
+      { name: { zh: '北京', en: 'Beijing' }, lat: 39.9, lon: 116.4, year: 1925, role: 'death' },
+    ],
   },
   {
     id: 'ford',
