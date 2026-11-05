@@ -383,6 +383,22 @@ console.log('   地点飞往: ✓（无报错）')
 await shot('22-person-atlas')
 await page.click('#person-card [data-close]')
 await new Promise((r) => setTimeout(r, 500))
+// 人物关系（PHASE C2）：马克思卡应有恩格斯（合作）关系行，点击切换
+await page.evaluate(() => window.__chrono.store.getState().selectPerson('marx'))
+await new Promise((r) => setTimeout(r, 700))
+const relInfo = await page.evaluate(() => ({
+  rows: document.querySelectorAll('#person-card .pc-rel').length,
+  engels: !!document.querySelector('#person-card [data-rel="engels"]'),
+  type: document.querySelector('#person-card .pc-rel-type')?.textContent?.trim(),
+}))
+console.log('   人物关系:', JSON.stringify(relInfo), relInfo.rows >= 1 && relInfo.engels ? '✓' : '✗')
+await shot('23-person-relations')
+await page.click('#person-card [data-rel="engels"]')
+await new Promise((r) => setTimeout(r, 600))
+const relSwitch = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
+console.log('   关系切换(恩格斯):', relSwitch, relSwitch === 'engels' ? '✓' : '✗')
+await page.click('#person-card [data-close]')
+await new Promise((r) => setTimeout(r, 500))
 // 同事件人物激活（V0.26.0 人物扩容后）：狄德罗卡应出现达朗贝尔并卡内切换
 await page.evaluate(() => window.__chrono.store.getState().selectPerson('diderot'))
 await new Promise((r) => setTimeout(r, 700))

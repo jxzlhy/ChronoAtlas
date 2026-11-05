@@ -124,6 +124,27 @@ export interface PersonPlace {
   precision?: 'city' | 'approx'
 }
 
+/** 人物关系类型（PHASE C2）：每条必须有明确史实依据 */
+export type PersonRelation =
+  | 'cooperation' // 合作（共事/合著/同盟）
+  | 'mentorship' // 师承（师生/举荐提携）
+  | 'opposition' // 对立（政敌/论战/镇压）
+  | 'family' // 家族
+  | 'influence' // 学术影响或思想传承（单向：from 影响 to）
+
+/** 人物关系边表（PHASE C2）：只收有明确史实依据的对，不同时代不硬连 */
+export interface PersonLink {
+  from: string
+  to: string
+  relation: PersonRelation
+  zh: string
+  en: string
+  /** 关系成立的大致年份（可选） */
+  year?: number
+  sourceIds?: string[]
+  review?: ReviewStatus
+}
+
 /** 参考资料类型 */
 export type SourceType = 'encyclopedia' | 'archive' | 'museum' | 'database' | 'publication'
 

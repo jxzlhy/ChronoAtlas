@@ -1,4 +1,4 @@
-import type { Person } from './model'
+import type { Person, PersonLink } from './model'
 
 /**
  * 历史人物层：与事件挂接，供搜索与事件卡"相关人物"展示。
@@ -231,6 +231,20 @@ export const PEOPLE: Person[] = [
       { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1849, role: 'active' },
       { name: { zh: '腓特烈斯鲁', en: 'Friedrichsruh' }, lat: 52.5, lon: 13.55, year: 1898, role: 'death' },
     ],
+  },
+  {
+    id: 'wilhelm-i',
+    name: { zh: '威廉一世', en: 'Wilhelm I' },
+    life: '1797 – 1888',
+    bio: {
+      zh: '普鲁士国王、德意志皇帝，任命俾斯麦为首相并支持其统一政策。',
+      en: 'King of Prussia and German Emperor who appointed Bismarck and backed unification.',
+    },
+    eventIds: ['franco-prussian-war'],
+    places: [
+      { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1861, role: 'active' },
+    ],
+    review: 'pending',
   },
   {
     id: 'meiji-emperor',
@@ -574,6 +588,64 @@ export const PEOPLE: Person[] = [
       en: 'Legendary general of the Expedition of the Thousand; military soul of Italian unification.',
     },
     eventIds: ['italian-unification'],
+    review: 'pending',
+  },
+]
+
+// ---- V0.31.0 人物关系（PHASE C2）：只收有明确史实依据的对 ----
+export const PERSON_LINKS: PersonLink[] = [
+  {
+    from: 'marx',
+    to: 'engels',
+    relation: 'cooperation',
+    zh: '四十年革命同道：《宣言》合著、《资本论》共同事业',
+    en: 'Four decades of revolutionary partnership — co-authors and comrades',
+    year: 1844,
+    review: 'pending',
+  },
+  {
+    from: 'diderot',
+    to: 'dalembert',
+    relation: 'cooperation',
+    zh: '《百科全书》联合主编：科学与人文条目的分工',
+    en: 'Co-editors of the Encyclopédie, splitting sciences and humanities',
+    year: 1750,
+    review: 'pending',
+  },
+  {
+    from: 'kang-youwei',
+    to: 'liang-qichao',
+    relation: 'mentorship',
+    zh: '康门弟子：从万木草堂到公车上书与戊戌变法',
+    en: 'Master and disciple — from Wanmu Cottage to the 1898 Reform',
+    year: 1890,
+    review: 'pending',
+  },
+  {
+    from: 'cixi',
+    to: 'kang-youwei',
+    relation: 'opposition',
+    zh: '戊戌政变：镇压百日维新，康梁流亡',
+    en: 'The 1898 coup crushed the Reform; Kang fled into exile',
+    year: 1898,
+    review: 'pending',
+  },
+  {
+    from: 'sun-yat-sen',
+    to: 'kang-youwei',
+    relation: 'opposition',
+    zh: '革命与保皇之争：改造中国路线的根本对立',
+    en: 'Revolution vs. constitutional monarchy — rival roads to save China',
+    year: 1900,
+    review: 'pending',
+  },
+  {
+    from: 'bismarck',
+    to: 'wilhelm-i',
+    relation: 'cooperation',
+    zh: '君相一体：铁血政策背后的国王授权',
+    en: 'King and chancellor — royal backing behind Realpolitik',
+    year: 1862,
     review: 'pending',
   },
 ]

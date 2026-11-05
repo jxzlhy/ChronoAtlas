@@ -1027,6 +1027,64 @@ body.ready .continent-nav {
   font-variant-numeric: tabular-nums;
 }
 
+/* 人物关系（PHASE C2）：类型徽章 + 对方 + 说明，点击切换 */
+.pc-relations {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pc-rel {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 9px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: rgba(240, 171, 252, 0.05);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pc-rel:hover {
+  background: rgba(240, 171, 252, 0.11);
+}
+
+.pc-rel-type {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  color: #f0abfc;
+  background: color-mix(in srgb, #f0abfc 12%, transparent);
+  border: 1px solid color-mix(in srgb, #f0abfc 35%, transparent);
+}
+
+.pc-rel-name {
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pc-rel-en {
+  margin-left: 5px;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.pc-rel-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* 同事件人物 chips（卡内切换） */
 .pc-peers {
   display: flex;

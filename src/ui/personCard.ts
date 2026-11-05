@@ -1,6 +1,6 @@
 import { appStore, type AppState, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
-import { PEOPLE } from '../data/people'
+import { PEOPLE, PERSON_LINKS } from '../data/people'
 import type { PersonPlace } from '../data/model'
 
 /** 人物卡罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
@@ -14,6 +14,14 @@ const ROLE_ZH: Record<PersonPlace['role'], string> = {
   death: '逝世',
   active: '活动',
   travel: '旅居',
+}
+
+const RELATION_ZH: Record<string, string> = {
+  cooperation: '合作',
+  mentorship: '师承',
+  opposition: '对立',
+  family: '家族',
+  influence: '影响',
 }
 
 /** 当前人物的活动地点（点击飞往用） */
@@ -55,6 +63,9 @@ export function initPersonCard(
         if (!peers.has(other.id) && via) peers.set(other.id, via.title.zh)
       }
     }
+
+    // 人物关系（PHASE C2）：PERSON_LINKS 中与当前人物相关的有据对
+    const relations = PERSON_LINKS.filter((l) => l.from === p.id || l.to === p.id)
 
     return `
       <button class="pc-close" type="button" data-close aria-label="关闭人物档案">×</button>
@@ -123,6 +134,28 @@ export function initPersonCard(
            .join('')}
        </div>`
           : ''
+      }
+      ${
+        relations.length > 0
+          ? `<div class="pc-links-label">人物关系 · Relations</div>
+       <div class="pc-relations">
+         ${relations
+           .map((l) => {
+             const otherId = l.from === p.id ? l.to : l.from
+             const other = PEOPLE.find((x) => x.id === otherId)
+             if (!other) return ''
+             const dir = l.relation === 'influence' ? (l.from === p.id ? '→' : '←') : '↔'
+             return `
+               <button class="pc-rel" type="button" data-rel="${otherId}"
+                       title="${l.zh} — ${l.en}">
+                 <span class="pc-rel-type">${RELATION_ZH[l.relation] ?? l.relation}${dir}</span>
+                 <span class="pc-rel-name">${other.name.zh}<span class="pc-rel-en">${other.name.en}</span></span>
+                 <span class="pc-rel-desc">${l.zh}</span>
+               </button>`
+           })
+           .join('')}
+       </div>`
+          : ''
       }`
   }
 
@@ -177,6 +210,12 @@ export function initPersonCard(
     if (peerBtn?.dataset.peer) {
       // 卡内切换到同事件人物
       appStore.getState().selectPerson(peerBtn.dataset.peer)
+      return
+    }
+    const relBtn = target.closest<HTMLElement>('[data-rel]')
+    if (relBtn?.dataset.rel) {
+      // 关系行点击 → 切换到对方人物
+      appStore.getState().selectPerson(relBtn.dataset.rel)
       return
     }
     const row = target.closest<HTMLElement>('[data-goto]')

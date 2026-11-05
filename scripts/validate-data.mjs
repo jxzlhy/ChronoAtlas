@@ -8,7 +8,7 @@
  */
 import { EVENTS, EVENT_TYPES } from '../src/data/events.ts'
 import { LINKS } from '../src/data/links.ts'
-import { PEOPLE } from '../src/data/people.ts'
+import { PEOPLE, PERSON_LINKS } from '../src/data/people.ts'
 import { SOURCES } from '../src/data/sources.ts'
 import { ROUTES } from '../src/data/routes.ts'
 
@@ -120,6 +120,22 @@ for (const pr of PEOPLE) {
   }
 }
 
+// ---------- 人物关系（PHASE C2） ----------
+const PERSON_RELATIONS = new Set(['cooperation', 'mentorship', 'opposition', 'family', 'influence'])
+const relSeen = new Set()
+for (const pl of PERSON_LINKS) {
+  const tag = `plink:${pl.from}>${pl.to}`
+  if (!personSeen.has(pl.from)) err(`${tag} 悬空人物引用 from`)
+  if (!personSeen.has(pl.to)) err(`${tag} 悬空人物引用 to`)
+  if (pl.from === pl.to) err(`${tag} 自环`)
+  const key = `${pl.from}|${pl.to}`
+  if (relSeen.has(key)) err(`${tag} 重复关系`)
+  relSeen.add(key)
+  if (!PERSON_RELATIONS.has(pl.relation)) err(`${tag} 关系类型非法: ${pl.relation}`)
+  if (!isBilingual({ zh: pl.zh, en: pl.en })) err(`${tag} 双语说明缺失`)
+  for (const sid of pl.sourceIds ?? []) checkSourceRef(tag, sid)
+}
+
 // ---------- 来源 ----------
 const srcIds = new Set()
 for (const s of SOURCES) {
@@ -215,6 +231,7 @@ const isolated = PEOPLE.filter((x) => x.eventIds.length === 0).length
 console.log(`孤立人物(零事件挂接): ${isolated}`)
 const withPlaces = PEOPLE.filter((x) => (x.places?.length ?? 0) > 0)
 console.log(`人物活动地点: ${withPlaces.length}/${PEOPLE.length} 位有据 (${pct(withPlaces.length, PEOPLE.length)}) · 共 ${PEOPLE.reduce((s, x) => s + (x.places?.length ?? 0), 0)} 个地点`)
+console.log(`人物关系: ${PERSON_LINKS.length} 条（有据对，无同时代硬连）`)
 
 console.log('\n=== 校验结果 ===')
 console.log(`errors: ${errors.length} · warnings: ${warnings.length}`)
