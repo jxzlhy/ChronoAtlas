@@ -16,6 +16,13 @@ export class CameraRig {
     private controls: OrbitControls,
   ) {}
 
+  /** 终止进行中的飞行动画（叙事跟随接管相机前调用，避免 tween 与跟随打架） */
+  kill(): void {
+    this.tween?.kill()
+    this.tween = null
+    this.controls.enabled = true
+  }
+
   flyTo(lat: number, lon: number, dist: number, duration = 1.2): void {
     this.tween?.kill()
 

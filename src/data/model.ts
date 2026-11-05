@@ -112,6 +112,49 @@ export interface Person {
 /** 参考资料类型 */
 export type SourceType = 'encyclopedia' | 'archive' | 'museum' | 'database' | 'publication'
 
+/** 历史路线类型（PHASE B1；与事件关系弧线严格区分） */
+export type RouteKind =
+  | 'voyage' // 航海探险
+  | 'expedition' // 陆上探险
+  | 'trade' // 商贸路线
+  | 'migration' // 人口迁徙
+  | 'military' // 军事行动
+  | 'scientific' // 科学考察
+  | 'cultural' // 文化传播
+  | 'discovery' // 地理发现
+
+/** 路线途经点：坐标 + 时间 + 说明；不编造，争议段用 uncertainty 说明 */
+export interface RoutePoint {
+  name: Bilingual
+  lat: number
+  lon: number
+  /** 抵达/经过年份（路线自身年代，可为负/超出主时间轴） */
+  year?: number
+  note?: Bilingual
+  /** 关联事件 id（可选，点击联动） */
+  eventId?: string
+}
+
+/** 历史路线：有史料依据的真实路径（区别于事件关系弧线与人物轨迹） */
+export interface HistoricalRoute {
+  id: string
+  name: Bilingual
+  kind: RouteKind
+  /** 历史时期/时代名（双语） */
+  era: Bilingual
+  points: RoutePoint[]
+  start: number
+  end: number
+  personIds?: string[]
+  eventIds?: string[]
+  /** 来源必填（路线主张需史料支撑） */
+  sourceIds: string[]
+  review: ReviewStatus
+  desc: Bilingual
+  /** 史料争议/不确定性说明 */
+  uncertainty?: Bilingual
+}
+
 export interface Source {
   id: string
   /** 资料名称（文章/条目题名） */

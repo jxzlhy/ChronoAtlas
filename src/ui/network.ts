@@ -86,8 +86,8 @@ export function initNetwork(onPause?: () => void, onResume?: () => void): void {
     nodes.forEach((n, i) => {
       const col = i % 16
       const row = Math.floor(i / 16)
-      n.x = (col + 0.5) * (w / 16) + (Math.random() - 0.5) * 20
-      n.y = (row + 0.5) * (h / Math.ceil(nodes.length / 16)) + (Math.random() - 0.5) * 20
+      n.x = (col + 0.5) * (w / 16) + ((i % 7) - 3) * 3
+      n.y = (row + 0.5) * (h / Math.ceil(nodes.length / 16)) + ((i % 5) - 2) * 3
     })
     const repul = 2600
     const spring = 0.02
@@ -100,8 +100,9 @@ export function initNetwork(onPause?: () => void, onResume?: () => void): void {
           let dy = a.y - b.y
           let d2 = dx * dx + dy * dy
           if (d2 < 1) {
-            dx = Math.random() - 0.5
-            dy = Math.random() - 0.5
+            // 确定性微扰（布局需可重现，供测试与分享）
+            dx = ((i + j) % 3) - 1 || 0.7
+            dy = ((i * j) % 3) - 1 || 0.7
             d2 = 1
           }
           const f = repul / d2

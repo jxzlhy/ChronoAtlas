@@ -10,6 +10,7 @@ import { EVENTS, EVENT_TYPES } from '../src/data/events.ts'
 import { LINKS } from '../src/data/links.ts'
 import { PEOPLE } from '../src/data/people.ts'
 import { SOURCES } from '../src/data/sources.ts'
+import { ROUTES } from '../src/data/routes.ts'
 
 const CONTINENT_KEYS = new Set([
   'asia', 'europe', 'africa', 'north-america', 'south-america', 'oceania', 'antarctica', 'polar',
@@ -126,6 +127,31 @@ for (const ev of EVENTS) for (const sid of ev.sourceIds ?? []) checkSourceRef(`e
 for (const pr of PEOPLE) for (const sid of pr.sourceIds ?? []) checkSourceRef(`person:${pr.id}`, sid)
 for (const l of LINKS) for (const sid of l.sourceIds ?? []) checkSourceRef(`link:${l.from}>${l.to}`, sid)
 
+// ---------- 路线（PHASE B） ----------
+const ROUTE_KINDS_SET = new Set([
+  'voyage', 'expedition', 'trade', 'migration', 'military', 'scientific', 'cultural', 'discovery',
+])
+const routeSeen = new Set()
+for (const r of ROUTES) {
+  const tag = `route:${r.id}`
+  if (routeSeen.has(r.id)) err(`${tag} 重复 ID`)
+  routeSeen.add(r.id)
+  if (!ROUTE_KINDS_SET.has(r.kind)) err(`${tag} 类型非法: ${r.kind}`)
+  if (!isBilingual(r.name) || !isBilingual(r.desc) || !isBilingual(r.era)) err(`${tag} 双语缺失`)
+  if (r.points.length < 2) err(`${tag} 途经点不足 2 个`)
+  for (const pt of r.points) {
+    if (!Number.isFinite(pt.lat) || Math.abs(pt.lat) > 90) err(`${tag} 途经点纬度非法: ${pt.lat}`)
+    if (!Number.isFinite(pt.lon) || Math.abs(pt.lon) > 180) err(`${tag} 途经点经度非法: ${pt.lon}`)
+    if (!isBilingual(pt.name)) err(`${tag} 途经点双语缺失`)
+  }
+  if (r.sourceIds.length === 0) err(`${tag} 路线必须挂接来源`)
+  for (const sid of r.sourceIds) checkSourceRef(tag, sid)
+  if (r.review !== 'reviewed' && r.review !== 'pending') err(`${tag} 审核状态非法`)
+  for (const pid of r.personIds ?? []) {
+    if (!personSeen.has(pid)) err(`${tag} 悬空人物引用: ${pid}`)
+  }
+}
+
 // ---------- 数据画像 ----------
 const countBy = (list, fn) => {
   const m = new Map()
@@ -145,7 +171,7 @@ const imp3Sourced = imp3.filter((e) => (e.sourceIds?.length ?? 0) > 0)
 
 console.log('=== ChronoAtlas 数据画像 ===')
 console.log(
-  `事件 ${EVENTS.length} · 关系 ${LINKS.length} · 人物 ${PEOPLE.length} · 来源 ${SOURCES.length}`,
+  `事件 ${EVENTS.length} · 关系 ${LINKS.length} · 人物 ${PEOPLE.length} · 来源 ${SOURCES.length} · 路线 ${ROUTES.length}`,
 )
 console.log('类型:', [...typeStat].map(([k, v]) => `${k}=${v}`).join(' '))
 console.log('大洲:', [...contStat].map(([k, v]) => `${k}=${v}`).join(' '))

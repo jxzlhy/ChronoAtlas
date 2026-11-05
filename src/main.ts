@@ -5,6 +5,7 @@ import { EventPillars } from './scene/EventPillars'
 import { CameraRig } from './scene/CameraRig'
 import { LinkArcs } from './scene/LinkArcs'
 import { HotZones } from './scene/HotZones'
+import { RouteArcs } from './scene/RouteArcs'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
@@ -17,6 +18,7 @@ import { initContinents } from './ui/continents'
 import { initLegend } from './ui/legend'
 import { initSnapshot } from './ui/snapshot'
 import { initNetwork } from './ui/network'
+import { initRoutesPanel } from './ui/routesPanel'
 import { playSelect, playFly } from './ui/sound'
 
 function boot(): void {
@@ -38,6 +40,7 @@ function boot(): void {
   const rig = new CameraRig(globe.camera, globe.controls)
   const arcs = new LinkArcs(globe.scene)
   const hotspots = new HotZones(globe.scene)
+  const routeArcs = new RouteArcs(globe.scene)
 
   // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>&p=<人物>）----
   {
@@ -79,6 +82,8 @@ function boot(): void {
   canvas.addEventListener('pointerdown', (e) => {
     downPoint = { x: e.clientX, y: e.clientY }
     canvas.style.cursor = 'grabbing'
+    // 用户拖动地球 → 历史航线播放中接管镜头
+    onRouteUserDrag?.()
   })
 
   window.addEventListener('pointerup', (e) => {
@@ -150,6 +155,40 @@ function boot(): void {
   const pauseRender = (): void => globe.renderer.setAnimationLoop(null)
   const resumeRender = (): void => globe.renderer.setAnimationLoop(renderLoop)
 
+  // ---- 历史航线面板（PHASE B4/B5）：播放跟随 + 用户拖动接管 ----
+  let routeFollow = false
+  let onRouteUserDrag: (() => void) | null = null
+  initRoutesPanel(
+    routeArcs,
+    {
+      follow: (point) => {
+        // 叙事跟随：相机沿播放头方向定位，保持当前距离，北极恒朝上
+        rig.kill()
+        routeFollow = true
+        globe.controls.enabled = false
+        const dist = Math.min(Math.max(globe.camera.position.length(), 1.9), 2.7)
+        globe.camera.position.set(point.x, point.y, point.z).setLength(dist)
+        globe.camera.lookAt(0, 0, 0)
+        globe.controls.update()
+      },
+      flyTo: (lat, lon, dist = 2.1, duration = 1.2) => rig.flyTo(lat, lon, dist, duration),
+      onUserDrag: (cb) => {
+        onRouteUserDrag = cb
+      },
+      release: () => {
+        if (routeFollow) {
+          routeFollow = false
+          globe.controls.enabled = true
+        }
+      },
+    },
+    (eventId) => {
+      const ev = EVENTS.find((x) => x.id === eventId)
+      if (ev) goToEvent(ev)
+    },
+    (personId) => appStore.getState().selectPerson(personId),
+  )
+
   // ---- 随机发现（尊重当前时间窗口与快照筛选；排除最近 5 个避免连续重复）----
   const recentRandom: string[] = []
   ;(document.getElementById('random-btn') as HTMLButtonElement).addEventListener('click', () => {
@@ -194,6 +233,8 @@ function boot(): void {
       ;(document.getElementById('random-btn') as HTMLButtonElement)?.click()
     } else if (e.key === 'p' || e.key === 'P') {
       ;(document.getElementById('slice-toggle') as HTMLButtonElement)?.click()
+    } else if (e.key === 'j' || e.key === 'J') {
+      ;(document.getElementById('routes-toggle') as HTMLButtonElement)?.click()
     }
   })
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数

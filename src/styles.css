@@ -1425,6 +1425,355 @@ body.ready .continent-nav {
   background: transparent;
 }
 
+/* ---------- 历史航线 ---------- */
+
+.routes-toggle {
+  position: absolute;
+  top: 18px;
+  right: 110px;
+  z-index: 30;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.routes-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+.routes-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
+.routes-toggle.is-open {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
+.routes-panel {
+  position: absolute;
+  top: 62px;
+  right: 18px;
+  z-index: 25;
+  width: min(360px, calc(100vw - 36px));
+  max-height: min(560px, calc(100vh - 200px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--panel-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.routes-panel[hidden] {
+  display: none;
+}
+
+.rp-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rp-head-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.rp-head-hint {
+  flex: 1;
+  text-align: right;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.rp-close {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.rp-close:hover {
+  color: var(--text);
+}
+
+.rp-list {
+  overflow: auto;
+  padding: 6px;
+}
+
+.rp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rp-row:hover,
+.rp-row:focus-visible {
+  background: rgba(148, 180, 255, 0.08);
+}
+
+.rp-row.is-active {
+  background: var(--accent-soft);
+}
+
+.rp-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--k, var(--accent));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--k, var(--accent)) 70%, transparent);
+}
+
+.rp-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.rp-title {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-sub {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-meta {
+  flex: none;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.rp-detail {
+  border-top: 1px solid var(--border);
+  overflow: auto;
+  padding: 12px 16px 14px;
+}
+
+.rp-head2 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rp-title2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.rp-title2-en {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.rp-kind {
+  font-size: 10px;
+  color: var(--k, var(--accent));
+  border: 1px solid color-mix(in srgb, var(--k, var(--accent)) 42%, transparent);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.rp-desc {
+  margin: 9px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.rp-desc-en {
+  margin: 5px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.rp-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(148, 180, 255, 0.05);
+}
+
+.rp-uncertain {
+  margin: 9px 0 0;
+  padding: 7px 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #f5c97b;
+  background: rgba(245, 201, 123, 0.08);
+  border: 1px solid color-mix(in srgb, #f5c97b 35%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.rp-uncertain-en {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  color: color-mix(in srgb, #f5c97b 65%, transparent);
+}
+
+.rp-links-label {
+  margin-top: 12px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.rp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rp-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rp-play,
+.rp-reset {
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.rp-reset {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.rp-play:hover,
+.rp-reset:hover {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.rp-progress-label {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rp-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.rp-stop {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rp-stop:hover {
+  background: rgba(148, 180, 255, 0.08);
+}
+
+.rp-stop-idx {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  border-radius: 50%;
+  background: rgba(148, 180, 255, 0.12);
+  color: var(--text-muted);
+}
+
+.rp-stop-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rp-stop-en {
+  margin-left: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.rp-stop-year {
+  flex: none;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- 因果网络 ---------- */
 
 /* 开关按钮：右上角与随机发现同列 */

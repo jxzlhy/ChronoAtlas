@@ -559,6 +559,39 @@ console.log(
   badHash.selected === null && badHash.hash === '#y=1850' ? '✓' : '✗',
 )
 
+// 12.11 历史航线面板（PHASE B）：列表/详情/播放进度
+await page.keyboard.press('j')
+await new Promise((r) => setTimeout(r, 500))
+const rpInfo = await page.evaluate(() => ({
+  open: !document.getElementById('routes-panel')?.hidden,
+  rows: document.querySelectorAll('#routes-list .rp-row').length,
+}))
+console.log('   航线面板:', JSON.stringify(rpInfo))
+if (!rpInfo.open || rpInfo.rows !== 5) throw new Error(`航线面板异常: ${JSON.stringify(rpInfo)}`)
+await shot('21-routes')
+// 选中麦哲伦环球（9 途经点）→ 详情 + 不确定性标注
+await page.click('#routes-list [data-route="magellan-circumnavigation"]')
+await new Promise((r) => setTimeout(r, 1800))
+const rpDetail = await page.evaluate(() => ({
+  stops: document.querySelectorAll('#routes-detail .rp-stop').length,
+  desc: !!document.querySelector('#routes-detail .rp-desc'),
+  uncertainty: !!document.querySelector('#routes-detail .rp-uncertain'),
+}))
+console.log('   航线详情:', JSON.stringify(rpDetail))
+if (rpDetail.stops !== 9) throw new Error(`麦哲伦途经点异常: ${rpDetail.stops}`)
+await shot('21b-route-detail')
+// 播放叙事 4 秒 → 进度应推进
+await page.click('#routes-detail [data-play]')
+await new Promise((r) => setTimeout(r, 4000))
+const rpPlay = await page.evaluate(() => ({
+  label: document.getElementById('rp-progress')?.textContent,
+}))
+console.log('   航线播放:', JSON.stringify(rpPlay), rpPlay.label !== '0%' ? '✓' : '✗')
+await shot('21c-route-play')
+await page.click('#routes-detail [data-reset]')
+await page.click('[data-routes-close]')
+await new Promise((r) => setTimeout(r, 400))
+
 // 13. 移动端视口 + 罗盘移动端行为
 await page.setViewport({ width: 390, height: 844 })
 await new Promise((r) => setTimeout(r, 1200))

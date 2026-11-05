@@ -53,6 +53,24 @@
         </svg>
       </button>
 
+      <!-- 历史航线 -->
+      <button id="routes-toggle" class="routes-toggle" type="button" aria-expanded="false" aria-label="打开历史航线探索面板" title="历史航线 · Voyages (J)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 20c3-1 4-3 6-6s5-6 8-7 4 1 4 1" /><circle cx="3" cy="20" r="1.2" /><circle cx="21" cy="8" r="1.2" />
+        </svg>
+      </button>
+
+      <!-- 航线探索面板 -->
+      <aside id="routes-panel" class="routes-panel" hidden role="dialog" aria-label="历史航线探索">
+        <div class="rp-head">
+          <span class="rp-head-title">历史航线 · Voyages</span>
+          <span class="rp-head-hint">播放时拖动地球即接管镜头</span>
+          <button class="rp-close" type="button" data-routes-close aria-label="关闭航线面板">×</button>
+        </div>
+        <div id="routes-list" class="rp-list"></div>
+        <div id="routes-detail" class="rp-detail" hidden></div>
+      </aside>
+
       <!-- 二维因果网络 -->
       <button id="network-toggle" class="network-toggle" type="button" aria-pressed="false" aria-label="打开二维因果网络视图" title="因果网络 · Causal Web (N)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">

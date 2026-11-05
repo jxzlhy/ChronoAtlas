@@ -312,4 +312,40 @@ export const SOURCES: Source[] = [
     url: 'https://en.wikipedia.org/wiki/Bulgarian_declaration_of_independence',
     type: 'encyclopedia',
   },
+  // ---- V0.29.0 历史路线来源（2026-11-06 逐条验证）----
+  {
+    id: 'brit-zheng-he',
+    name: { zh: '郑和', en: 'Zheng He' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Zheng-He',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-silk-road',
+    name: { zh: '丝绸之路', en: 'Silk Road' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/Silk-Road-trade-route',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-columbus',
+    name: { zh: '克里斯托弗·哥伦布', en: 'Christopher Columbus' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Christopher-Columbus',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-magellan',
+    name: { zh: '斐迪南·麦哲伦', en: 'Ferdinand Magellan' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Ferdinand-Magellan',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-james-cook',
+    name: { zh: '詹姆斯·库克', en: 'James Cook' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/James-Cook',
+    type: 'encyclopedia',
+  },
 ]
