@@ -47,7 +47,7 @@
 | gongche-shangshu | 公车上书 | 1895 | 中国 · 北京 | politics | 1 | en.wikipedia.org/wiki/Gongche_Shangshu_Movement |
 | meiji-constitution | 《大日本帝国宪法》颁布 | 1889 | 日本 · 东京 | politics | 2 | britannica.com/topic/Meiji-Constitution |
 | portsmouth-treaty | 《朴茨茅斯条约》 | 1905 | 美国 · 朴茨茅斯 | politics | 1 | britannica.com/event/Treaty-of-Portsmouth |
-| bengal-partition | 孟加拉分省 | 1905 | 印度 · 加尔各答 | politics | 1 | britannica.com/event/Partition-of-Bengalia 校对：Partition-of-Bengal |
+| bengal-partition | 孟加拉分省 | 1905 | 印度 · 加尔各答 | politics | 1 | britannica.com/event/Partition-of-Bengal（校对 slug 大小写） |
 | tongmenghui | 中国同盟会成立 | 1905 | 日本 · 东京 | politics | 2 | en.wikipedia.org/wiki/Tongmenghui |
 
 ### 关系链补强（3，均挂接已复核事件）
@@ -55,8 +55,8 @@
 | 提议 id | 事件 | 年 | 地点 | 类型 | 重要度 | 候选来源（待验证） |
 |---|---|---|---|---|---|---|
 | second-industrial-revolution | 第二次工业革命（电气/化工） | 1870–1914 | 德国 · 柏林/美国 | economy | 3 | britannica.com/event/Second-Industrial-Revolution（校对 slug） |
-| redemption-us | 美国重建时期结束 | 1877 | 美国 | politics | 1 | britannica.com/event/Reconstruction-Amendment? 校对 Reconstruction（美国史条目） |
-| Dawson-landing? | （备选，可放弃） |  |  |  |  |  |
+| redemption-us | 美国重建时期结束（妥协案） | 1877 | 美国 · 华盛顿 | politics | 1 | britannica.com/event/Compromise-of-1877（优先）或 Reconstruction 美国史条目 |
+| （备选池） | 第二次工业革命若 slug 缺失，改挂 second-industrial-revolution 到 wiki 条目 |  |  |  |  | en.wikipedia.org/wiki/Second_Industrial_Revolution |
 
 ### 新增关系候选（验证后随事件入库）
 
