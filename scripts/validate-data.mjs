@@ -115,15 +115,16 @@ for (const s of SOURCES) {
   srcIds.add(s.id)
   if (!isBilingual(s.name)) err(`${tag} 名称双语缺失`)
   if (!isBilingual(s.publisher)) err(`${tag} 机构双语缺失`)
-  if (!/^https:\/\/(www\.)?(britannica\.com|en\.wikipedia\.org)\//.test(s.url))
-    warn(`${tag} URL 不在已知可靠域白名单内: ${s.url}`)
+  if (!/^https:\/\/(www\.)?([a-z0-9-]+\.)+[a-z]{2,}\//.test(s.url))
+    err(`${tag} URL 格式非法: ${s.url}`)
 }
 
-for (const ev of EVENTS) {
-  for (const sid of ev.sourceIds ?? []) {
-    if (!srcIds.has(sid)) err(`event:${ev.id} 悬空来源引用: ${sid}`)
-  }
+const checkSourceRef = (owner, sid) => {
+  if (!srcIds.has(sid)) err(`${owner} 悬空来源引用: ${sid}`)
 }
+for (const ev of EVENTS) for (const sid of ev.sourceIds ?? []) checkSourceRef(`event:${ev.id}`, sid)
+for (const pr of PEOPLE) for (const sid of pr.sourceIds ?? []) checkSourceRef(`person:${pr.id}`, sid)
+for (const l of LINKS) for (const sid of l.sourceIds ?? []) checkSourceRef(`link:${l.from}>${l.to}`, sid)
 
 // ---------- 数据画像 ----------
 const countBy = (list, fn) => {
@@ -149,10 +150,31 @@ console.log(
 console.log('类型:', [...typeStat].map(([k, v]) => `${k}=${v}`).join(' '))
 console.log('大洲:', [...contStat].map(([k, v]) => `${k}=${v}`).join(' '))
 console.log('关系类型:', [...kindStat].map(([k, v]) => `${k}=${v}`).join(' '))
+
+// ---- 数据质量报告（PHASE A4）----
+const pct = (n, d) => (d === 0 ? 'n/a' : `${Math.round((n / d) * 100)}%`)
+const personSourced = PEOPLE.filter((x) => (x.sourceIds?.length ?? 0) > 0)
+const linkSourced = LINKS.filter((x) => (x.sourceIds?.length ?? 0) > 0)
+const reviewedLinks = LINKS.filter((x) => x.review === 'reviewed')
+const pendingPeople = PEOPLE.filter((x) => x.review !== 'reviewed')
+const bilingualEvents = EVENTS.filter(
+  (e) => isBilingual(e.title) && isBilingual(e.desc) && isBilingual(e.place),
+).length
+console.log('--- 数据质量报告 ---')
 console.log(
-  `来源覆盖: ${sourced.length}/${EVENTS.length}（importance=3: ${imp3Sourced.length}/${imp3.length}）`,
+  `来源覆盖: 事件 ${sourced.length}/${EVENTS.length} (${pct(sourced.length, EVENTS.length)}) · importance=3 ${imp3Sourced.length}/${imp3.length} · 人物 ${personSourced.length}/${PEOPLE.length} (${pct(personSourced.length, PEOPLE.length)}) · 关系 ${linkSourced.length}/${LINKS.length} (${pct(linkSourced.length, LINKS.length)})`,
 )
-console.log(`人工复核: ${reviewed.length}/${EVENTS.length} 事件 · ${LINKS.length}/${LINKS.length} 关系`)
+console.log(
+  `审核状态: 事件 reviewed ${reviewed.length}/${EVENTS.length} (${pct(reviewed.length, EVENTS.length)}) · 关系 reviewed ${reviewedLinks.length}/${LINKS.length} · 人物 pending ${pendingPeople.length}/${PEOPLE.length}`,
+)
+console.log(
+  `双语完整率: 事件 ${bilingualEvents}/${EVENTS.length} (${pct(bilingualEvents, EVENTS.length)})`,
+)
+console.log(
+  `无来源事件: ${EVENTS.length - sourced.length} · 无来源人物: ${PEOPLE.length - personSourced.length} · 无来源关系: ${LINKS.length - linkSourced.length}`,
+)
+const isolated = PEOPLE.filter((x) => x.eventIds.length === 0).length
+console.log(`孤立人物(零事件挂接): ${isolated}`)
 
 console.log('\n=== 校验结果 ===')
 console.log(`errors: ${errors.length} · warnings: ${warnings.length}`)

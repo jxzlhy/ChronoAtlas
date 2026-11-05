@@ -92,6 +92,8 @@ export interface EventLink {
   kind: LinkKind
   zh: string
   en: string
+  /** 支持该关系的来源（sources.ts）；逐条补录中，缺省 = 待补 */
+  sourceIds?: string[]
   review?: ReviewStatus
 }
 
