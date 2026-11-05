@@ -2401,6 +2401,35 @@ body.ready .timeline-wrap {
     font-size: var(--fs-md);
   }
 
+  /* 历史航线面板移动端全屏化（独立复核：不与大陆导航/事件卡争位） */
+  .routes-panel {
+    inset: 0;
+    width: 100%;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+    z-index: 26;
+  }
+
+  .routes-panel .rp-head {
+    padding-top: 54px;
+  }
+
+  .routes-panel .rp-close {
+    top: 54px;
+  }
+
+  .routes-toggle {
+    top: 62px;
+    right: 62px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .rp-head-hint {
+    display: none;
+  }
+
   .slice-list {
     max-height: min(200px, 24vh);
   }
