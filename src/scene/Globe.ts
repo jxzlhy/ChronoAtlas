@@ -6,15 +6,21 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { latLonToVec3 } from './latLon'
 
+// V1.1：贴图本地化（public/textures/，4096×2048 高清）——真实地球不再依赖 CDN；
+// 本地缺失时回退 CDN（两源），全部失败降级线框球
 const TEXTURE_URLS = [
+  '/textures/earth-blue-marble.jpg',
   'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
-  'https://cdn.jsdelivr.net/npm/three-globe@2.31.0/example/img/earth-dark.jpg',
   'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg',
 ]
 
+// PHASE E3 视觉增强（夜间灯光 emissiveMap + 地形 bumpMap；加载失败静默跳过，不阻塞 ready）
+const NIGHT_URL = '/textures/earth-night.jpg'
+const TOPOLOGY_URL = '/textures/earth-topology.png'
+
 /**
- * 3D 地球场景：贴图球体 + 星空 + 大气辉光 + Bloom 后期。
- * 贴图按候选链依次尝试（load 事件后加载，不阻塞页面），全部失败时降级为
+ * 3D 地球场景：高清贴图球体 + 夜间城市灯光 + 地形凹凸 + 星空 + 大气辉光 + Bloom 后期。
+ * 主贴图按候选链依次尝试（load 事件后加载，不阻塞页面），全部失败时降级为
  * 深色线框风格球体，功能不受影响。
  */
 export class Globe {
@@ -156,6 +162,7 @@ export class Globe {
           ;(this.fallbackWire.material as THREE.Material).dispose()
           this.fallbackWire = null
         }
+        this.loadEnhancementMaps()
         settle('texture')
       }
 
@@ -199,6 +206,50 @@ export class Globe {
         window.addEventListener('load', start, { once: true })
       }
     })
+  }
+
+  /**
+   * PHASE E3 视觉增强（真实感升级）：夜间城市灯光（emissiveMap，暖色低强度，
+   * 背光面可见灯网）+ 地形凹凸（bumpMap）。纯增强项：任一失败静默跳过，
+   * 绝不影响主贴图与 ready。
+   */
+  private loadEnhancementMaps(): void {
+    const loader = new THREE.TextureLoader()
+    loader.setCrossOrigin('anonymous')
+    const tryLoad = (url: string): Promise<THREE.Texture> =>
+      new Promise((res, rej) => {
+        const timer = window.setTimeout(() => rej(new Error('timeout')), 15000)
+        loader.load(
+          url,
+          (tex) => {
+            window.clearTimeout(timer)
+            tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy()
+            res(tex)
+          },
+          undefined,
+          () => {
+            window.clearTimeout(timer)
+            rej(new Error('failed'))
+          },
+        )
+      })
+
+    tryLoad(NIGHT_URL)
+      .then((tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace
+        this.earthMaterial.emissive = new THREE.Color(0xffd9a0)
+        this.earthMaterial.emissiveMap = tex
+        this.earthMaterial.emissiveIntensity = 0.55
+        this.earthMaterial.needsUpdate = true
+      })
+      .catch(() => {})
+    tryLoad(TOPOLOGY_URL)
+      .then((tex) => {
+        this.earthMaterial.bumpMap = tex
+        this.earthMaterial.bumpScale = 0.05
+        this.earthMaterial.needsUpdate = true
+      })
+      .catch(() => {})
   }
 
   /** 贴图全部不可用时的降级外观：深蓝球体 + 经纬线框 */
