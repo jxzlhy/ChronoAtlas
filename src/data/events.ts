@@ -1011,6 +1011,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1839, end: 1876, lat: 41.0, lon: 28.98,
     continent: 'europe',
 
+    sourceIds: ['brit-tanzimat'],
+    review: 'reviewed',
     civilizations: ['ottoman'],    place: { zh: '奥斯曼 · 伊斯坦布尔', en: 'Istanbul, Ottoman Empire' },
     type: 'politics', importance: 2,
     desc: {
@@ -1503,6 +1505,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1895, lat: 49.79, lon: 9.95,
     continent: 'europe',
 
+    sourceIds: ['brit-x-ray'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 维尔茨堡', en: 'Würzburg, Germany' },
     type: 'science', importance: 2,
     desc: {

@@ -527,6 +527,21 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'brit-tanzimat',
+    name: { zh: '坦志麦特改革', en: 'Tanzimat' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Tanzimat',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-x-ray',
+    name: { zh: 'X 射线', en: 'X-ray' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/X-ray',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

@@ -50,7 +50,7 @@ export class Globe {
     this.renderer.setSize(width, height)
     this.renderer.setClearColor(0x04060e, 1)
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 1.05
+    this.renderer.toneMappingExposure = 1.3
     // EffectComposer 每个 pass 都会 reset info；关闭 autoReset 改为整帧手动累计，
     // 使 renderer.info 反映完整帧的 draw calls/triangles（性能基线用）
     this.renderer.info.autoReset = false
@@ -62,8 +62,8 @@ export class Globe {
     this.scene.add(this.camera)
 
     // 光照：环境光 + 跟随相机的主光，保证可见面始终被照亮
-    this.scene.add(new THREE.AmbientLight(0xbfd4ff, 0.75))
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.35)
+    this.scene.add(new THREE.AmbientLight(0xbfd4ff, 1.05))
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.6)
     keyLight.position.set(0.6, 0.5, 1)
     this.camera.add(keyLight)
 
@@ -239,7 +239,7 @@ export class Globe {
         tex.colorSpace = THREE.SRGBColorSpace
         this.earthMaterial.emissive = new THREE.Color(0xffd9a0)
         this.earthMaterial.emissiveMap = tex
-        this.earthMaterial.emissiveIntensity = 0.55
+        this.earthMaterial.emissiveIntensity = 0.85
         this.earthMaterial.needsUpdate = true
       })
       .catch(() => {})
