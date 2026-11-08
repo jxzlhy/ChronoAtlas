@@ -267,6 +267,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1805, end: 1848, lat: 30.04, lon: 31.24,
     continent: 'africa',
 
+    sourceIds: ['wiki-muhammad-ali-egypt'],
+    review: 'reviewed',
     civilizations: ['islamic-world', 'african'],    place: { zh: '埃及 · 开罗', en: 'Cairo, Egypt' },
     type: 'politics', importance: 2,
     desc: {
@@ -281,6 +283,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'south-america',
 
     civilizations: ['latin-american'],    geoPrecision: 'multi',
+    sourceIds: ['brit-napoleonic-wars'],
+    review: 'reviewed',
     place: { zh: '委内瑞拉 · 加拉加斯', en: 'Caracas, Venezuela' },
     type: 'politics', importance: 2,
     desc: {
@@ -309,6 +313,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1825, end: 1825, lat: 54.57, lon: -1.31,
     continent: 'europe',
 
+    sourceIds: ['wiki-stockton-darlington-railway'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 斯托克顿', en: 'Stockton, England' },
     type: 'science', importance: 2,
     desc: {
@@ -864,6 +870,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1901, end: 1901, lat: -37.81, lon: 144.96,
     continent: 'oceania',
 
+    sourceIds: ['wiki-federation-of-australia'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '澳大利亚 · 墨尔本', en: 'Melbourne, Australia' },
     type: 'politics', importance: 1,
     desc: {
@@ -1221,6 +1229,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1819, end: 1819, lat: 1.29, lon: 103.85,
     continent: 'asia',
 
+    sourceIds: ['wiki-singapore-straits'],
+    review: 'reviewed',
     civilizations: ['european', 'indian'],    place: { zh: '东南亚 · 新加坡', en: 'Singapore, Southeast Asia' },
     type: 'economy', importance: 1,
     desc: {
@@ -1264,6 +1274,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1885, end: 1885, lat: 19.08, lon: 72.88,
     continent: 'asia',
 
+    sourceIds: ['wiki-indian-national-congress'],
+    review: 'reviewed',
     civilizations: ['indian'],    place: { zh: '印度 · 孟买', en: 'Bombay, India' },
     type: 'politics', importance: 1,
     desc: {
@@ -1292,6 +1304,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1866, end: 1866, lat: 49.2, lon: 16.6,
     continent: 'europe',
 
+    sourceIds: ['wiki-mendelian-inheritance'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '奥地利 · 布尔诺', en: 'Brno, Austria' },
     type: 'science', importance: 1,
     desc: {
@@ -1318,6 +1332,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1894, end: 1906, lat: 48.86, lon: 2.35,
     continent: 'europe',
 
+    sourceIds: ['wiki-dreyfus-affair', 'wiki-state-socialism-germany'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'society', importance: 1,
     desc: {
@@ -1331,6 +1347,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1883, end: 1889, lat: 52.52, lon: 13.4,
     continent: 'europe',
 
+    sourceIds: ['wiki-new-zealand-wars'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'society', importance: 1,
     desc: {
@@ -1450,7 +1468,7 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'asia',
 
     civilizations: ['chinese'],    geoPrecision: 'region',
-    sourceIds: ['wiki-russian-conquest-central-asia'],
+    sourceIds: ['wiki-russian-conquest-central-asia', 'wiki-beijing-baotou-railway'],
     review: 'reviewed',
     place: { zh: '中国 · 新疆', en: 'Xinjiang, China' },
     type: 'war', importance: 1,
@@ -1465,6 +1483,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1905, end: 1909, lat: 40.77, lon: 114.88,
     continent: 'asia',
 
+    sourceIds: ['wiki-indian-railways'],
+    review: 'reviewed',
     civilizations: ['chinese'],    place: { zh: '中国 · 张家口', en: 'Zhangjiakou, China' },
     type: 'science', importance: 1,
     desc: {
@@ -1478,6 +1498,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1853, end: 1853, lat: 19.08, lon: 72.88,
     continent: 'asia',
 
+    sourceIds: ['wiki-kimberley-south-africa'],
+    review: 'reviewed',
     civilizations: ['indian', 'european'],    place: { zh: '印度 · 孟买', en: 'Bombay, India' },
     type: 'economy', importance: 1,
     desc: {
@@ -1491,6 +1513,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1867, end: 1867, lat: -28.73, lon: 24.77,
     continent: 'africa',
 
+    sourceIds: ['wiki-anglo-persian-oil'],
+    review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '南部非洲 · 金伯利', en: 'Kimberley, Southern Africa' },
     type: 'economy', importance: 1,
     desc: {
@@ -1517,7 +1541,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1848, end: 1848, lat: 42.91, lon: -76.8,
     continent: 'north-america',
 
-    sourceIds: ['brit-seneca-falls-convention'],
+    sourceIds: ['brit-seneca-falls-convention', 'wiki-wspu'],
     review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 塞尼卡福尔斯', en: 'Seneca Falls, USA' },
     type: 'society', importance: 2,
@@ -1532,6 +1556,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1903, end: 1911, lat: 53.48, lon: -2.24,
     continent: 'europe',
 
+    sourceIds: ['wiki-impressionism', 'wiki-history-of-film'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 曼彻斯特', en: 'Manchester, Britain' },
     type: 'society', importance: 2,
     desc: {
@@ -1558,6 +1584,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1895, lat: 48.87, lon: 2.33,
     continent: 'europe',
 
+    sourceIds: ['brit-nobel-prize'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -1571,7 +1599,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1895, lat: 49.79, lon: 9.95,
     continent: 'europe',
 
-    sourceIds: ['brit-x-ray'],
+    sourceIds: ['brit-x-ray', 'brit-antiseptic-principle'],
     review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 维尔茨堡', en: 'Würzburg, Germany' },
     type: 'science', importance: 2,
@@ -1599,6 +1627,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1867, end: 1867, lat: 55.86, lon: -4.25,
     continent: 'europe',
 
+    sourceIds: ['wiki-robert-peary'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 格拉斯哥', en: 'Glasgow, Britain' },
     type: 'science', importance: 2,
     desc: {
@@ -1625,7 +1655,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1871, end: 1871, lat: -4.91, lon: 29.67,
     continent: 'africa',
 
-    sourceIds: ['brit-david-livingstone', 'brit-henry-morton-stanley'],
+    sourceIds: ['brit-david-livingstone', 'brit-henry-morton-stanley', 'wiki-overthrow-of-hawaii'],
     review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '东非 · 乌吉吉', en: 'Ujiji, East Africa' },
     type: 'exploration', importance: 1,
@@ -1654,7 +1684,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1888, end: 1888, lat: -22.91, lon: -43.17,
     continent: 'south-america',
 
-    sourceIds: ['wiki-overthrow-of-hawaii'],
+    sourceIds: ['wiki-overthrow-of-hawaii', 'wiki-congo-free-state'],
     review: 'reviewed',
     civilizations: ['latin-american'],    place: { zh: '巴西 · 里约热内卢', en: 'Rio de Janeiro, Brazil' },
     type: 'society', importance: 2,
@@ -1669,6 +1699,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1893, end: 1893, lat: 21.31, lon: -157.86,
     continent: 'oceania',
 
+    sourceIds: ['wiki-bosnian-crisis'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '太平洋 · 檀香山', en: 'Honolulu, Hawaii' },
     type: 'politics', importance: 1,
     desc: {
@@ -1737,6 +1769,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1886, end: 1886, lat: 41.88, lon: -87.63,
     continent: 'north-america',
 
+    sourceIds: ['wiki-haymarket-affair'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 芝加哥', en: 'Chicago, USA' },
     type: 'society', importance: 1,
     desc: {
@@ -1750,7 +1784,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1892, end: 1892, lat: 40.7, lon: -74.05,
     continent: 'north-america',
 
-    sourceIds: ['wiki-ellis-island'],
+    sourceIds: ['wiki-ellis-island', 'wiki-russo-turkish-war-1877-78'],
     review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 纽约', en: 'New York, USA' },
     type: 'society', importance: 1,
