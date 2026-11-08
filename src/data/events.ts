@@ -55,7 +55,7 @@ export const EVENTS: HistoryEvent[] = [
     civilizations: ['european'],    geoPrecision: 'multi',
     place: { zh: '欧洲 · 中欧', en: 'Central Europe' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-seven-years-war'],
+    sourceIds: ['brit-seven-years-war', 'wiki-seven-years-war'],
     review: 'reviewed',
     desc: {
       zh: '英普对阵法奥俄的全球性战争，战火波及欧洲、北美与印度，战后英国一跃成为海上殖民霸主。',
@@ -72,7 +72,7 @@ export const EVENTS: HistoryEvent[] = [
     timePrecision: 'circa',
     place: { zh: '英国 · 伯明翰一带', en: 'Birmingham, Britain' },
     type: 'economy', importance: 3,
-    sourceIds: ['brit-industrial-revolution'],
+    sourceIds: ['brit-industrial-revolution', 'wiki-industrial-revolution'],
     review: 'reviewed',
     desc: {
       zh: '从棉纺织业开始的机器生产变革由英国蔓延至欧陆与北美，工厂、铁路与城市化彻底重塑了人类的生产与生活方式。',
@@ -102,7 +102,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '英国 · 格拉斯哥', en: 'Glasgow, Scotland' },
     type: 'science', importance: 3,
-    sourceIds: ['brit-james-watt'],
+    sourceIds: ['brit-james-watt', 'wiki-watt-steam-engine'],
     review: 'reviewed',
     desc: {
       zh: '瓦特为蒸汽机加装分离冷凝器，热效率大幅提升，人类第一次拥有了可随处部署的强大动力源。',
@@ -163,7 +163,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['north-american'],    place: { zh: '北美 · 费城', en: 'Philadelphia, North America' },
     type: 'politics', importance: 3,
-    sourceIds: ['brit-declaration-independence'],
+    sourceIds: ['brit-declaration-independence', 'wiki-us-declaration'],
     review: 'reviewed',
     desc: {
       zh: '十三殖民地发表《独立宣言》并击败英国军队，建立美利坚合众国，成为近代第一个大型共和制国家。',
@@ -178,7 +178,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '苏格兰 · 柯科迪', en: 'Kirkcaldy, Scotland' },
     type: 'ideas', importance: 3,
-    sourceIds: ['brit-wealth-of-nations'],
+    sourceIds: ['brit-wealth-of-nations', 'wiki-wealth-of-nations'],
     review: 'reviewed',
     desc: {
       zh: '亚当·斯密阐述分工、市场与"看不见的手"，现代经济学由此诞生。',
@@ -208,7 +208,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'politics', importance: 3,
-    sourceIds: ['brit-french-revolution'],
+    sourceIds: ['brit-french-revolution', 'wiki-french-revolution'],
     review: 'reviewed',
     desc: {
       zh: '攻占巴士底狱、《人权宣言》与共和国的建立震撼整个欧洲，"自由、平等、博爱"从此成为现代政治的通用语。',
@@ -239,7 +239,7 @@ export const EVENTS: HistoryEvent[] = [
     civilizations: ['european'],    geoPrecision: 'multi',
     place: { zh: '欧洲 · 巴黎', en: 'Paris, Europe' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-napoleonic-wars'],
+    sourceIds: ['brit-napoleonic-wars', 'wiki-napoleonic-wars'],
     review: 'reviewed',
     desc: {
       zh: '拿破仑率法军横扫欧陆，从特拉法加到滑铁卢，十年战火既输出革命法典，也埋下民族主义的种子。',
@@ -360,7 +360,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['chinese', 'european'],    place: { zh: '中国 · 广州', en: 'Guangzhou, China' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-opium-wars'],
+    sourceIds: ['brit-opium-wars', 'wiki-first-opium-war'],
     review: 'reviewed',
     desc: {
       zh: '虎门销烟引来的英国远征军以坚船利炮敲开清朝国门，《南京条约》割让香港，中国近代史自此揭开屈辱与变革交织的一页。',
@@ -420,7 +420,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'ideas', importance: 3,
-    sourceIds: ['brit-communist-manifesto'],
+    sourceIds: ['brit-communist-manifesto', 'wiki-communist-manifesto'],
     review: 'reviewed',
     desc: {
       zh: '马克思与恩格斯写下"一个幽灵，共产主义的幽灵，在欧洲游荡"，这份纲领深刻影响了此后一个多世纪的世界政治。',
@@ -496,7 +496,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'science', importance: 3,
-    sourceIds: ['brit-origin-of-species'],
+    sourceIds: ['brit-origin-of-species', 'wiki-origin-of-species'],
     review: 'reviewed',
     desc: {
       zh: '达尔文以自然选择解释生命演化，"物竞天择"的思想重塑了生物学，也震荡了整个时代的世界观。',
@@ -526,7 +526,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['north-american'],    place: { zh: '美国 · 华盛顿', en: 'Washington, USA' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-american-civil-war'],
+    sourceIds: ['brit-american-civil-war', 'wiki-american-civil-war'],
     review: 'reviewed',
     desc: {
       zh: '南北战争以六十余万人的伤亡维系了联邦完整，《解放宣言》废除了奴隶制，美国由此走上工业化快车道。',
@@ -601,7 +601,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['japanese'],    place: { zh: '日本 · 东京', en: 'Tokyo, Japan' },
     type: 'politics', importance: 3,
-    sourceIds: ['brit-meiji-restoration'],
+    sourceIds: ['brit-meiji-restoration', 'wiki-meiji-restoration'],
     review: 'reviewed',
     desc: {
       zh: '明治政府"富国强兵、殖产兴业、文明开化"，短短一代人时间里完成了从封建幕藩体制到工业强国的转身。',
@@ -631,7 +631,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european', 'islamic-world'],    place: { zh: '埃及 · 苏伊士', en: 'Suez, Egypt' },
     type: 'economy', importance: 3,
-    sourceIds: ['brit-suez-canal'],
+    sourceIds: ['brit-suez-canal', 'wiki-suez-canal'],
     review: 'reviewed',
     desc: {
       zh: '历经十年开凿的运河沟通地中海与红海，欧亚航程缩短近万公里，全球贸易的血管被重新接驳。',
@@ -691,7 +691,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european', 'african'],    place: { zh: '比利时 · 布鲁塞尔', en: 'Brussels, Belgium' },
     type: 'politics', importance: 3,
-    sourceIds: ['brit-berlin-conference'],
+    sourceIds: ['brit-berlin-conference', 'wiki-berlin-conference'],
     review: 'reviewed',
     desc: {
       zh: '列强围桌瓜分非洲，划定势力范围与"有效占领"规则，非洲大陆的边界由此被遥远的欧洲谈判桌改写。',
@@ -752,7 +752,7 @@ export const EVENTS: HistoryEvent[] = [
     civilizations: ['chinese', 'japanese'],    geoPrecision: 'region',
     place: { zh: '中国 · 黄海 / 威海卫', en: 'Yellow Sea / Weihaiwei' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-first-sino-japanese-war'],
+    sourceIds: ['brit-first-sino-japanese-war', 'wiki-first-sino-japanese-war'],
     review: 'reviewed',
     desc: {
       zh: '北洋水师全军覆没，《马关条约》割让台湾，东亚百年格局由此逆转，也直接刺激了戊戌变法与日本扩张主义。',
@@ -887,7 +887,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['north-american'],    place: { zh: '美国 · 基蒂霍克', en: 'Kitty Hawk, USA' },
     type: 'science', importance: 3,
-    sourceIds: ['brit-wright-brothers'],
+    sourceIds: ['brit-wright-brothers', 'wiki-wright-flyer'],
     review: 'reviewed',
     desc: {
       zh: '"飞行者一号"在沙丘上摇晃飞行了 12 秒 36 米，人类千年的飞天梦想自此有了第一台真正可操控的动力飞行器。',
@@ -932,7 +932,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['european'],    place: { zh: '瑞士 · 伯尔尼', en: 'Bern, Switzerland' },
     type: 'science', importance: 3,
-    sourceIds: ['brit-relativity'],
+    sourceIds: ['brit-relativity', 'wiki-special-relativity'],
     review: 'reviewed',
     desc: {
       zh: '专利局职员爱因斯坦一年内连发数篇论文，用相对论与光量子重新定义了时间、空间与能量。',
@@ -992,7 +992,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['chinese'],    place: { zh: '中国 · 武昌', en: 'Wuchang, China' },
     type: 'politics', importance: 3,
-    sourceIds: ['wiki-1911-revolution'],
+    sourceIds: ['wiki-1911-revolution', 'wiki-xinhai-revolution'],
     review: 'reviewed',
     desc: {
       zh: '武昌城头一声枪响，各省纷纷响应，延续两千余年的帝制在次年落幕，亚洲第一个共和国——中华民国宣告成立。',
@@ -1005,7 +1005,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1803, end: 1803, lat: 38.63, lon: -90.2,
     continent: 'north-america',
 
-    sourceIds: ['brit-louisiana-purchase'],
+    sourceIds: ['brit-louisiana-purchase', 'wiki-louisiana-purchase'],
     review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 圣路易斯', en: 'St. Louis, USA' },
     type: 'politics', importance: 3,
@@ -1022,7 +1022,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['chinese'],    place: { zh: '中国 · 南京', en: 'Nanjing, China' },
     type: 'war', importance: 3,
-    sourceIds: ['brit-taiping-rebellion'],
+    sourceIds: ['brit-taiping-rebellion', 'wiki-taiping-rebellion'],
     review: 'reviewed',
     desc: {
       zh: '洪秀全以拜上帝会起事，定都天京，纵横十八省，是人类历史上伤亡最惨重的内战之一，也彻底动摇了清王朝的根基。',
@@ -1386,7 +1386,7 @@ export const EVENTS: HistoryEvent[] = [
     civilizations: ['north-american'],    geoPrecision: 'region',
     place: { zh: '美国 · 普罗蒙特里峰会', en: 'Promontory, USA' },
     type: 'economy', importance: 3,
-    sourceIds: ['brit-transcontinental-railroad'],
+    sourceIds: ['brit-transcontinental-railroad', 'wiki-first-transcontinental'],
     review: 'reviewed',
     desc: {
       zh: '联合太平洋与中央太平洋两线在犹他州金钉合龙，华工与爱尔兰工人的汗水把大洋到大海的车程从六个月压缩到一周。',
@@ -1401,7 +1401,7 @@ export const EVENTS: HistoryEvent[] = [
 
     civilizations: ['russian'],    place: { zh: '俄罗斯 · 莫斯科', en: 'Moscow, Russia' },
     type: 'politics', importance: 3,
-    sourceIds: ['wiki-emancipation-1861'],
+    sourceIds: ['wiki-emancipation-1861', 'wiki-emancipation-reform-1861'],
     review: 'reviewed',
     desc: {
       zh: '亚历山大二世签署解放宣言，2300 万农奴获得自由，俄国踏上迟到的近代化之路，也为日后的革命埋下伏笔。',
