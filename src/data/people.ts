@@ -16,6 +16,9 @@ export const PEOPLE: Person[] = [
       en: 'French Enlightenment philosopher, chief editor of the Encyclopédie.',
     },
     eventIds: ['encyclopedie'],
+
+    sourceIds: ['brit-denis-diderot'],
+    review: 'reviewed',
     places: [
       { name: { zh: '朗格勒', en: 'Langres' }, lat: 47.86, lon: 5.33, year: 1713, role: 'birth' },
       { name: { zh: '巴黎', en: 'Paris' }, lat: 48.86, lon: 2.35, year: 1742, role: 'active' },
@@ -30,7 +33,9 @@ export const PEOPLE: Person[] = [
       en: 'Philosopher of popular sovereignty: "Man is born free, and everywhere he is in chains."',
     },
     eventIds: ['social-contract'],
-  },
+
+    sourceIds: ['brit-rousseau'],
+    review: 'reviewed',  },
   {
     id: 'cook',
     name: { zh: '库克船长', en: 'Captain James Cook' },
@@ -40,7 +45,9 @@ export const PEOPLE: Person[] = [
       en: 'Charted the Pacific on three voyages, reaching Australia and Hawaii.',
     },
     eventIds: ['cooks-voyages'],
-  },
+
+    sourceIds: ['brit-james-cook'],
+    review: 'reviewed',  },
   {
     id: 'watt',
     name: { zh: '瓦特', en: 'James Watt' },
@@ -50,6 +57,9 @@ export const PEOPLE: Person[] = [
       en: 'His separate condenser made steam power universally deployable.',
     },
     eventIds: ['watt-steam-engine', 'industrial-revolution'],
+
+    sourceIds: ['brit-james-watt'],
+    review: 'reviewed',
     places: [
       { name: { zh: '格里诺克', en: 'Greenock' }, lat: 55.95, lon: -4.76, year: 1736, role: 'birth' },
       { name: { zh: '格拉斯哥', en: 'Glasgow' }, lat: 55.86, lon: -4.25, year: 1754, role: 'active' },
@@ -65,7 +75,9 @@ export const PEOPLE: Person[] = [
       en: 'Author of The Wealth of Nations, founder of modern economics.',
     },
     eventIds: ['wealth-of-nations'],
-  },
+
+    sourceIds: ['brit-adam-smith'],
+    review: 'reviewed',  },
   {
     id: 'washington',
     name: { zh: '华盛顿', en: 'George Washington' },
@@ -75,7 +87,9 @@ export const PEOPLE: Person[] = [
       en: 'Led the Continental Army to independence and set the republican precedent.',
     },
     eventIds: ['us-independence'],
-  },
+
+    sourceIds: ['brit-george-washington'],
+    review: 'reviewed',  },
   {
     id: 'napoleon',
     name: { zh: '拿破仑', en: 'Napoléon Bonaparte' },
@@ -85,7 +99,9 @@ export const PEOPLE: Person[] = [
       en: 'From Corsican artillery officer to Emperor; his civil code endures.',
     },
     eventIds: ['napoleonic-wars', 'french-revolution'],
-  },
+
+    sourceIds: ['brit-napoleon-i'],
+    review: 'reviewed',  },
   {
     id: 'stephenson',
     name: { zh: '史蒂芬孙', en: 'George Stephenson' },
@@ -95,7 +111,9 @@ export const PEOPLE: Person[] = [
       en: '"Father of railways"; his Locomotion No. 1 opened the railway age.',
     },
     eventIds: ['stockton-darlington'],
-  },
+
+    sourceIds: ['brit-george-stephenson'],
+    review: 'reviewed',  },
   {
     id: 'bolivar',
     name: { zh: '玻利瓦尔', en: 'Simón Bolívar' },
@@ -105,7 +123,9 @@ export const PEOPLE: Person[] = [
       en: '"The Liberator" of northern South America; Bolivia bears his name.',
     },
     eventIds: ['latin-american-independence'],
-  },
+
+    sourceIds: ['brit-simon-bolivar'],
+    review: 'reviewed',  },
   {
     id: 'muhammad-ali',
     name: { zh: '穆罕默德·阿里', en: 'Muhammad Ali' },
@@ -115,7 +135,9 @@ export const PEOPLE: Person[] = [
       en: 'De facto ruler of Egypt whose reforms modernized the state.',
     },
     eventIds: ['muhammad-ali-reforms'],
-  },
+
+    sourceIds: ['wiki-muhammad-ali-egypt'],
+    review: 'reviewed',  },
   {
     id: 'lin-zexu',
     name: { zh: '林则徐', en: 'Lin Zexu' },
@@ -125,7 +147,9 @@ export const PEOPLE: Person[] = [
       en: 'Commissioner who destroyed opium at Humen; China\'s first open-eyed reformer.',
     },
     eventIds: ['first-opium-war'],
-  },
+
+    sourceIds: ['brit-lin-zexu'],
+    review: 'reviewed',  },
   {
     id: 'darwin',
     name: { zh: '达尔文', en: 'Charles Darwin' },
@@ -135,6 +159,9 @@ export const PEOPLE: Person[] = [
       en: 'Explained evolution by natural selection, reshaping biology and worldview.',
     },
     eventIds: ['origin-of-species'],
+
+    sourceIds: ['brit-charles-darwin'],
+    review: 'reviewed',
     places: [
       { name: { zh: '什鲁斯伯里', en: 'Shrewsbury' }, lat: 52.71, lon: -2.75, year: 1809, role: 'birth' },
       { name: { zh: '剑桥', en: 'Cambridge' }, lat: 52.2, lon: 0.12, year: 1828, role: 'active' },
@@ -150,6 +177,9 @@ export const PEOPLE: Person[] = [
       en: 'Co-author of the Communist Manifesto, shaping a century of politics.',
     },
     eventIds: ['communist-manifesto'],
+
+    sourceIds: ['brit-karl-marx'],
+    review: 'reviewed',
     places: [
       { name: { zh: '特里尔', en: 'Trier' }, lat: 49.75, lon: 6.63, year: 1818, role: 'birth' },
       { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1836, role: 'active' },
@@ -165,12 +195,14 @@ export const PEOPLE: Person[] = [
       en: 'Marx\'s lifelong collaborator and supporter — co-author of the Manifesto and editor of Capital\'s later volumes.',
     },
     eventIds: ['communist-manifesto', 'paris-commune'],
+
+    sourceIds: ['brit-friedrich-engels'],
+    review: 'reviewed',
     places: [
       { name: { zh: '巴门（伍珀塔尔）', en: 'Barmen (Wuppertal)' }, lat: 51.26, lon: 7.18, year: 1820, role: 'birth' },
       { name: { zh: '曼彻斯特', en: 'Manchester' }, lat: 53.48, lon: -2.24, year: 1842, role: 'active' },
       { name: { zh: '伦敦', en: 'London' }, lat: 51.5, lon: -0.12, year: 1870, role: 'active' },
     ],
-    review: 'pending',
   },
   {
     id: 'perry',
@@ -181,7 +213,9 @@ export const PEOPLE: Person[] = [
       en: 'His "Black Ships" ended Japan\'s two centuries of seclusion.',
     },
     eventIds: ['perry-expedition'],
-  },
+
+    sourceIds: ['brit-matthew-perry'],
+    review: 'reviewed',  },
   {
     id: 'nightingale',
     name: { zh: '南丁格尔', en: 'Florence Nightingale' },
@@ -191,6 +225,9 @@ export const PEOPLE: Person[] = [
       en: 'Founder of modern nursing and health statistics, forged in Crimea.',
     },
     eventIds: ['nightingale-crimea', 'crimean-war'],
+
+    sourceIds: ['brit-florence-nightingale'],
+    review: 'reviewed',
     places: [
       { name: { zh: '佛罗伦萨', en: 'Florence' }, lat: 43.77, lon: 11.26, year: 1820, role: 'birth' },
       { name: { zh: '伦敦', en: 'London' }, lat: 51.5, lon: -0.12, year: 1837, role: 'active' },
@@ -206,7 +243,9 @@ export const PEOPLE: Person[] = [
       en: 'Led the Self-Strengthening Movement and late-Qing diplomacy.',
     },
     eventIds: ['self-strengthening-movement', 'sino-japanese-war'],
-  },
+
+    sourceIds: ['brit-li-hongzhang'],
+    review: 'reviewed',  },
   {
     id: 'dunant',
     name: { zh: '亨利·杜南', en: 'Henry Dunant' },
@@ -216,7 +255,9 @@ export const PEOPLE: Person[] = [
       en: 'Founded the Red Cross after Solferino; first Nobel Peace laureate.',
     },
     eventIds: ['red-cross-founding'],
-  },
+
+    sourceIds: ['wiki-henry-dunant'],
+    review: 'reviewed',  },
   {
     id: 'bismarck',
     name: { zh: '俾斯麦', en: 'Otto von Bismarck' },
@@ -226,6 +267,9 @@ export const PEOPLE: Person[] = [
       en: 'Iron Chancellor who unified Germany and chaired the Berlin Conference.',
     },
     eventIds: ['franco-prussian-war', 'berlin-conference'],
+
+    sourceIds: ['brit-otto-von-bismarck'],
+    review: 'reviewed',
     places: [
       { name: { zh: '舍恩豪森', en: 'Schönhausen' }, lat: 52.47, lon: 11.4, year: 1815, role: 'birth' },
       { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1849, role: 'active' },
@@ -241,10 +285,12 @@ export const PEOPLE: Person[] = [
       en: 'King of Prussia and German Emperor who appointed Bismarck and backed unification.',
     },
     eventIds: ['franco-prussian-war'],
+
+    sourceIds: ['wiki-wilhelm-i'],
+    review: 'reviewed',
     places: [
       { name: { zh: '柏林', en: 'Berlin' }, lat: 52.52, lon: 13.4, year: 1861, role: 'active' },
     ],
-    review: 'pending',
   },
   {
     id: 'meiji-emperor',
@@ -255,7 +301,9 @@ export const PEOPLE: Person[] = [
       en: 'Symbolic leader of Japan\'s transformation in the Meiji era.',
     },
     eventIds: ['meiji-restoration'],
-  },
+
+    sourceIds: ['wiki-emperor-meiji'],
+    review: 'reviewed',  },
   {
     id: 'mendeleyev',
     name: { zh: '门捷列夫', en: 'Dmitri Mendeleev' },
@@ -265,7 +313,9 @@ export const PEOPLE: Person[] = [
       en: 'Arranged the elements and predicted the undiscovered ones.',
     },
     eventIds: ['periodic-table'],
-  },
+
+    sourceIds: ['wiki-dmitri-mendeleev'],
+    review: 'reviewed',  },
   {
     id: 'kang-youwei',
     name: { zh: '康有为', en: 'Kang Youwei' },
@@ -275,7 +325,9 @@ export const PEOPLE: Person[] = [
       en: 'Architect of the Hundred Days\' Reform movement.',
     },
     eventIds: ['gongche-shangshu', 'hundred-days-reform'],
-  },
+
+    sourceIds: ['brit-kang-youwei'],
+    review: 'reviewed',  },
   {
     id: 'bell',
     name: { zh: '贝尔', en: 'Alexander Graham Bell' },
@@ -285,6 +337,9 @@ export const PEOPLE: Person[] = [
       en: 'Patented the telephone; the voice crossed continents in real time.',
     },
     eventIds: ['telephone'],
+
+    sourceIds: ['brit-alexander-graham-bell'],
+    review: 'reviewed',
     places: [
       { name: { zh: '爱丁堡', en: 'Edinburgh', }, lat: 55.95, lon: -3.19, year: 1847, role: 'birth' },
       { name: { zh: '波士顿（语音教学）', en: 'Boston (teaching speech)' }, lat: 42.36, lon: -71.06, year: 1871, role: 'active' },
@@ -299,6 +354,9 @@ export const PEOPLE: Person[] = [
       en: 'His Menlo Park lab delivered the lamp and the systems that powered it.',
     },
     eventIds: ['light-bulb'],
+
+    sourceIds: ['brit-thomas-edison'],
+    review: 'reviewed',
     places: [
       { name: { zh: '米兰（俄亥俄州）', en: 'Milan, Ohio' }, lat: 41.1, lon: -82.6, year: 1847, role: 'birth' },
       { name: { zh: '门洛帕克（新泽西）', en: 'Menlo Park, NJ' }, lat: 40.52, lon: -74.31, year: 1876, role: 'active' },
@@ -314,6 +372,9 @@ export const PEOPLE: Person[] = [
       en: 'Two Nobel Prizes; pioneer of radioactivity research.',
     },
     eventIds: ['nobel-marie-curie', 'radium-discovery'],
+
+    sourceIds: ['brit-marie-curie'],
+    review: 'reviewed',
     places: [
       { name: { zh: '华沙', en: 'Warsaw' }, lat: 52.23, lon: 21.01, year: 1867, role: 'birth' },
       { name: { zh: '巴黎（索邦）', en: 'Paris (Sorbonne)' }, lat: 48.85, lon: 2.35, year: 1891, role: 'active' },
@@ -328,7 +389,9 @@ export const PEOPLE: Person[] = [
       en: 'His quantum hypothesis cracked open classical physics.',
     },
     eventIds: ['quantum-hypothesis'],
-  },
+
+    sourceIds: ['brit-max-planck'],
+    review: 'reviewed',  },
   {
     id: 'einstein',
     name: { zh: '爱因斯坦', en: 'Albert Einstein' },
@@ -338,7 +401,9 @@ export const PEOPLE: Person[] = [
       en: 'In his miracle year he redefined space, time and energy.',
     },
     eventIds: ['special-relativity'],
-  },
+
+    sourceIds: ['brit-albert-einstein'],
+    review: 'reviewed',  },
   {
     id: 'wright-brothers',
     name: { zh: '莱特兄弟', en: 'The Wright Brothers' },
@@ -348,7 +413,9 @@ export const PEOPLE: Person[] = [
       en: 'Their twelve-second flight changed the world.',
     },
     eventIds: ['wright-flight'],
-  },
+
+    sourceIds: ['brit-wright-brothers'],
+    review: 'reviewed',  },
   {
     id: 'sun-yat-sen',
     name: { zh: '孙中山', en: 'Sun Yat-sen' },
@@ -358,6 +425,9 @@ export const PEOPLE: Person[] = [
       en: 'Spiritual leader of the Xinhai Revolution and the first Asian republic.',
     },
     eventIds: ['tongmenghui', 'xinhai-revolution'],
+
+    sourceIds: ['brit-sun-yat-sen'],
+    review: 'reviewed',
     places: [
       { name: { zh: '香山翠亨', en: 'Cuiheng, Xiangshan' }, lat: 22.44, lon: 113.53, year: 1866, role: 'birth' },
       { name: { zh: '檀香山', en: 'Honolulu' }, lat: 21.31, lon: -157.86, year: 1879, role: 'travel' },
@@ -374,7 +444,9 @@ export const PEOPLE: Person[] = [
       en: 'His assembly line put the twentieth century on wheels.',
     },
     eventIds: ['model-t'],
-  },
+
+    sourceIds: ['brit-henry-ford'],
+    review: 'reviewed',  },
   {
     id: 'amundsen',
     name: { zh: '阿蒙森', en: 'Roald Amundsen' },
@@ -384,7 +456,9 @@ export const PEOPLE: Person[] = [
       en: 'First to the South Pole and through the Northwest Passage.',
     },
     eventIds: ['amundsen-south-pole'],
-  },
+
+    sourceIds: ['brit-roald-amundsen'],
+    review: 'reviewed',  },
   {
     id: 'shaka',
     name: { zh: '沙卡', en: 'Shaka Zulu' },
@@ -394,7 +468,9 @@ export const PEOPLE: Person[] = [
       en: 'Founder of the Zulu Kingdom; his conquests reshaped Southern Africa.',
     },
     eventIds: ['zulu-kingdom'],
-  },
+
+    sourceIds: ['wiki-shaka'],
+    review: 'reviewed',  },
   {
     id: 'hong-xiuquan',
     name: { zh: '洪秀全', en: 'Hong Xiuquan' },
@@ -404,7 +480,9 @@ export const PEOPLE: Person[] = [
       en: 'Heavenly King of the Taiping; led history\'s largest peasant war.',
     },
     eventIds: ['taiping-rebellion'],
-  },
+
+    sourceIds: ['wiki-hong-xiuquan'],
+    review: 'reviewed',  },
   {
     id: 'menelik-ii',
     name: { zh: '孟尼利克二世', en: 'Menelik II' },
@@ -414,7 +492,9 @@ export const PEOPLE: Person[] = [
       en: 'Emperor of Ethiopia; Adwa preserved independence while he modernized.',
     },
     eventIds: ['adwa'],
-  },
+
+    sourceIds: ['wiki-menelik-ii'],
+    review: 'reviewed',  },
   {
     id: 'pasteur',
     name: { zh: '巴斯德', en: 'Louis Pasteur' },
@@ -424,7 +504,9 @@ export const PEOPLE: Person[] = [
       en: 'Founder of germ theory and vaccination: "Chance favours the prepared mind."',
     },
     eventIds: ['pasteur-vaccine'],
-  },
+
+    sourceIds: ['brit-louis-pasteur'],
+    review: 'reviewed',  },
   {
     id: 'mendel',
     name: { zh: '孟德尔', en: 'Gregor Mendel' },
@@ -434,7 +516,9 @@ export const PEOPLE: Person[] = [
       en: 'The father of genetics, discovered in a monastery garden.',
     },
     eventIds: ['mendel-genetics'],
-  },
+
+    sourceIds: ['brit-gregor-mendel'],
+    review: 'reviewed',  },
   {
     id: 'alexander-ii',
     name: { zh: '亚历山大二世', en: 'Alexander II' },
@@ -444,7 +528,9 @@ export const PEOPLE: Person[] = [
       en: 'The Tsar-Liberator who freed the serfs, later assassinated by revolutionaries.',
     },
     eventIds: ['emancipation-serfs'],
-  },
+
+    sourceIds: ['wiki-alexander-ii-russia'],
+    review: 'reviewed',  },
   {
     id: 'elizabeth-cady-stanton',
     name: { zh: '伊丽莎白·卡迪·斯坦顿', en: 'Elizabeth Cady Stanton' },
@@ -454,7 +540,9 @@ export const PEOPLE: Person[] = [
       en: 'Soul of Seneca Falls and principal author of the Declaration of Sentiments.',
     },
     eventIds: ['seneca-falls'],
-  },
+
+    sourceIds: ['brit-elizabeth-cady-stanton'],
+    review: 'reviewed',  },
   {
     id: 'emmeline-pankhurst',
     name: { zh: '埃米琳·潘克赫斯特', en: 'Emmeline Pankhurst' },
@@ -464,7 +552,9 @@ export const PEOPLE: Person[] = [
       en: 'Leader of Britain\'s militant suffragettes: "Deeds, not words."',
     },
     eventIds: ['wspu-suffrage'],
-  },
+
+    sourceIds: ['brit-emmeline-pankhurst'],
+    review: 'reviewed',  },
   {
     id: 'livingstone',
     name: { zh: '利文斯通', en: 'David Livingstone' },
@@ -474,7 +564,9 @@ export const PEOPLE: Person[] = [
       en: 'Missionary-explorer who crossed Africa and fought the slave trade.',
     },
     eventIds: ['stanley-livingstone'],
-  },
+
+    sourceIds: ['brit-david-livingstone'],
+    review: 'reviewed',  },
   {
     id: 'zuo-zongtang',
     name: { zh: '左宗棠', en: 'Zuo Zongtang' },
@@ -484,7 +576,9 @@ export const PEOPLE: Person[] = [
       en: 'Qing statesman-general who recovered Xinjiang and built the Fuzhou shipyard.',
     },
     eventIds: ['zuozongtang-xinjiang'],
-  },
+
+    sourceIds: ['wiki-zuo-zongtang'],
+    review: 'reviewed',  },
   {
     id: 'zhan-tianyou',
     name: { zh: '詹天佑', en: 'Zhan Tianyou' },
@@ -494,7 +588,9 @@ export const PEOPLE: Person[] = [
       en: '"Father of China\'s railways"; his switchback conquered the Jingzhang line.',
     },
     eventIds: ['jingzhang-railway'],
-  },
+
+    sourceIds: ['wiki-zhan-tianyou'],
+    review: 'reviewed',  },
   {
     id: 'lumiere-brothers',
     name: { zh: '卢米埃尔兄弟', en: 'The Lumière Brothers' },
@@ -504,7 +600,9 @@ export const PEOPLE: Person[] = [
       en: 'Inventors of the Cinématographe and hosts of cinema\'s first paid screening.',
     },
     eventIds: ['cinema-lumiere'],
-  },
+
+    sourceIds: ['wiki-lumiere-brothers'],
+    review: 'reviewed',  },
   {
     id: 'roentgen',
     name: { zh: '伦琴', en: 'Wilhelm Röntgen' },
@@ -514,7 +612,9 @@ export const PEOPLE: Person[] = [
       en: 'Discoverer of X-rays and the first Nobel laureate in Physics.',
     },
     eventIds: ['x-rays'],
-  },
+
+    sourceIds: ['wiki-wilhelm-roentgen'],
+    review: 'reviewed',  },
   {
     id: 'nobel',
     name: { zh: '诺贝尔', en: 'Alfred Nobel' },
@@ -524,7 +624,9 @@ export const PEOPLE: Person[] = [
       en: 'Inventor of dynamite whose will founded the Nobel Prizes.',
     },
     eventIds: ['nobel-prizes'],
-  },
+
+    sourceIds: ['brit-alfred-nobel'],
+    review: 'reviewed',  },
   {
     id: 'cixi',
     name: { zh: '慈禧太后', en: 'Empress Dowager Cixi' },
@@ -534,7 +636,9 @@ export const PEOPLE: Person[] = [
       en: 'De facto ruler of late Qing China for nearly half a century.',
     },
     eventIds: ['hundred-days-reform', 'eight-nation-alliance'],
-  },
+
+    sourceIds: ['wiki-empress-dowager-cixi'],
+    review: 'reviewed',  },
   {
     id: 'theodore-roosevelt',
     name: { zh: '西奥多·罗斯福', en: 'Theodore Roosevelt' },
@@ -544,7 +648,9 @@ export const PEOPLE: Person[] = [
       en: 'The president behind the Panama Canal and Big Stick diplomacy.',
     },
     eventIds: ['panama-canal'],
-  },
+
+    sourceIds: ['brit-theodore-roosevelt'],
+    review: 'reviewed',  },
   // ---- V0.26.0 人物扩容（仅补实际缺口 4 位；生卒为百科级常识，review: 'pending' 待来源验证升级）----
   {
     id: 'dalembert',
@@ -555,7 +661,9 @@ export const PEOPLE: Person[] = [
       en: 'French mathematician and philosophe, Diderot\'s co-editor and science contributor of the Encyclopédie.',
     },
     eventIds: ['encyclopedie'],
-    review: 'pending',
+
+    sourceIds: ['brit-jean-le-rond-dalembert'],
+    review: 'reviewed',
   },
   {
     id: 'liang-qichao',
@@ -566,7 +674,9 @@ export const PEOPLE: Person[] = [
       en: 'Reform leader and pioneer of modern Chinese journalism, guiding a generation of intellectuals.',
     },
     eventIds: ['hundred-days-reform'],
-    review: 'pending',
+
+    sourceIds: ['brit-liang-qichao'],
+    review: 'reviewed',
   },
   {
     id: 'ito-hirobumi',
@@ -577,7 +687,9 @@ export const PEOPLE: Person[] = [
       en: 'Principal drafter of the Meiji Constitution and first prime minister of Japan.',
     },
     eventIds: ['meiji-restoration'],
-    review: 'pending',
+
+    sourceIds: ['brit-ito-hirobumi'],
+    review: 'reviewed',
   },
   {
     id: 'garibaldi',
@@ -588,7 +700,9 @@ export const PEOPLE: Person[] = [
       en: 'Legendary general of the Expedition of the Thousand; military soul of Italian unification.',
     },
     eventIds: ['italian-unification'],
-    review: 'pending',
+
+    sourceIds: ['brit-giuseppe-garibaldi'],
+    review: 'reviewed',
   },
 ]
 
