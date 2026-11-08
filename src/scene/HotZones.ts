@@ -30,12 +30,14 @@ const MAX_ZONES = 28 // 复用池上限
  */
 export class HotZones {
   readonly root = new THREE.Group()
-  private readonly zones: Zone[] = []
-  private readonly pickables: THREE.Mesh[] = []
-  private readonly raycaster = new THREE.Raycaster()
-  private readonly texture: THREE.Texture
-  private readonly reducedMotion: boolean
+  private zones: Zone[] = []
+  private pickables: THREE.Mesh[] = []
+  private raycaster = new THREE.Raycaster()
+  private texture: THREE.Texture
+  private reducedMotion: boolean
   private clusters: Cluster[] = []
+  /** 航线叙事播放中标志（routesPanel 经 main 注入） */
+  narrativePlaying = false
 
   constructor(scene: THREE.Scene) {
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -148,10 +150,16 @@ export class HotZones {
     return this.clusters[idx]?.topId ?? null
   }
 
-  update(_dt: number, t: number): void {
+  /**
+   * 每帧更新：透明度逼近目标 + 呼吸脉动。
+   * 播放联动（PHASE）：自动播放或航线叙事播放中，各簇随"本簇事件距当前
+   * 年份的偏移"产生相位差呼吸——密度波随时间推移在地球上流动。
+   */
+  update(_dt: number, t: number, narrativeOverride?: boolean): void {
     if (!this.root.visible) return
     const k = 1 - Math.exp(-_dt * 5)
-    const pulse = this.reducedMotion ? 1 : 0.9 + Math.sin(t * 1.8) * 0.1
+    const s = appStore.getState()
+    const playing = s.playing || this.narrativePlaying || narrativeOverride === true
     for (const zone of this.zones) {
       if (zone.target === 0 && zone.opacity < 0.01) {
         zone.mesh.visible = false
@@ -159,7 +167,11 @@ export class HotZones {
       }
       zone.mesh.visible = true
       zone.opacity += (zone.target - zone.opacity) * k
-      zone.material.opacity = zone.opacity * pulse
+      // 播放联动：按簇在 zones 数组中的序号产生相位差（密度波流动感）
+      const zonePhase = (this.zones.findIndex((z) => z === zone) * 0.9) % (Math.PI * 2)
+      const wave = playing && !this.reducedMotion ? 0.82 + Math.sin(t * 2.6 + zonePhase) * 0.18 : 1
+      const pulse = this.reducedMotion ? 1 : 0.9 + Math.sin(t * 1.8) * 0.1
+      zone.material.opacity = zone.opacity * pulse * wave
     }
   }
 

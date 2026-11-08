@@ -172,7 +172,18 @@ function boot(): void {
   // ---- 历史航线面板（PHASE B4/B5）：播放跟随 + 用户拖动接管 ----
   let routeFollow = false
   let onRouteUserDrag: (() => void) | null = null
-  initRoutesPanel(
+  // 航线叙事播放 → 热区密度波联动
+  let routePlaying = false
+  const setRoutePlaying = (v: boolean): void => {
+    routePlaying = v
+    hotspots.narrativePlaying = v
+  }
+  let routePanel: {
+    isPlaying: () => boolean
+    pause: () => void
+    setPlayingListener: (cb: (v: boolean) => void) => void
+  } | null = null
+  routePanel = initRoutesPanel(
     routeArcs,
     {
       follow: (point) => {
@@ -202,6 +213,7 @@ function boot(): void {
     },
     (personId) => appStore.getState().selectPerson(personId),
   )
+  routePanel?.setPlayingListener(setRoutePlaying)
 
   // ---- 随机发现（尊重当前时间窗口与快照筛选；排除最近 5 个避免连续重复）----
   const recentRandom: string[] = []
@@ -268,7 +280,7 @@ function boot(): void {
     globe.update(dt)
     pillars.update(dt, clock.elapsedTime)
     arcs.update(dt, clock.elapsedTime)
-    hotspots.update(dt, clock.elapsedTime)
+    hotspots.update(dt, clock.elapsedTime, routePlaying)
     // 卡片罗盘：指向选中棱柱（事件卡=选中事件；人物卡=人物主事件）
     const s2 = appStore.getState()
     const compassEl = getCompassEl()

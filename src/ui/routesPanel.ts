@@ -28,7 +28,18 @@ export function initRoutesPanel(
   },
   onGoEvent: (eventId: string) => void,
   onOpenPerson: (personId: string) => void,
-): { isPlaying: () => boolean; pause: () => void } {
+): {
+    isPlaying: () => boolean
+    pause: () => void
+    /** 播放状态变化通知（main 用于热区密度波联动） */
+    setPlayingListener: (cb: (v: boolean) => void) => void
+  } {
+  // 播放状态变化通知（main 用于热区密度波联动）
+  const onPlayingChange = (v: boolean): void => {
+    routePanelStateRef.isPlaying = () => v
+  }
+  const routePanelStateRef: { isPlaying: () => boolean } = { isPlaying: () => false }
+  void routePanelStateRef
   const toggle = document.getElementById('routes-toggle') as HTMLButtonElement
   const panel = document.getElementById('routes-panel') as HTMLElement
   const list = document.getElementById('routes-list') as HTMLElement
@@ -202,16 +213,19 @@ export function initRoutesPanel(
     raf = requestAnimationFrame(tick)
   }
 
+  let playingListener: ((v: boolean) => void) | null = null
   const startPlay = (): void => {
     if (!current) return
     if (progress >= 1) progress = 0
     playing = true
     lastTs = 0
+    playingListener?.(true)
     raf = requestAnimationFrame(tick)
     renderDetail()
   }
   const pausePlay = (): void => {
     playing = false
+    playingListener?.(false)
     cancelAnimationFrame(raf)
     camera.release()
     renderDetail()
@@ -287,5 +301,8 @@ export function initRoutesPanel(
   return {
     isPlaying: () => playing,
     pause: pausePlay,
+    setPlayingListener: (cb: (v: boolean) => void) => {
+      playingListener = cb
+    },
   }
 }
