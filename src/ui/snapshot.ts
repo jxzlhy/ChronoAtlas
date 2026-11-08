@@ -2,7 +2,22 @@ import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { eraOf } from '../data/eras'
 import { panelIn } from './motion'
+import { CIVILIZATIONS } from '../data/model'
 import type { ContinentKey, EventType } from '../data/model'
+
+/** 文明标签展示名（PHASE D） */
+const CIV_LABEL: Record<string, { zh: string; en: string }> = {
+  chinese: { zh: '中华', en: 'Chinese' },
+  ottoman: { zh: '奥斯曼', en: 'Ottoman' },
+  european: { zh: '欧洲', en: 'European' },
+  russian: { zh: '俄罗斯', en: 'Russian' },
+  indian: { zh: '印度', en: 'Indian' },
+  japanese: { zh: '日本', en: 'Japanese' },
+  african: { zh: '非洲', en: 'African' },
+  'latin-american': { zh: '拉美', en: 'Latin America' },
+  'north-american': { zh: '北美', en: 'North America' },
+  'islamic-world': { zh: '伊斯兰', en: 'Islamic World' },
+}
 
 /**
  * 世界快照面板（V1.0-M2）：年份驱动的时代切片。
@@ -17,6 +32,8 @@ import type { ContinentKey, EventType } from '../data/model'
 
 type SortBy = 'importance' | 'time' | 'geo' | 'type'
 type ViewMode = 'list' | 'sync'
+/** 文明筛选：面板局部状态（PHASE D） */
+type CivFilter = string | null
 
 const SORT_LABEL: Record<SortBy, { zh: string; en: string }> = {
   importance: { zh: '重要度', en: 'Importance' },
@@ -64,6 +81,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   let signature = ''
   let sortBy: SortBy = 'importance'
   let viewMode: ViewMode = 'list'
+  let civFilter: CivFilter = null
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -160,6 +178,24 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
         .join('')
   }
 
+  /** 文明筛选 chips（PHASE D）：有活跃事件的文明才显示 */
+  const renderCivs = (active: HistoryEvent[]): void => {
+    const civEl = document.getElementById('snapshot-civs') as HTMLElement | null
+    if (!civEl) return
+    const counts = new Map<string, number>()
+    for (const ev of active) {
+      for (const c of ev.civilizations ?? []) counts.set(c, (counts.get(c) ?? 0) + 1)
+    }
+    civEl.innerHTML =
+      `<span class="snap-sort-label">文明 · Civilization</span>` +
+      CIVILIZATIONS.filter((c) => (counts.get(c) ?? 0) > 0)
+        .map((c) => {
+          const label = CIV_LABEL[c] ?? { zh: c, en: c }
+          return `<button class="snap-sort-btn${civFilter === c ? ' is-active' : ''}" type="button" data-civ="${c}" title="${label.en}">${label.zh} <span class="snap-chip-count">${counts.get(c)}</span></button>`
+        })
+        .join('')
+  }
+
   /** 同时代视图：按大洲并置当年代表事件（数据驱动，不虚构叙述） */
   const renderSync = (rows: HistoryEvent[], selectedId: string | null): string => {
     const byCont = new Map<ContinentKey, HistoryEvent[]>()
@@ -213,7 +249,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   const render = (force = false): void => {
     const s = appStore.getState()
     // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选/排序/视图
-    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}|${viewMode}`
+    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}|${viewMode}|${civFilter}`
     if (!force && next === signature) return
     signature = next
 
@@ -242,8 +278,13 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     renderContinents(contCounts, s.continentFilter)
     renderSort()
     renderView()
+    renderCivs(active)
 
-    const filtered = sortEvents(active.filter((ev) => matchesFilters(ev, s)))
+    const filtered = sortEvents(
+      active.filter(
+        (ev) => matchesFilters(ev, s) && (civFilter === null || (ev.civilizations ?? []).includes(civFilter)),
+      ),
+    )
     countEl.textContent = String(active.length)
 
     if (viewMode === 'sync') {
@@ -309,6 +350,15 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-view]')
     if (!btn?.dataset.view) return
     viewMode = btn.dataset.view as ViewMode
+    render(true)
+  })
+
+  // 文明筛选（PHASE D）：点击切换（面板局部状态）
+  const civEl = document.getElementById('snapshot-civs') as HTMLElement
+  civEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-civ]')
+    if (!btn?.dataset.civ) return
+    civFilter = civFilter === btn.dataset.civ ? null : btn.dataset.civ
     render(true)
   })
 
