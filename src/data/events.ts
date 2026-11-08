@@ -37,6 +37,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1751, end: 1772, lat: 48.86, lon: 2.35,
     continent: 'europe',
 
+    sourceIds: ['brit-encyclopedie'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'ideas', importance: 2,
     desc: {
@@ -83,6 +85,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1762, end: 1762, lat: 46.2, lon: 6.14,
     continent: 'europe',
 
+    sourceIds: ['brit-social-contract'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '日内瓦 / 阿姆斯特丹', en: 'Geneva / Amsterdam' },
     type: 'ideas', importance: 2,
     desc: {
@@ -112,6 +116,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'oceania',
 
     civilizations: ['european'],    geoPrecision: 'multi',
+    sourceIds: ['brit-james-cook'],
+    review: 'reviewed',
     place: { zh: '太平洋 · 悉尼至夏威夷', en: 'Pacific Ocean' },
     type: 'exploration', importance: 2,
     desc: {
@@ -209,6 +215,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1791, end: 1804, lat: 18.54, lon: -72.34,
     continent: 'north-america',
 
+    sourceIds: ['brit-haitian-revolution'],
+    review: 'reviewed',
     civilizations: ['latin-american'],    place: { zh: '海地 · 太子港', en: 'Port-au-Prince, Haiti' },
     type: 'politics', importance: 2,
     desc: {
@@ -278,6 +286,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1814, end: 1815, lat: 48.2, lon: 16.37,
     continent: 'europe',
 
+    sourceIds: ['brit-congress-of-vienna'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '奥地利 · 维也纳', en: 'Vienna, Austria' },
     type: 'politics', importance: 2,
     desc: {
@@ -304,6 +314,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1823, end: 1823, lat: 38.9, lon: -77.04,
     continent: 'north-america',
 
+    sourceIds: ['brit-monroe-doctrine'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 华盛顿', en: 'Washington, USA' },
     type: 'politics', importance: 1,
     desc: {
@@ -345,6 +357,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1844, end: 1844, lat: 39.29, lon: -76.62,
     continent: 'north-america',
 
+    sourceIds: ['brit-telegraph'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 巴尔的摩', en: 'Baltimore, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -358,6 +372,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1845, end: 1852, lat: 53.35, lon: -6.26,
     continent: 'europe',
 
+    sourceIds: ['brit-great-famine'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '爱尔兰 · 都柏林', en: 'Dublin, Ireland' },
     type: 'society', importance: 2,
     desc: {
@@ -371,6 +387,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1851, end: 1851, lat: 51.51, lon: -0.13,
     continent: 'europe',
 
+    sourceIds: ['brit-great-exhibition'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'economy', importance: 2,
     desc: {
@@ -413,6 +431,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1853, end: 1856, lat: 44.62, lon: 33.53,
     continent: 'europe',
 
+    sourceIds: ['brit-crimean-war'],
+    review: 'reviewed',
     civilizations: ['european', 'russian', 'ottoman'],    place: { zh: '克里米亚 · 塞瓦斯托波尔', en: 'Sevastopol, Crimea' },
     type: 'war', importance: 2,
     desc: {
@@ -426,6 +446,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1853, end: 1854, lat: 35.45, lon: 139.75,
     continent: 'asia',
 
+    sourceIds: ['brit-matthew-perry'],
+    review: 'reviewed',
     civilizations: ['north-american', 'japanese'],    place: { zh: '日本 · 江户湾', en: 'Edo Bay, Japan' },
     type: 'politics', importance: 2,
     desc: {
@@ -467,6 +489,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1861, end: 1871, lat: 41.9, lon: 12.5,
     continent: 'europe',
 
+    sourceIds: ['brit-risorgimento'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '意大利 · 罗马', en: 'Rome, Italy' },
     type: 'politics', importance: 2,
     desc: {
@@ -495,6 +519,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1861, end: 1895, lat: 31.23, lon: 121.47,
     continent: 'asia',
 
+    sourceIds: ['wiki-self-strengthening'],
+    review: 'reviewed',
     civilizations: ['chinese'],    place: { zh: '中国 · 上海', en: 'Shanghai, China' },
     type: 'politics', importance: 2,
     desc: {
@@ -508,6 +534,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1863, end: 1863, lat: 46.2, lon: 6.14,
     continent: 'europe',
 
+    sourceIds: ['wiki-henry-dunant'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '瑞士 · 日内瓦', en: 'Geneva, Switzerland' },
     type: 'society', importance: 2,
     desc: {
@@ -590,6 +618,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1870, end: 1871, lat: 49.7, lon: 4.94,
     continent: 'europe',
 
+    sourceIds: ['brit-franco-german-war'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 色当', en: 'Sedan, France' },
     type: 'war', importance: 2,
     desc: {
@@ -657,6 +687,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1889, end: 1889, lat: 48.86, lon: 2.29,
     continent: 'europe',
 
+    sourceIds: ['wiki-eiffel-tower'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'society', importance: 1,
     desc: {
@@ -699,6 +731,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1901, lat: 44.49, lon: 11.34,
     continent: 'europe',
 
+    sourceIds: ['brit-guglielmo-marconi'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '意大利 · 博洛尼亚', en: 'Bologna, Italy' },
     type: 'science', importance: 2,
     desc: {
@@ -712,6 +746,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1896, end: 1896, lat: 37.98, lon: 23.73,
     continent: 'europe',
 
+    sourceIds: ['wiki-1896-olympics'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '希腊 · 雅典', en: 'Athens, Greece' },
     type: 'society', importance: 2,
     desc: {
@@ -725,6 +761,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1898, end: 1898, lat: 39.9, lon: 116.4,
     continent: 'asia',
 
+    sourceIds: ['brit-kang-youwei'],
+    review: 'reviewed',
     civilizations: ['chinese'],    place: { zh: '中国 · 北京', en: 'Beijing, China' },
     type: 'politics', importance: 2,
     desc: {
@@ -738,6 +776,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1898, end: 1903, lat: 48.85, lon: 2.35,
     continent: 'europe',
 
+    sourceIds: ['brit-marie-curie'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -764,6 +804,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1900, end: 1900, lat: 52.52, lon: 13.4,
     continent: 'europe',
 
+    sourceIds: ['brit-max-planck'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'science', importance: 2,
     desc: {
@@ -995,6 +1037,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1878, end: 1878, lat: 52.52, lon: 13.4,
     continent: 'europe',
 
+    sourceIds: ['brit-berlin-conference-1884'],
+    review: 'reviewed',
     civilizations: ['european', 'african'],    place: { zh: '德国 · 柏林', en: 'Berlin, Germany' },
     type: 'politics', importance: 2,
     desc: {
@@ -1008,6 +1052,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1871, end: 1871, lat: 48.86, lon: 2.35,
     continent: 'europe',
 
+    sourceIds: ['wiki-paris-commune'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'politics', importance: 2,
     desc: {
@@ -1021,6 +1067,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1896, end: 1896, lat: 14.16, lon: 38.9,
     continent: 'africa',
 
+    sourceIds: ['brit-battle-of-adwa'],
+    review: 'reviewed',
     civilizations: ['african'],    place: { zh: '埃塞俄比亚 · 阿杜瓦', en: 'Adwa, Ethiopia' },
     type: 'war', importance: 2,
     desc: {
@@ -1074,6 +1122,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'africa',
 
     civilizations: ['african', 'european'],    geoPrecision: 'region',
+    sourceIds: ['wiki-second-boer-war'],
+    review: 'reviewed',
     place: { zh: '南部非洲 · 德兰士瓦', en: 'Transvaal, Southern Africa' },
     type: 'war', importance: 2,
     desc: {
@@ -1276,6 +1326,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1825, end: 1825, lat: 59.93, lon: 30.34,
     continent: 'europe',
 
+    sourceIds: ['wiki-decembrist-revolt'],
+    review: 'reviewed',
     civilizations: ['russian'],    place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'politics', importance: 2,
     desc: {
@@ -1290,6 +1342,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'asia',
 
     civilizations: ['russian'],    geoPrecision: 'region',
+    sourceIds: ['brit-trans-siberian-railroad'],
+    review: 'reviewed',
     place: { zh: '俄罗斯 · 海参崴', en: 'Vladivostok, Russia' },
     type: 'economy', importance: 2,
     desc: {
@@ -1395,6 +1449,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1848, end: 1848, lat: 42.91, lon: -76.8,
     continent: 'north-america',
 
+    sourceIds: ['brit-seneca-falls-convention'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 塞尼卡福尔斯', en: 'Seneca Falls, USA' },
     type: 'society', importance: 2,
     desc: {
@@ -1618,6 +1674,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1892, end: 1892, lat: 40.7, lon: -74.05,
     continent: 'north-america',
 
+    sourceIds: ['wiki-ellis-island'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 纽约', en: 'New York, USA' },
     type: 'society', importance: 1,
     desc: {
