@@ -11,6 +11,7 @@ import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEve
 import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
 import { PEOPLE } from './data/people'
+import { ROUTES } from './data/routes'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
 import { initEventCard, getCompassEl } from './ui/eventCard'
@@ -56,6 +57,8 @@ function boot(): void {
     if (evId && EVENTS.some((e) => e.id === evId)) s.select(evId)
     const pId = params.get('p')
     if (pId && PEOPLE.some((x) => x.id === pId)) s.selectPerson(pId)
+    const rtId = params.get('rt')
+    if (rtId && ROUTES.some((x) => x.id === rtId)) s.selectRoute(rtId)
   }
   // store → hash（replaceState，不打断导航）；boot 时也写回一次以清理无效参数
   {
@@ -66,6 +69,7 @@ function boot(): void {
       p.set('y', String(s.year))
       if (s.selectedId) p.set('ev', s.selectedId)
       if (s.selectedPersonId) p.set('p', s.selectedPersonId)
+      if (s.selectedRouteId) p.set('rt', s.selectedRouteId)
       const h = `#${p.toString()}`
       if (h !== lastHash) {
         lastHash = h

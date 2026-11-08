@@ -2,6 +2,7 @@ import { ROUTES, ROUTE_KINDS, type HistoricalRoute } from '../data/routes'
 import { PEOPLE } from '../data/people'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { SOURCES } from '../data/sources'
+import { appStore } from '../store'
 import type { RoutePoint } from '../data/model'
 import { panelIn } from './motion'
 
@@ -39,12 +40,14 @@ export function initRoutesPanel(
   let progress = 0
   let raf = 0
   let lastTs = 0
+  let suppressStore = false // 面板内部选择时避免与 store 订阅回环
 
   const setOpen = (v: boolean): void => {
     open = v
     panel.hidden = !v
     toggle.setAttribute('aria-expanded', String(v))
     toggle.classList.toggle('is-open', v)
+    appStore.getState().selectRoute(v ? (current?.id ?? null) : null)
     if (!v) {
       playing = false
       cancelAnimationFrame(raf)
@@ -83,6 +86,10 @@ export function initRoutesPanel(
     playing = false
     progress = 0
     routeArcs.show(current?.id ?? null)
+    // 同步 store → URL hash rt= 参数（PHASE F4 分享恢复）
+    suppressStore = true
+    appStore.getState().selectRoute(current?.id ?? null)
+    suppressStore = false
     renderList()
     renderDetail()
     if (current) {
@@ -267,6 +274,16 @@ export function initRoutesPanel(
   })
 
   renderList()
+
+  // store 订阅：URL rt= 恢复时自动选中（suppressStore 防内部选择回环）
+  appStore.subscribe((s) => {
+    if (suppressStore) return
+    if (s.selectedRouteId && s.selectedRouteId !== current?.id) {
+      if (!open) setOpen(true)
+      select(s.selectedRouteId)
+    }
+  })
+
   return {
     isPlaying: () => playing,
     pause: pausePlay,

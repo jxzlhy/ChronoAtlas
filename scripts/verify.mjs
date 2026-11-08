@@ -589,7 +589,7 @@ console.log(
   badHash.selected === null && badHash.hash === '#y=1850' ? '✓' : '✗',
 )
 
-// 12.11 历史航线面板（PHASE B）：列表/详情/播放进度
+// 12.11 历史航线面板（PHASE B）：列表/详情/播放进度/URL rt= 回环
 await page.keyboard.press('j')
 await new Promise((r) => setTimeout(r, 500))
 const rpInfo = await page.evaluate(() => ({
@@ -599,19 +599,46 @@ const rpInfo = await page.evaluate(() => ({
 console.log('   航线面板:', JSON.stringify(rpInfo))
 if (!rpInfo.open || rpInfo.rows !== 5) throw new Error(`航线面板异常: ${JSON.stringify(rpInfo)}`)
 await shot('21-routes')
-// 选中麦哲伦环球（9 途经点）→ 详情 + 不确定性标注
+// 选中麦哲伦环球（9 途经点）→ 详情 + 不确定性标注 + URL rt= 写入
 await page.click('#routes-list [data-route="magellan-circumnavigation"]')
 await new Promise((r) => setTimeout(r, 1800))
 const rpDetail = await page.evaluate(() => ({
   stops: document.querySelectorAll('#routes-detail .rp-stop').length,
   desc: !!document.querySelector('#routes-detail .rp-desc'),
   uncertainty: !!document.querySelector('#routes-detail .rp-uncertain'),
+  hash: window.location.hash,
 }))
 console.log('   航线详情:', JSON.stringify(rpDetail))
 if (rpDetail.stops !== 9) throw new Error(`麦哲伦途经点异常: ${rpDetail.stops}`)
+if (!rpDetail.hash.includes('rt=magellan-circumnavigation'))
+  throw new Error(`URL rt= 未写入: ${rpDetail.hash}`)
 await shot('21b-route-detail')
-// 播放叙事 4 秒 → 进度应推进
-await page.click('#routes-detail [data-play]')
+// rt= 回环：reload 后航线自动恢复
+await page.reload({ waitUntil: 'domcontentloaded' })
+await page.waitForFunction(() => typeof window.__chrono !== 'undefined', { timeout: 30000 })
+await new Promise((r) => setTimeout(r, 1500))
+const rtRestored = await page.evaluate(() => ({
+  route: window.__chrono.store.getState().selectedRouteId,
+  open: !document.getElementById('routes-panel')?.hidden,
+}))
+console.log('   rt= 回环:', JSON.stringify(rtRestored), rtRestored.route === 'magellan-circumnavigation' ? '✓' : '✗')
+// 关闭航线（rt 从 hash 清除）
+await page.evaluate(() => document.getElementById('routes-toggle').click())
+await new Promise((r) => setTimeout(r, 500))
+const rtCleared = await page.evaluate(() => window.location.hash)
+console.log('   rt= 清除:', rtCleared, !rtCleared.includes('rt=') ? '✓' : '✗')
+// 播放叙事 4 秒 → 进度应推进（toggle 当前若已开则跳过点击）
+await page.evaluate(() => {
+  const t = document.getElementById('routes-toggle')
+  const panel = document.getElementById('routes-panel')
+  const isOpen = !panel.hidden
+  const want = true
+  if (isOpen !== want) t.click()
+})
+await new Promise((r) => setTimeout(r, 500))
+await page.evaluate(() => document.querySelector('#routes-list [data-route="magellan-circumnavigation"]')?.click())
+await new Promise((r) => setTimeout(r, 1500))
+await page.evaluate(() => document.querySelector('#routes-detail [data-play]')?.click())
 await new Promise((r) => setTimeout(r, 4000))
 const rpPlay = await page.evaluate(() => ({
   label: document.getElementById('rp-progress')?.textContent,

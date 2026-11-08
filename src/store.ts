@@ -23,6 +23,8 @@ export interface AppState {
   soundOn: boolean
   /** 当前人物档案（人物卡独立探索入口；null = 关闭） */
   selectedPersonId: string | null
+  /** 当前历史航线（URL 分享恢复；null = 关闭） */
+  selectedRouteId: string | null
   setYear: (y: number) => void
   setPlaying: (p: boolean) => void
   togglePlay: () => void
@@ -36,6 +38,7 @@ export interface AppState {
   setHotspotsOn: (v: boolean) => void
   setSoundOn: (v: boolean) => void
   selectPerson: (id: string | null) => void
+  selectRoute: (id: string | null) => void
 }
 
 export const YEAR_MIN = 1750
@@ -54,6 +57,7 @@ export const appStore = createStore<AppState>()((set) => ({
   hotspotsOn: false,
   soundOn: false,
   selectedPersonId: null,
+  selectedRouteId: null,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
@@ -67,6 +71,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setHotspotsOn: (hotspotsOn) => set({ hotspotsOn }),
   setSoundOn: (soundOn) => set({ soundOn }),
   selectPerson: (selectedPersonId) => set({ selectedPersonId }),
+  selectRoute: (selectedRouteId) => set({ selectedRouteId }),
 }))
 
 // 音效偏好记忆（首次访问默认关；无法读写时静默跳过）
