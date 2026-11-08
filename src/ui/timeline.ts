@@ -3,16 +3,18 @@ import { EVENTS } from '../data/events'
 import { eraOf } from '../data/eras'
 import { playTick } from './sound'
 
-/** 事件密度条：每年 1 柱（全数据集重叠计数，与时间窗口无关），点击快速跳年 */
+/** 事件密度条：每年 1 柱（全数据集重叠计数，与时间窗口无关），点击跳年 + 悬停显示当年事件 */
 function buildDensity(): void {
   const svg = document.getElementById('timeline-density') as SVGSVGElement | null
   if (!svg) return
   const years = YEAR_MAX - YEAR_MIN + 1
   const counts = new Array<number>(years).fill(0)
+  const byYear: string[][] = Array.from({ length: years }, () => [])
   let max = 0
   for (const ev of EVENTS) {
     for (let y = Math.max(ev.start, YEAR_MIN); y <= Math.min(ev.end, YEAR_MAX); y++) {
       counts[y - YEAR_MIN]++
+      byYear[y - YEAR_MIN].push(ev.title.zh)
       max = Math.max(max, counts[y - YEAR_MIN])
     }
   }
@@ -31,6 +33,34 @@ function buildDensity(): void {
     const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
     const year = Math.round(YEAR_MIN + frac * (years - 1))
     appStore.getState().setYear(year)
+  })
+
+  // 悬停 tooltip：显示当年活跃事件名（PHASE 交互深化）
+  const tooltip = document.createElement('div')
+  tooltip.className = 'density-tooltip'
+  tooltip.hidden = true
+  svg.parentElement?.appendChild(tooltip)
+  svg.addEventListener('pointermove', (e) => {
+    const rect = svg.getBoundingClientRect()
+    if (rect.width === 0) return
+    const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
+    const year = Math.round(YEAR_MIN + frac * (years - 1))
+    const titles = byYear[year - YEAR_MIN]
+    if (titles.length === 0) {
+      tooltip.hidden = true
+      return
+    }
+    const show = titles.slice(0, 4).join(' · ')
+    const more = titles.length > 4 ? `\n…等 ${titles.length} 个` : ''
+    tooltip.textContent = `${year} 年（${titles.length}）：${show}${more}`
+    tooltip.hidden = false
+    const wrap = svg.parentElement!.getBoundingClientRect()
+    const x = Math.min(Math.max(e.clientX - wrap.left, 60), wrap.width - 60)
+    tooltip.style.left = `${x}px`
+    tooltip.style.top = `${rect.bottom - wrap.top + 4}px`
+  })
+  svg.addEventListener('pointerleave', () => {
+    tooltip.hidden = true
   })
 }
 

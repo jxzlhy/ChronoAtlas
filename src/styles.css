@@ -2528,3 +2528,30 @@ input:focus-visible {
   background: var(--accent-soft);
   border-color: var(--accent-border);
 }
+
+/* 密度条 hover tooltip（PHASE 交互深化） */
+.timeline-wrap {
+  position: relative; /* tooltip 定位锚 */
+  overflow: visible;
+}
+
+.density-tooltip {
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 5px 10px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+  max-width: 320px;
+  color: var(--text);
+  background: var(--panel-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+
+.density-tooltip[hidden] {
+  display: none;
+}
