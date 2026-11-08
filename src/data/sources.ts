@@ -592,6 +592,71 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'brit-enlightenment',
+    name: { zh: '启蒙运动', en: 'Enlightenment' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/Enlightenment-European-history',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-partition-sejm',
+    name: { zh: '瓜分波兰（ partition sejm 背景）', en: 'Partition Sejm' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Partition_Sejm',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-pugachev-rebellion',
+    name: { zh: '普加乔夫起义', en: 'Pugachev Rebellion' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Pugachev-Rebellion',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-constitution-act-1867',
+    name: { zh: '1867 年宪法法案', en: 'Constitution Act, 1867' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Constitution_Act,_1867',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-japan-korea-treaty-1876',
+    name: { zh: '江华条约（日韩修好条规）', en: 'Japan–Korea Treaty of 1876' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Japan%E2%80%93Korea_Treaty_of_1876',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-franco-prussian-war',
+    name: { zh: '普法战争', en: 'Franco-Prussian War' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Franco-Prussian_War',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-eight-nation-alliance',
+    name: { zh: '八国联军', en: 'Eight-Nation Alliance' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Eight-Nation_Alliance',
+    type: 'encyclopedia',
+  },
+
+  {
+    id: 'brit-battle-of-navarino',
+    name: { zh: '纳瓦里诺海战（希腊独立战争）', en: 'Battle of Navarino' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Battle-of-Navarino',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-siege-of-khartoum',
+    name: { zh: '喀土穆围城战', en: 'Siege of Khartoum' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Siege-of-Khartoum',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

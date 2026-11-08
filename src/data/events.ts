@@ -131,6 +131,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1772, end: 1795, lat: 52.23, lon: 21.01,
     continent: 'europe',
 
+    sourceIds: ['wiki-partition-sejm'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '波兰 · 华沙', en: 'Warsaw, Poland' },
     type: 'politics', importance: 2,
     desc: {
@@ -144,6 +146,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1773, end: 1775, lat: 51.53, lon: 46.03,
     continent: 'europe',
 
+    sourceIds: ['brit-pugachev-rebellion'],
+    review: 'reviewed',
     civilizations: ['russian'],    place: { zh: '俄罗斯 · 伏尔加河流域', en: 'Volga Region, Russia' },
     type: 'war', importance: 1,
     desc: {
@@ -568,6 +572,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1867, end: 1867, lat: 45.42, lon: -75.7,
     continent: 'north-america',
 
+    sourceIds: ['wiki-constitution-act-1867'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '加拿大 · 渥太华', en: 'Ottawa, Canada' },
     type: 'politics', importance: 1,
     desc: {
@@ -807,6 +813,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1900, end: 1901, lat: 39.9, lon: 116.4,
     continent: 'asia',
 
+    sourceIds: ['wiki-eight-nation-alliance'],
+    review: 'reviewed',
     civilizations: ['chinese', 'european', 'japanese', 'russian'],    place: { zh: '中国 · 北京', en: 'Beijing, China' },
     type: 'war', importance: 2,
     desc: {
@@ -1005,6 +1013,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1821, end: 1830, lat: 37.98, lon: 23.73,
     continent: 'europe',
 
+    sourceIds: ['brit-battle-of-navarino'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '希腊 · 伯罗奔尼撒', en: 'Peloponnese, Greece' },
     type: 'war', importance: 2,
     desc: {
@@ -1046,6 +1056,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1876, end: 1876, lat: 37.45, lon: 126.7,
     continent: 'asia',
 
+    sourceIds: ['wiki-japan-korea-treaty-1876'],
+    review: 'reviewed',
     civilizations: ['japanese'],    place: { zh: '朝鲜 · 江华岛', en: 'Ganghwa, Korea' },
     type: 'politics', importance: 1,
     desc: {
@@ -1130,6 +1142,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1884, end: 1885, lat: 15.5, lon: 32.56,
     continent: 'africa',
 
+    sourceIds: ['brit-siege-of-khartoum'],
+    review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '苏丹 · 喀土穆', en: 'Khartoum, Sudan' },
     type: 'war', importance: 2,
     desc: {
@@ -1581,6 +1595,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1871, end: 1871, lat: -4.91, lon: 29.67,
     continent: 'africa',
 
+    sourceIds: ['brit-david-livingstone'],
+    review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '东非 · 乌吉吉', en: 'Ujiji, East Africa' },
     type: 'exploration', importance: 1,
     desc: {
