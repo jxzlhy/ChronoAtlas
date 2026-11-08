@@ -1395,6 +1395,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1905, end: 1905, lat: 59.93, lon: 30.34,
     continent: 'europe',
 
+    sourceIds: ['brit-russian-revolution-1905'],
+    review: 'reviewed',
     civilizations: ['russian'],    place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'politics', importance: 2,
     desc: {
@@ -1408,6 +1410,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1877, end: 1877, lat: 31.6, lon: 130.56,
     continent: 'asia',
 
+    sourceIds: ['wiki-satsuma-rebellion'],
+    review: 'reviewed',
     civilizations: ['japanese'],    place: { zh: '日本 · 鹿儿岛', en: 'Kagoshima, Japan' },
     type: 'war', importance: 1,
     desc: {

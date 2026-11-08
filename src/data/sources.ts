@@ -657,6 +657,28 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'wiki-hundred-days-reform',
+    name: { zh: '百日维新', en: "Hundred Days' Reform" },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Hundred_Days%27_Reform',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-russian-revolution-1905',
+    name: { zh: '1905 年俄国革命', en: 'Russian Revolution of 1905' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Russian-Revolution-of-1905',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-satsuma-rebellion',
+    name: { zh: '西南战争（萨摩叛乱）', en: 'Satsuma Rebellion' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Satsuma_Rebellion',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',
