@@ -12,6 +12,7 @@ import { EVENTS, CONTINENTS } from './data/events'
 import { LINKS } from './data/links'
 import { PEOPLE } from './data/people'
 import { ROUTES } from './data/routes'
+import { CIVILIZATIONS } from './data/model'
 import { initTimeline } from './ui/timeline'
 import { initSearch } from './ui/search'
 import { initEventCard, getCompassEl } from './ui/eventCard'
@@ -59,6 +60,8 @@ function boot(): void {
     if (pId && PEOPLE.some((x) => x.id === pId)) s.selectPerson(pId)
     const rtId = params.get('rt')
     if (rtId && ROUTES.some((x) => x.id === rtId)) s.selectRoute(rtId)
+    const civ = params.get('civ')
+    if (civ && CIVILIZATIONS.includes(civ as never)) s.setCivFilter(civ)
   }
   // store → hash（replaceState，不打断导航）；boot 时也写回一次以清理无效参数
   {
@@ -70,6 +73,7 @@ function boot(): void {
       if (s.selectedId) p.set('ev', s.selectedId)
       if (s.selectedPersonId) p.set('p', s.selectedPersonId)
       if (s.selectedRouteId) p.set('rt', s.selectedRouteId)
+      if (s.civFilter) p.set('civ', s.civFilter)
       const h = `#${p.toString()}`
       if (h !== lastHash) {
         lastHash = h

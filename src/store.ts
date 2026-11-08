@@ -15,6 +15,8 @@ export interface AppState {
   /** 快照面板筛选：null = 不过滤；影响地球棱柱明暗与随机发现 */
   typeFilter: EventType | null
   continentFilter: ContinentKey | null
+  /** 文明筛选（PHASE F 深化）：null = 不过滤 */
+  civFilter: string | null
   /** 关系弧线跳数（1 = 直接关系，3 = 长河多跳） */
   arcsDepth: 1 | 3
   /** 历史热区模式开关（展示已收录事件的空间密度） */
@@ -34,6 +36,7 @@ export interface AppState {
   setHover: (id: string | null) => void
   setTypeFilter: (t: EventType | null) => void
   setContinentFilter: (c: ContinentKey | null) => void
+  setCivFilter: (c: string | null) => void
   setArcsDepth: (d: 1 | 3) => void
   setHotspotsOn: (v: boolean) => void
   setSoundOn: (v: boolean) => void
@@ -53,6 +56,7 @@ export const appStore = createStore<AppState>()((set) => ({
   hoverId: null,
   typeFilter: null,
   continentFilter: null,
+  civFilter: null,
   arcsDepth: 3,
   hotspotsOn: false,
   soundOn: false,
@@ -67,6 +71,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setHover: (hoverId) => set({ hoverId }),
   setTypeFilter: (typeFilter) => set({ typeFilter }),
   setContinentFilter: (continentFilter) => set({ continentFilter }),
+  setCivFilter: (civFilter) => set({ civFilter }),
   setArcsDepth: (arcsDepth) => set({ arcsDepth }),
   setHotspotsOn: (hotspotsOn) => set({ hotspotsOn }),
   setSoundOn: (soundOn) => set({ soundOn }),

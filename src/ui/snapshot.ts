@@ -32,8 +32,6 @@ const CIV_LABEL: Record<string, { zh: string; en: string }> = {
 
 type SortBy = 'importance' | 'time' | 'geo' | 'type'
 type ViewMode = 'list' | 'sync' | 'civ'
-/** 文明筛选：面板局部状态（PHASE D） */
-type CivFilter = string | null
 
 const SORT_LABEL: Record<SortBy, { zh: string; en: string }> = {
   importance: { zh: '重要度', en: 'Importance' },
@@ -81,7 +79,6 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   let signature = ''
   let sortBy: SortBy = 'importance'
   let viewMode: ViewMode = 'list'
-  let civFilter: CivFilter = null
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -225,7 +222,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   }
 
   /** 文明筛选 chips（PHASE D 深化）：显示活跃计数 + 该文明的时代跨度（title） */
-  const renderCivs = (active: HistoryEvent[]): void => {
+  const renderCivs = (active: HistoryEvent[], civFilter: string | null): void => {
     const civEl = document.getElementById('snapshot-civs') as HTMLElement | null
     if (!civEl) return
     const counts = new Map<string, number>()
@@ -308,7 +305,7 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
   const render = (force = false): void => {
     const s = appStore.getState()
     // hover 变化也触发订阅，但内容只取决于 年份/窗口/选中/筛选/排序/视图
-    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${sortBy}|${viewMode}|${civFilter}`
+    const next = `${s.year}|${s.windowSize}|${s.selectedId}|${s.typeFilter}|${s.continentFilter}|${s.civFilter}|${sortBy}|${viewMode}`
     if (!force && next === signature) return
     signature = next
 
@@ -337,11 +334,11 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     renderContinents(contCounts, s.continentFilter)
     renderSort()
     renderView()
-    renderCivs(active)
+    renderCivs(active, s.civFilter)
 
     const filtered = sortEvents(
       active.filter(
-        (ev) => matchesFilters(ev, s) && (civFilter === null || (ev.civilizations ?? []).includes(civFilter)),
+        (ev) => matchesFilters(ev, s) && (s.civFilter === null || (ev.civilizations ?? []).includes(s.civFilter)),
       ),
     )
     countEl.textContent = String(active.length)
@@ -418,13 +415,13 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     render(true)
   })
 
-  // 文明筛选（PHASE D）：点击切换（面板局部状态）
+  // 文明筛选（PHASE D 深化）：写入 store（URL civ= 联动）
   const civEl = document.getElementById('snapshot-civs') as HTMLElement
   civEl.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-civ]')
     if (!btn?.dataset.civ) return
-    civFilter = civFilter === btn.dataset.civ ? null : btn.dataset.civ
-    render(true)
+    const s = appStore.getState()
+    s.setCivFilter(s.civFilter === btn.dataset.civ ? null : btn.dataset.civ)
   })
 
   list.addEventListener('click', (e) => {
