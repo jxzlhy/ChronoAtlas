@@ -2472,3 +2472,41 @@ input:focus-visible {
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
+
+/* 人物卡时代入口（PHASE C4 探索路径：人物→时期） */
+.pc-era {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease-out);
+}
+
+.pc-era:hover {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.pc-era-label {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.pc-era-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pc-era-en {
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+}

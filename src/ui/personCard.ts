@@ -1,6 +1,8 @@
 import { appStore, type AppState, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { PEOPLE, PERSON_LINKS } from '../data/people'
+import { SOURCES } from '../data/sources'
+import { eraOf } from '../data/eras'
 import type { PersonPlace } from '../data/model'
 
 /** 人物卡罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
@@ -80,6 +82,11 @@ export function initPersonCard(
       <div class="pc-life">${p.life}</div>
       <p class="pc-bio">${p.bio.zh}</p>
       <p class="pc-bio-en">${p.bio.en}</p>
+      <button class="pc-era" type="button" data-era="${eraOf(p.places?.[0]?.year ?? timeline[0]?.start ?? 1850).name.zh}"
+              title="跳转到该时代 · Jump to era">
+        <span class="pc-era-label">时代 · Era</span>
+        <span class="pc-era-name">${eraOf(p.places?.[0]?.year ?? timeline[0]?.start ?? 1850).name.zh}<span class="pc-era-en">${eraOf(p.places?.[0]?.year ?? timeline[0]?.start ?? 1850).name.en}</span></span>
+      </button>
       ${
         p.places && p.places.length > 0
           ? `<div class="pc-links-label">活动地图 · Atlas<span class="pc-atlas-hint">点击定位 · click to fly</span></div>
@@ -120,6 +127,21 @@ export function initPersonCard(
            })
            .join('')}
        </div>`
+          : ''
+      }
+      ${
+        (p.sourceIds ?? []).length > 0
+          ? `<div class="pc-links-label">参考资料 · Sources</div>
+       <ul class="ec-sources">
+         ${((p.sourceIds ?? [])
+           .map((sid) => SOURCES.find((s) => s.id === sid))
+           .filter((s) => s !== undefined))
+           .map(
+             (s) =>
+               `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name.en} — ${s.publisher.en}">${s.name.zh}<span class="ec-source-pub">${s.publisher.zh}</span></a></li>`,
+           )
+           .join('')}
+       </ul>`
           : ''
       }
       ${
@@ -204,6 +226,18 @@ export function initPersonCard(
     if (placeBtn?.dataset.place !== undefined && currentPersonPlaces) {
       const pl = currentPersonPlaces[Number(placeBtn.dataset.place)]
       if (pl) onFlyPlace(pl.lat, pl.lon)
+      return
+    }
+    const eraBtn = target.closest<HTMLElement>('[data-era]')
+    if (eraBtn?.dataset.era) {
+      // 时代入口：跳到人物主事件年份（时代探索路径：人物→时期）
+      const pid = appStore.getState().selectedPersonId
+      const person = PEOPLE.find((x) => x.id === pid)
+      const mainEv = person ? EVENTS.find((x) => x.id === person.eventIds[0]) : undefined
+      if (mainEv) {
+        appStore.getState().setYear(mainEv.start)
+        onGo(mainEv)
+      }
       return
     }
     const peerBtn = target.closest<HTMLElement>('[data-peer]')

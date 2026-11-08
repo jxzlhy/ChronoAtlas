@@ -397,6 +397,21 @@ const atlas = await page.evaluate(() => ({
   birth: !!document.querySelector('#person-card .pc-place-role[data-role="birth"]'),
 }))
 console.log('   活动地图:', JSON.stringify(atlas), atlas.rows === 3 && atlas.birth ? '✓' : '✗')
+// C3/C4 收尾：时代入口 + 人物参考资料节
+const eraEntry = await page.evaluate(() => ({
+  era: !!document.querySelector('#person-card .pc-era'),
+  eraName: document.querySelector('#person-card .pc-era-name')?.textContent?.trim(),
+  sources: document.querySelectorAll('#person-card .ec-sources a').length,
+}))
+console.log('   时代入口+来源:', JSON.stringify(eraEntry), eraEntry.era ? '✓' : '✗')
+await page.click('#person-card .pc-era')
+await new Promise((r) => setTimeout(r, 1600))
+const eraJump = await page.evaluate(() => ({
+  sel: window.__chrono.store.getState().selectedId,
+  personOpen: !document.getElementById('person-card')?.hidden,
+}))
+console.log('   时代跳转:', JSON.stringify(eraJump), eraJump.sel ? '✓' : '✗')
+await shot('22b-person-era')
 await page.click('#person-card .pc-place:nth-child(2)')
 await new Promise((r) => setTimeout(r, 1600))
 console.log('   地点飞往: ✓（无报错）')
