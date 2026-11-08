@@ -251,6 +251,26 @@ const syncJump = await page.evaluate(() => ({
   filter: window.__chrono.store.getState().continentFilter,
 }))
 console.log('   同时代跳列表:', JSON.stringify(syncJump), syncJump.view === 'list' && syncJump.filter ? '✓' : '✗')
+// 文明视图（PHASE F）：九文明并置断言
+await page.evaluate(() => document.querySelector('#snapshot-view [data-view="civ"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+await new Promise((r) => setTimeout(r, 500))
+const civView = await page.evaluate(() => ({
+  sections: document.querySelectorAll('#slice-list .sync-section').length,
+  heads: [...document.querySelectorAll('#slice-list .sync-cont')].map((b) => b.textContent?.trim().split(/\s/)[0]),
+}))
+console.log('   文明视图:', JSON.stringify(civView), civView.sections >= 5 ? '✓' : '✗')
+await shot('19d-civ-view')
+// 文明筛选行：点击"中华" chip → 列表过滤
+await page.evaluate(() => document.querySelector('#snapshot-civs [data-civ="chinese"]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const civFilter = await page.evaluate(() => {
+  const rows = [...document.querySelectorAll('#slice-list .slice-row')]
+  return { rows: rows.length, allChinese: rows.length > 0 && rows.every((r) => { const e = window.__chrono.events.find((x) => x.id === r.getAttribute('data-id')); return e && (e.civilizations ?? []).includes('chinese') }) }
+})
+console.log('   文明筛选(中华):', JSON.stringify(civFilter), civFilter.allChinese ? '✓' : '✗')
+await page.evaluate(() => document.querySelector('#snapshot-civs [data-civ="chinese"]')?.click())
+await page.evaluate(() => document.querySelector('#snapshot-view [data-view="list"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+await new Promise((r) => setTimeout(r, 300))
 // 还原：清筛选回列表
 await page.evaluate(() => {
   window.__chrono.store.getState().setContinentFilter(null)
