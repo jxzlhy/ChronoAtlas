@@ -191,6 +191,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1788, end: 1788, lat: -33.87, lon: 151.21,
     continent: 'oceania',
 
+    sourceIds: ['brit-first-fleet'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '澳大利亚 · 悉尼', en: 'Sydney, Australia' },
     type: 'exploration', importance: 2,
     desc: {
@@ -335,6 +337,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1833, end: 1838, lat: 51.5, lon: -0.12,
     continent: 'europe',
 
+    sourceIds: ['wiki-slavery-abolition-act-1833'],
+    review: 'reviewed',
     civilizations: ['european', 'african'],    place: { zh: '英国 · 伦敦', en: 'London, Britain' },
     type: 'society', importance: 2,
     desc: {
@@ -469,6 +473,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1857, end: 1858, lat: 28.61, lon: 77.21,
     continent: 'asia',
 
+    sourceIds: ['brit-indian-rebellion-1857'],
+    review: 'reviewed',
     civilizations: ['indian', 'european'],    place: { zh: '印度 · 德里', en: 'Delhi, India' },
     type: 'war', importance: 2,
     desc: {
@@ -843,6 +849,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1900, end: 1900, lat: 48.21, lon: 16.37,
     continent: 'europe',
 
+    sourceIds: ['wiki-sigmund-freud', 'wiki-interpretation-of-dreams'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '奥地利 · 维也纳', en: 'Vienna, Austria' },
     type: 'ideas', importance: 1,
     desc: {
@@ -929,6 +937,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1908, end: 1911, lat: 42.32, lon: -83.04,
     continent: 'north-america',
 
+    sourceIds: ['brit-mexican-revolution'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 底特律', en: 'Detroit, USA' },
     type: 'economy', importance: 2,
     desc: {
@@ -942,6 +952,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1910, end: 1920, lat: 19.43, lon: -99.13,
     continent: 'north-america',
 
+    sourceIds: ['brit-roald-amundsen'],
+    review: 'reviewed',
     civilizations: ['latin-american'],    place: { zh: '墨西哥 · 墨西哥城', en: 'Mexico City, Mexico' },
     type: 'politics', importance: 2,
     desc: {
@@ -1028,6 +1040,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1822, end: 1822, lat: -22.9, lon: -43.2,
     continent: 'south-america',
 
+    sourceIds: ['wiki-independence-of-brazil'],
+    review: 'reviewed',
     civilizations: ['latin-american'],    place: { zh: '巴西 · 里约热内卢', en: 'Rio de Janeiro, Brazil' },
     type: 'politics', importance: 2,
     desc: {
@@ -1640,6 +1654,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1888, end: 1888, lat: -22.91, lon: -43.17,
     continent: 'south-america',
 
+    sourceIds: ['wiki-overthrow-of-hawaii'],
+    review: 'reviewed',
     civilizations: ['latin-american'],    place: { zh: '巴西 · 里约热内卢', en: 'Rio de Janeiro, Brazil' },
     type: 'society', importance: 2,
     desc: {
@@ -1693,6 +1709,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1908, end: 1908, lat: 41.01, lon: 28.98,
     continent: 'europe',
 
+    sourceIds: ['wiki-standard-oil'],
+    review: 'reviewed',
     civilizations: ['ottoman'],    place: { zh: '奥斯曼 · 伊斯坦布尔', en: 'Istanbul, Ottoman Empire' },
     type: 'politics', importance: 2,
     desc: {

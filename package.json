@@ -1,7 +1,7 @@
 {
   "name": "chrono-atlas",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "ChronoAtlas · 动态历史地球 — a 3D dynamic history globe (1750–1911)",
   "type": "module",
   "scripts": {

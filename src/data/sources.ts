@@ -739,6 +739,77 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'brit-first-fleet',
+    name: { zh: '第一舰队', en: 'First Fleet' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/First-Fleet',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-indian-rebellion-1857',
+    name: { zh: '印度起义（1857）', en: 'Indian Rebellion of 1857' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Indian-Rebellion-of-1857',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-sigmund-freud',
+    name: { zh: '西格蒙德·弗洛伊德', en: 'Sigmund Freud' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Sigmund_Freud',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-interpretation-of-dreams',
+    name: { zh: '《梦的解析》', en: 'The Interpretation of Dreams' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/The_Interpretation_of_Dreams',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-slavery-abolition-act-1833',
+    name: { zh: '1833 年废除奴隶制法案', en: 'Slavery Abolition Act 1833' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Slavery_Abolition_Act_1833',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-mexican-revolution',
+    name: { zh: '墨西哥革命', en: 'Mexican Revolution' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Mexican-Revolution',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-independence-of-brazil',
+    name: { zh: '巴西独立', en: 'Independence of Brazil' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Independence_of_Brazil',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-robert-peary',
+    name: { zh: '罗伯特·皮里', en: 'Robert Peary' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Robert_Peary',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-overthrow-of-hawaii',
+    name: { zh: '夏威夷王国覆灭', en: 'Overthrow of the Hawaiian Kingdom' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Overthrow_of_the_Hawaiian_Kingdom',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-standard-oil',
+    name: { zh: '标准石油', en: 'Standard Oil' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Standard_Oil',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',
