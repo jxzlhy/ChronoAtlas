@@ -80,10 +80,11 @@ export function initEventCard(
         </div>`
     }
 
-    // 参考资料：只显示已挂接且在 registry 中可解析的来源
+    // 参考资料：只显示已挂接且在 registry 中可解析的来源；双来源时权威出版者优先
     const sources = (ev.sourceIds ?? [])
       .map((sid) => SOURCES.find((s) => s.id === sid))
       .filter((s) => s !== undefined)
+      .sort((a, b) => Number(b.publisher.en.includes('Britannica')) - Number(a.publisher.en.includes('Britannica')))
     const sourcesSection = (): string => {
       if (sources.length === 0) return ''
       return `

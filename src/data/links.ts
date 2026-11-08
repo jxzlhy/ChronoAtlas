@@ -14,7 +14,7 @@ export const LINKS: EventLink[] = [
     zh: '蒸汽动力催生铁路时代',
     en: 'Steam power enabled the railway age',
     review: 'reviewed',
-    sourceIds: ['brit-james-watt'],
+    sourceIds: ['wiki-watt-steam-engine'],
   },
   {
     from: 'industrial-revolution',
@@ -68,7 +68,7 @@ export const LINKS: EventLink[] = [
     zh: '战后秩序重建',
     en: 'Postwar order rebuilt',
     review: 'reviewed',
-    sourceIds: ['brit-napoleonic-wars'],
+    sourceIds: ['wiki-napoleonic-wars'],
   },
   {
     from: 'napoleonic-wars',
@@ -86,7 +86,7 @@ export const LINKS: EventLink[] = [
     zh: '埃及权力真空造就阿里崛起',
     en: 'Power vacuum elevated Muhammad Ali',
     review: 'reviewed',
-    sourceIds: ['brit-napoleonic-wars'],
+    sourceIds: ['wiki-napoleonic-wars'],
   },
   {
     from: 'first-opium-war',
@@ -95,7 +95,7 @@ export const LINKS: EventLink[] = [
     zh: '坚船利炮刺激自强运动',
     en: 'Gunboat diplomacy spurred reform',
     review: 'reviewed',
-    sourceIds: ['brit-opium-wars'],
+    sourceIds: ['wiki-first-opium-war'],
   },
   {
     from: 'first-opium-war',
@@ -104,7 +104,7 @@ export const LINKS: EventLink[] = [
     zh: '炮舰外交震动东亚',
     en: 'Gunboat diplomacy shook East Asia',
     review: 'reviewed',
-    sourceIds: ['brit-opium-wars'],
+    sourceIds: ['wiki-first-opium-war'],
   },
   {
     from: 'perry-expedition',
@@ -122,7 +122,7 @@ export const LINKS: EventLink[] = [
     zh: '维新成果接受战争检验',
     en: 'Meiji reforms tested by war',
     review: 'reviewed',
-    sourceIds: ['brit-meiji-restoration'],
+    sourceIds: ['wiki-meiji-restoration'],
   },
   {
     from: 'self-strengthening-movement',
@@ -140,7 +140,7 @@ export const LINKS: EventLink[] = [
     zh: '战败刺激变法图强',
     en: 'Defeat ignited reform drive',
     review: 'reviewed',
-    sourceIds: ['brit-first-sino-japanese-war'],
+    sourceIds: ['wiki-first-sino-japanese-war'],
   },
   {
     from: 'hundred-days-reform',
@@ -185,7 +185,7 @@ export const LINKS: EventLink[] = [
     zh: '思想的第一次政权实验',
     en: 'The ideas\' first test in power',
     review: 'reviewed',
-    sourceIds: ['brit-communist-manifesto'],
+    sourceIds: ['wiki-communist-manifesto'],
   },
   {
     from: 'meiji-restoration',
@@ -194,7 +194,7 @@ export const LINKS: EventLink[] = [
     zh: '维新日本迫使朝鲜开国',
     en: 'Meiji Japan opened Korea',
     review: 'reviewed',
-    sourceIds: ['brit-meiji-restoration'],
+    sourceIds: ['wiki-meiji-restoration'],
   },
   {
     from: 'berlin-conference',
@@ -203,7 +203,7 @@ export const LINKS: EventLink[] = [
     zh: '瓜分之下的非洲抵抗',
     en: 'African resistance to the Scramble',
     review: 'reviewed',
-    sourceIds: ['brit-berlin-conference'],
+    sourceIds: ['wiki-berlin-conference'],
   },
   {
     from: 'indian-rebellion',
@@ -257,7 +257,7 @@ export const LINKS: EventLink[] = [
     zh: '新射线开启放射性研究',
     en: 'New rays opened radioactivity research',
     review: 'reviewed',
-    sourceIds: ['brit-x-ray'],
+    sourceIds: ['brit-nobel-prize'],
   },
   {
     from: 'maxwell-equations',
@@ -284,7 +284,7 @@ export const LINKS: EventLink[] = [
     zh: '会议之后的刚果悲剧',
     en: 'The Congo tragedy after the Conference',
     review: 'reviewed',
-    sourceIds: ['brit-berlin-conference'],
+    sourceIds: ['wiki-berlin-conference'],
   },
   {
     from: 'russo-japanese-war',
@@ -303,7 +303,7 @@ export const LINKS: EventLink[] = [
     zh: '蒸汽技术积累孕育电气时代',
     en: 'Steam-era engineering seeded the electrical age',
     review: 'reviewed',
-    sourceIds: ['brit-james-watt'],
+    sourceIds: ['wiki-watt-steam-engine'],
   },
   {
     from: 'second-industrial-revolution',
@@ -348,7 +348,7 @@ export const LINKS: EventLink[] = [
     zh: '维新体制的立宪定型',
     en: 'The Meiji order took constitutional form',
     review: 'reviewed',
-    sourceIds: ['brit-meiji-restoration'],
+    sourceIds: ['wiki-meiji-restoration'],
   },
   {
     from: 'meiji-constitution',
@@ -429,7 +429,7 @@ export const LINKS: EventLink[] = [
     zh: '护理改革间接滋养人道组织化',
     en: 'Nursing reform indirectly shaped organized humanitarianism',
     review: 'reviewed',
-    sourceIds: ['brit-opium-wars'],
+    sourceIds: ['brit-florence-nightingale'],
   },
   {
     from: 'radium-discovery',
