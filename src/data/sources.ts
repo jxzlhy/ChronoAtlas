@@ -542,6 +542,56 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'wiki-revolutions-1848',
+    name: { zh: '1848 年革命（民族之春）', en: 'Revolutions of 1848' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Revolutions_of_1848',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-transatlantic-telegraph',
+    name: { zh: '跨大西洋电报电缆', en: 'Transatlantic telegraph cable' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Transatlantic_telegraph_cable',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-karl-benz',
+    name: { zh: '卡尔·本茨', en: 'Karl Benz' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Karl-Benz',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-nz-suffrage',
+    name: { zh: '新西兰女性选举权', en: "Women's suffrage in New Zealand" },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Women%27s_suffrage_in_New_Zealand',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-russo-japanese-war',
+    name: { zh: '日俄战争', en: 'Russo-Japanese War' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/event/Russo-Japanese-War',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'brit-panama-canal',
+    name: { zh: '巴拿马运河', en: 'Panama Canal' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/Panama-Canal',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-bessemer-process',
+    name: { zh: '贝塞麦炼钢法', en: 'Bessemer process' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Bessemer_process',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

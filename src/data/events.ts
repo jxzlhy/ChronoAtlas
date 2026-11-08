@@ -246,6 +246,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1804, end: 1806, lat: 38.63, lon: -90.2,
     continent: 'north-america',
 
+    sourceIds: ['brit-louisiana-purchase'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '北美 · 圣路易斯', en: 'St. Louis, USA' },
     type: 'exploration', importance: 1,
     desc: {
@@ -418,6 +420,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'europe',
 
     civilizations: ['european'],    geoPrecision: 'multi',
+    sourceIds: ['wiki-revolutions-1848'],
+    review: 'reviewed',
     place: { zh: '欧洲 · 维也纳', en: 'Vienna, Europe' },
     type: 'politics', importance: 2,
     desc: {
@@ -549,6 +553,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1866, end: 1866, lat: 47.93, lon: -53.96,
     continent: 'north-america',
 
+    sourceIds: ['wiki-transatlantic-telegraph'],
+    review: 'reviewed',
     civilizations: ['north-american', 'european'],    place: { zh: '纽芬兰 · 心安港', en: 'Heart\'s Content, Newfoundland' },
     type: 'science', importance: 2,
     desc: {
@@ -590,6 +596,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1869, end: 1869, lat: 59.93, lon: 30.34,
     continent: 'europe',
 
+    sourceIds: ['wiki-dmitri-mendeleev'],
+    review: 'reviewed',
     civilizations: ['russian'],    place: { zh: '俄罗斯 · 圣彼得堡', en: 'St. Petersburg, Russia' },
     type: 'science', importance: 2,
     desc: {
@@ -633,6 +641,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1876, end: 1876, lat: 42.36, lon: -71.06,
     continent: 'north-america',
 
+    sourceIds: ['brit-alexander-graham-bell'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 波士顿', en: 'Boston, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -646,6 +656,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1879, end: 1882, lat: 40.52, lon: -74.31,
     continent: 'north-america',
 
+    sourceIds: ['brit-thomas-edison'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 门洛帕克', en: 'Menlo Park, USA' },
     type: 'science', importance: 2,
     desc: {
@@ -674,6 +686,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1885, end: 1888, lat: 49.49, lon: 8.47,
     continent: 'europe',
 
+    sourceIds: ['brit-karl-benz'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 曼海姆', en: 'Mannheim, Germany' },
     type: 'science', importance: 2,
     desc: {
@@ -702,6 +716,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1893, end: 1893, lat: -41.29, lon: 174.78,
     continent: 'oceania',
 
+    sourceIds: ['wiki-nz-suffrage'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '新西兰 · 惠灵顿', en: 'Wellington, New Zealand' },
     type: 'society', importance: 2,
     desc: {
@@ -860,6 +876,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1904, end: 1905, lat: 38.8, lon: 121.24,
     continent: 'asia',
 
+    sourceIds: ['brit-russo-japanese-war'],
+    review: 'reviewed',
     civilizations: ['russian', 'japanese'],    place: { zh: '中国 · 旅顺', en: 'Lüshun (Port Arthur), China' },
     type: 'war', importance: 2,
     desc: {
@@ -873,6 +891,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1904, end: 1914, lat: 9.08, lon: -79.68,
     continent: 'north-america',
 
+    sourceIds: ['brit-panama-canal'],
+    review: 'reviewed',
     civilizations: ['north-american', 'latin-american'],    place: { zh: '巴拿马 · 巴拿马城', en: 'Panama City, Panama' },
     type: 'economy', importance: 2,
     desc: {
@@ -1219,6 +1239,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1856, end: 1856, lat: 53.38, lon: -1.47,
     continent: 'europe',
 
+    sourceIds: ['wiki-bessemer-process'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 谢菲尔德', en: 'Sheffield, England' },
     type: 'economy', importance: 2,
     desc: {
