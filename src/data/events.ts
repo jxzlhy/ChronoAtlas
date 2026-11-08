@@ -975,6 +975,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1911, end: 1911, lat: -89.9, lon: 0,
     continent: 'antarctica',
 
+    sourceIds: ['brit-roald-amundsen'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '南极点', en: 'South Pole' },
     type: 'exploration', importance: 2,
     desc: {
@@ -1138,6 +1140,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1816, end: 1828, lat: -28.5, lon: 31.4,
     continent: 'africa',
 
+    sourceIds: ['wiki-zulu-kingdom'],
+    review: 'reviewed',
     civilizations: ['african'],    place: { zh: '南部非洲 · 夸祖鲁', en: 'KwaZulu, Southern Africa' },
     type: 'war', importance: 1,
     desc: {
@@ -1319,6 +1323,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1885, end: 1885, lat: 48.85, lon: 2.3,
     continent: 'europe',
 
+    sourceIds: ['brit-louis-pasteur'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'science', importance: 2,
     desc: {
@@ -1362,6 +1368,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1845, end: 1872, lat: -39.0, lon: 174.2,
     continent: 'oceania',
 
+    sourceIds: ['wiki-new-zealand-wars'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '新西兰 · 塔拉纳基', en: 'Taranaki, New Zealand' },
     type: 'war', importance: 1,
     desc: {
@@ -1528,6 +1536,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1908, end: 1908, lat: 31.94, lon: 49.3,
     continent: 'asia',
 
+    sourceIds: ['wiki-anglo-persian-oil'],
+    review: 'reviewed',
     civilizations: ['islamic-world', 'european'],    place: { zh: '波斯 · 马斯吉德苏莱曼', en: 'Masjed Soleyman, Persia' },
     type: 'economy', importance: 2,
     desc: {
@@ -1571,6 +1581,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1874, end: 1874, lat: 48.86, lon: 2.34,
     continent: 'europe',
 
+    sourceIds: ['wiki-impressionism'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '法国 · 巴黎', en: 'Paris, France' },
     type: 'ideas', importance: 1,
     desc: {
@@ -1599,7 +1611,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1895, lat: 49.79, lon: 9.95,
     continent: 'europe',
 
-    sourceIds: ['brit-x-ray', 'brit-antiseptic-principle'],
+    sourceIds: ['brit-x-ray', 'brit-antiseptic-principle', 'brit-nobel-prize'],
     review: 'reviewed',
     civilizations: ['european'],    place: { zh: '德国 · 维尔茨堡', en: 'Würzburg, Germany' },
     type: 'science', importance: 2,
@@ -1614,6 +1626,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1901, end: 1901, lat: 59.33, lon: 18.07,
     continent: 'europe',
 
+    sourceIds: ['brit-nobel-prize'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '瑞典 · 斯德哥尔摩', en: 'Stockholm, Sweden' },
     type: 'society', importance: 1,
     desc: {
@@ -1627,7 +1641,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1867, end: 1867, lat: 55.86, lon: -4.25,
     continent: 'europe',
 
-    sourceIds: ['wiki-robert-peary'],
+    sourceIds: ['wiki-robert-peary', 'brit-max-planck'],
     review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 格拉斯哥', en: 'Glasgow, Britain' },
     type: 'science', importance: 2,
@@ -1642,6 +1656,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1865, end: 1865, lat: 52.21, lon: 0.12,
     continent: 'europe',
 
+    sourceIds: ['brit-max-planck'],
+    review: 'reviewed',
     civilizations: ['european'],    place: { zh: '英国 · 剑桥', en: 'Cambridge, Britain' },
     type: 'science', importance: 2,
     desc: {
@@ -1655,7 +1671,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1871, end: 1871, lat: -4.91, lon: 29.67,
     continent: 'africa',
 
-    sourceIds: ['brit-david-livingstone', 'brit-henry-morton-stanley', 'wiki-overthrow-of-hawaii'],
+    sourceIds: ['brit-david-livingstone', 'brit-henry-morton-stanley', 'wiki-overthrow-of-hawaii', 'wiki-robert-peary'],
     review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '东非 · 乌吉吉', en: 'Ujiji, East Africa' },
     type: 'exploration', importance: 1,
@@ -1671,6 +1687,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'polar',
 
     civilizations: ['north-american'],    timePrecision: 'circa',
+    sourceIds: ['wiki-robert-peary'],
+    review: 'reviewed',
     place: { zh: '北极点', en: 'The North Pole' },
     type: 'exploration', importance: 1,
     desc: {
@@ -1699,7 +1717,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1893, end: 1893, lat: 21.31, lon: -157.86,
     continent: 'oceania',
 
-    sourceIds: ['wiki-bosnian-crisis'],
+    sourceIds: ['wiki-bosnian-crisis', 'wiki-congo-free-state'],
     review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '太平洋 · 檀香山', en: 'Honolulu, Hawaii' },
     type: 'politics', importance: 1,
@@ -1715,6 +1733,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'africa',
 
     civilizations: ['african', 'european'],    geoPrecision: 'country',
+    sourceIds: ['wiki-congo-free-state'],
+    review: 'reviewed',
     place: { zh: '中非 · 刚果', en: 'Congo, Central Africa' },
     type: 'society', importance: 2,
     desc: {
@@ -1728,6 +1748,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1908, end: 1908, lat: 43.86, lon: 18.41,
     continent: 'europe',
 
+    sourceIds: ['wiki-bosnian-crisis'],
+    review: 'reviewed',
     civilizations: ['european', 'ottoman'],    place: { zh: '巴尔干 · 萨拉热窝', en: 'Sarajevo, Balkans' },
     type: 'politics', importance: 1,
     desc: {
@@ -1756,6 +1778,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1870, end: 1870, lat: 41.5, lon: -81.69,
     continent: 'north-america',
 
+    sourceIds: ['wiki-standard-oil'],
+    review: 'reviewed',
     civilizations: ['north-american'],    place: { zh: '美国 · 克利夫兰', en: 'Cleveland, USA' },
     type: 'economy', importance: 1,
     desc: {
@@ -1799,6 +1823,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1877, end: 1878, lat: 43.42, lon: 24.61,
     continent: 'europe',
 
+    sourceIds: ['wiki-russo-turkish-war-1877-78'],
+    review: 'reviewed',
     civilizations: ['russian', 'ottoman'],    place: { zh: '巴尔干 · 普列文', en: 'Pleven, Balkans' },
     type: 'war', importance: 1,
     desc: {
