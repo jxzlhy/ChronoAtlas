@@ -31,7 +31,7 @@ const CIV_LABEL: Record<string, { zh: string; en: string }> = {
  */
 
 type SortBy = 'importance' | 'time' | 'geo' | 'type'
-type ViewMode = 'list' | 'sync'
+type ViewMode = 'list' | 'sync' | 'civ'
 /** 文明筛选：面板局部状态（PHASE D） */
 type CivFilter = string | null
 
@@ -170,12 +170,58 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       ([
         ['list', '列表'],
         ['sync', '同时代'],
+        ['civ', '文明'],
       ] as const)
         .map(
           ([k, zh]) =>
             `<button class="snap-sort-btn${viewMode === k ? ' is-active' : ''}" type="button" data-view="${k}">${zh}</button>`,
         )
         .join('')
+  }
+
+  /** 文明视图（PHASE F 对比起步）：按文明并置当年代表事件——跨文明同时代对比 */
+  const renderCiv = (rows: HistoryEvent[], selectedId: string | null): string => {
+    const byCiv = new Map<string, HistoryEvent[]>()
+    for (const ev of rows) {
+      for (const c of ev.civilizations ?? []) {
+        const arr = byCiv.get(c) ?? []
+        arr.push(ev)
+        byCiv.set(c, arr)
+      }
+    }
+    const sections = CIVILIZATIONS.filter((c) => (byCiv.get(c)?.length ?? 0) > 0)
+    if (sections.length === 0) {
+      return '<div class="slice-empty">该筛选下没有活跃事件。<span class="slice-empty-en">No active events under this filter.</span></div>'
+    }
+    return sections
+      .map((c) => {
+        const arr = (byCiv.get(c) ?? []).sort((a, b) => b.importance - a.importance || a.start - b.start)
+        const label = CIV_LABEL[c] ?? { zh: c, en: c }
+        const top = arr.slice(0, 2)
+        return `
+          <div class="sync-section">
+            <div class="sync-head">
+              <span class="sync-cont">${label.zh}<span class="sync-cont-en">${label.en}</span><span class="sync-cont-count">${arr.length} 条</span></span>
+            </div>
+            ${top
+              .map((ev) => {
+                const t = EVENT_TYPES[ev.type]
+                const years = ev.start === ev.end ? `${ev.start}` : `${ev.start}–${ev.end}`
+                return `
+                  <button class="slice-row${selectedId === ev.id ? ' is-active' : ''}" type="button"
+                          data-id="${ev.id}" style="--type-color:${t.color}">
+                    <span class="slice-dot" aria-hidden="true"></span>
+                    <span class="slice-main">
+                      <span class="slice-title">${ev.title.zh}</span>
+                      <span class="slice-sub">${ev.title.en}</span>
+                    </span>
+                    <span class="slice-meta">${years} 年</span>
+                  </button>`
+              })
+              .join('')}
+          </div>`
+      })
+      .join('')
   }
 
   /** 文明筛选 chips（PHASE D）：有活跃事件的文明才显示 */
@@ -286,6 +332,12 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       ),
     )
     countEl.textContent = String(active.length)
+
+    if (viewMode === 'civ') {
+      // 文明视图（PHASE F）：跨文明同时代对比，与筛选叠加
+      list.innerHTML = renderCiv(filtered, s.selectedId)
+      return
+    }
 
     if (viewMode === 'sync') {
       // 同时代视图：不做全局排序（各大洲内部按重要度），忽略类型筛选的列表排序
