@@ -22,6 +22,7 @@ export const LINKS: EventLink[] = [
     zh: '工业成果的世纪检阅',
     en: 'Industry showcased at mid-century',
     review: 'reviewed',
+    sourceIds: ['brit-industrial-revolution'],
   },
   {
     from: 'industrial-revolution',
@@ -30,6 +31,7 @@ export const LINKS: EventLink[] = [
     zh: '工业社会矛盾催生新思潮',
     en: 'Industrial society bred new ideology',
     review: 'reviewed',
+    sourceIds: ['brit-industrial-revolution'],
   },
   {
     from: 'social-contract',
@@ -38,6 +40,7 @@ export const LINKS: EventLink[] = [
     zh: '主权在民思想奠基大革命',
     en: 'Popular sovereignty inspired revolution',
     review: 'reviewed',
+    sourceIds: ['brit-james-watt'],
   },
   {
     from: 'french-revolution',
@@ -118,6 +121,7 @@ export const LINKS: EventLink[] = [
     zh: '自强三十年，一战见分晓',
     en: 'Thirty years of reform, one verdict',
     review: 'reviewed',
+    sourceIds: ['brit-meiji-restoration'],
   },
   {
     from: 'sino-japanese-war',
@@ -150,6 +154,7 @@ export const LINKS: EventLink[] = [
     zh: '购地催生大陆探险',
     en: 'The purchase spurred the expedition',
     review: 'reviewed',
+    sourceIds: ['brit-louisiana-purchase'],
   },
   {
     from: 'taiping-rebellion',
@@ -158,6 +163,7 @@ export const LINKS: EventLink[] = [
     zh: '内忧外患倒逼自强',
     en: 'Crisis at home forced reform',
     review: 'reviewed',
+    sourceIds: ['brit-taiping-rebellion'],
   },
   {
     from: 'communist-manifesto',
@@ -214,6 +220,7 @@ export const LINKS: EventLink[] = [
     zh: '铁路延伸到殖民地',
     en: 'Railways reached the colonies',
     review: 'reviewed',
+    sourceIds: ['brit-industrial-revolution'],
   },
   {
     from: 'tanzimat',
@@ -262,6 +269,7 @@ export const LINKS: EventLink[] = [
     zh: '远东战败引爆国内革命',
     en: 'Defeat in the East ignited revolution',
     review: 'reviewed',
+    sourceIds: ['brit-relativity'],
   },
   // ---- V0.27.0 内容扩容 III 新关系（kind 逐条裁定）----
   {
@@ -279,6 +287,7 @@ export const LINKS: EventLink[] = [
     zh: '内燃机技术催生汽车',
     en: 'Combustion-engine technology enabled the automobile',
     review: 'reviewed',
+    sourceIds: ['wiki-second-industrial-revolution'],
   },
   {
     from: 'second-industrial-revolution',
@@ -287,6 +296,7 @@ export const LINKS: EventLink[] = [
     zh: '电气工业体系点亮白炽灯',
     en: 'The electrical industry made lighting practical',
     review: 'reviewed',
+    sourceIds: ['wiki-second-industrial-revolution'],
   },
   {
     from: 'second-industrial-revolution',
@@ -295,6 +305,7 @@ export const LINKS: EventLink[] = [
     zh: '电报网络与电气实验室为电话铺路',
     en: 'Telegraph networks and electrical labs paved the way',
     review: 'reviewed',
+    sourceIds: ['wiki-second-industrial-revolution'],
   },
   {
     from: 'second-industrial-revolution',
@@ -303,6 +314,7 @@ export const LINKS: EventLink[] = [
     zh: '工业实验室体系支撑基础物理发现',
     en: 'Industrial lab systems backed fundamental physics',
     review: 'reviewed',
+    sourceIds: ['wiki-second-industrial-revolution'],
   },
   {
     from: 'meiji-restoration',
@@ -319,6 +331,7 @@ export const LINKS: EventLink[] = [
     zh: '立宪国力为对外战争打底',
     en: 'Constitutional consolidation underwrote the war effort',
     review: 'reviewed',
+    sourceIds: ['brit-meiji-constitution'],
   },
   {
     from: 'gongche-shangshu',
@@ -327,6 +340,7 @@ export const LINKS: EventLink[] = [
     zh: '上书开启变法舆论先声',
     en: 'The petition opened the reform discourse',
     review: 'reviewed',
+    sourceIds: ['brit-kang-youwei'],
   },
   {
     from: 'tongmenghui',
@@ -335,6 +349,7 @@ export const LINKS: EventLink[] = [
     zh: '全国性革命组织发动起义',
     en: 'The national revolutionary network launched the uprising',
     review: 'reviewed',
+    sourceIds: ['wiki-tongmenghui'],
   },
   {
     from: 'tanzimat',
@@ -351,6 +366,7 @@ export const LINKS: EventLink[] = [
     zh: '财政失权积累立宪派变革势能',
     en: 'Fiscal subordination fueled constitutionalist momentum',
     review: 'reviewed',
+    sourceIds: ['wiki-ottoman-public-debt'],
   },
   {
     from: 'young-turk-revolution',
@@ -359,6 +375,7 @@ export const LINKS: EventLink[] = [
     zh: '帝国动荡为保加利亚升格提供时机',
     en: 'Imperial turmoil gave Bulgaria its moment',
     review: 'reviewed',
+    sourceIds: ['brit-young-turk-revolution'],
   },
   {
     from: 'us-civil-war',
@@ -399,6 +416,7 @@ export const LINKS: EventLink[] = [
     zh: '烈士之血激励革命者',
     en: 'The martyr\'s blood steeled the revolutionaries',
     review: 'reviewed',
+    sourceIds: ['wiki-qiu-jin'],
   },
   {
     from: 'panama-independence',
@@ -407,6 +425,7 @@ export const LINKS: EventLink[] = [
     zh: '独立缔约开启运河工程',
     en: 'Independence opened the canal treaty',
     review: 'reviewed',
+    sourceIds: ['wiki-secession-of-panama'],
   },
   {
     from: 'russo-japanese-war',
@@ -415,6 +434,7 @@ export const LINKS: EventLink[] = [
     zh: '战局消耗促成和谈',
     en: 'Mutual exhaustion forced the peace',
     review: 'reviewed',
+    sourceIds: ['brit-relativity'],
   },
   {
     from: 'portsmouth-treaty',
@@ -423,5 +443,6 @@ export const LINKS: EventLink[] = [
     zh: '无赔款和约激化国内不满',
     en: 'The indemnity-free peace inflamed discontent',
     review: 'reviewed',
+    sourceIds: ['brit-treaty-of-portsmouth'],
   },
 ]
