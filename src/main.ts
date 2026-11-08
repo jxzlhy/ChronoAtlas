@@ -252,10 +252,14 @@ function boot(): void {
     }
   })
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数
-  initSnapshot(goToEvent, (key) => {
-    const c = CONTINENTS[key]
-    if (c) rig.flyTo(c.lat, c.lon, c.dist)
-  })
+  initSnapshot(
+    goToEvent,
+    (key) => {
+      const c = CONTINENTS[key]
+      if (c) rig.flyTo(c.lat, c.lon, c.dist)
+    },
+    (lat, lon) => rig.flyTo(lat, lon, 2.2, 1.1),
+  )
 
   // ---- 主循环 ----
   const clock = new THREE.Clock()

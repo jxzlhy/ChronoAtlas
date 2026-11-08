@@ -62,7 +62,11 @@ const CONTINENT_LABEL: Partial<Record<ContinentKey, { zh: string; en: string }>>
   oceania: { zh: '大洋洲', en: 'Oceania' },
 }
 
-export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (key: string) => void): void {
+export function initSnapshot(
+  onGo: (ev: HistoryEvent) => void,
+  onFlyContinent: (key: string) => void,
+  onFlyPoint: (lat: number, lon: number) => void,
+): void {
   const toggle = document.getElementById('slice-toggle') as HTMLButtonElement
   const countEl = document.getElementById('active-count') as HTMLElement
   const panel = document.getElementById('slice-panel') as HTMLElement
@@ -421,7 +425,19 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-civ]')
     if (!btn?.dataset.civ) return
     const s = appStore.getState()
-    s.setCivFilter(s.civFilter === btn.dataset.civ ? null : btn.dataset.civ)
+    const next = s.civFilter === btn.dataset.civ ? null : btn.dataset.civ
+    s.setCivFilter(next)
+    // 选中时飞往该文明活跃事件群重心（事件坐标均值）
+    if (next) {
+      const pts = EVENTS.filter(
+        (ev) => isActive(ev, s.year, s.windowSize) && (ev.civilizations ?? []).includes(next),
+      )
+      if (pts.length > 0) {
+        const lat = pts.reduce((sum, x) => sum + x.lat, 0) / pts.length
+        const lon = pts.reduce((sum, x) => sum + x.lon, 0) / pts.length
+        onFlyPoint(lat, lon)
+      }
+    }
   })
 
   list.addEventListener('click', (e) => {
