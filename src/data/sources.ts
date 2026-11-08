@@ -724,6 +724,21 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'wiki-sokoto-caliphate',
+    name: { zh: '索科托哈里发国', en: 'Sokoto Caliphate' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Sokoto_Caliphate',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-java-war',
+    name: { zh: '爪哇战争', en: 'Java War' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Java_War',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

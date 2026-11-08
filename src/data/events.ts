@@ -983,10 +983,10 @@ export const EVENTS: HistoryEvent[] = [
     start: 1803, end: 1803, lat: 38.63, lon: -90.2,
     continent: 'north-america',
 
-    civilizations: ['north-american'],    place: { zh: '美国 · 圣路易斯', en: 'St. Louis, USA' },
-    type: 'politics', importance: 3,
     sourceIds: ['brit-louisiana-purchase'],
     review: 'reviewed',
+    civilizations: ['north-american'],    place: { zh: '美国 · 圣路易斯', en: 'St. Louis, USA' },
+    type: 'politics', importance: 3,
     desc: {
       zh: '美国以 1500 万美元从拿破仑手中购得密西西比河以西 214 万平方公里土地，国土一夜之间翻倍。',
       en: 'The United States bought 2.1 million square kilometres west of the Mississippi from Napoleon for $15 million, doubling its territory overnight.',
@@ -1129,6 +1129,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1804, end: 1804, lat: 13.06, lon: 5.24,
     continent: 'africa',
 
+    sourceIds: ['wiki-sokoto-caliphate'],
+    review: 'reviewed',
     civilizations: ['african', 'islamic-world'],    place: { zh: '西非 · 索科托', en: 'Sokoto, West Africa' },
     type: 'politics', importance: 1,
     desc: {
@@ -1218,6 +1220,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1825, end: 1830, lat: -7.8, lon: 110.36,
     continent: 'asia',
 
+    sourceIds: ['wiki-java-war'],
+    review: 'reviewed',
     civilizations: ['islamic-world', 'european'],    place: { zh: '东南亚 · 爪哇', en: 'Java, Southeast Asia' },
     type: 'war', importance: 1,
     desc: {
@@ -1894,14 +1898,14 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1895, lat: 3.14, lon: 101.69,
     continent: 'asia',
 
+    sourceIds: ['wiki-federated-malay-states'],
+    review: 'reviewed',
     civilizations: ['european', 'indian'],    place: { zh: '马来亚 · 吉隆坡', en: 'Kuala Lumpur, Malaya' },
     type: 'politics', importance: 1,
     desc: {
       zh: '霹雳雪兰莪森美兰彭亨四邦组成联邦，英国驻扎官制度定型，锡矿与胶园经济加速殖民地化。',
       en: 'Four sultanates formed a federation under the Resident system, accelerating tin-and-rubber colonialization.',
     },
-    sourceIds: ['wiki-federated-malay-states'],
-    review: 'reviewed',
   },
   {
     id: 'cuba-independence-war',
