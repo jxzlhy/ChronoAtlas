@@ -679,6 +679,51 @@ export const SOURCES: Source[] = [
     type: 'encyclopedia',
   },
 
+  {
+    id: 'brit-giuseppe-mazzini',
+    name: { zh: '朱塞佩·马志尼', en: 'Giuseppe Mazzini' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Giuseppe-Mazzini',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-russian-conquest-central-asia',
+    name: { zh: '俄国征服中亚', en: 'Russian conquest of Central Asia' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Russian_conquest_of_Central_Asia',
+    type: 'encyclopedia',
+  },
+
+  {
+    id: 'brit-henry-morton-stanley',
+    name: { zh: '亨利·莫顿·斯坦利', en: 'Henry Morton Stanley' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/biography/Henry-Morton-Stanley',
+    type: 'encyclopedia',
+  },
+
+  {
+    id: 'brit-spanish-american-war',
+    name: { zh: '美西战争', en: 'Spanish-American War' },
+    publisher: { zh: '大英百科全书', en: 'Encyclopædia Britannica' },
+    url: 'https://www.britannica.com/topic/Spanish-American-War',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-war-of-the-pacific',
+    name: { zh: '南美太平洋战争', en: 'War of the Pacific' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/War_of_the_Pacific',
+    type: 'encyclopedia',
+  },
+  {
+    id: 'wiki-paraguayan-war',
+    name: { zh: '三国同盟战争', en: 'Paraguayan War' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Paraguayan_War',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

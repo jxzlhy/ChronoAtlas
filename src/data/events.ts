@@ -1174,6 +1174,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'south-america',
 
     civilizations: ['latin-american'],    geoPrecision: 'region',
+    sourceIds: ['wiki-paraguayan-war'],
+    review: 'reviewed',
     place: { zh: '南美 · 巴拉圭', en: 'Paraguay, South America' },
     type: 'war', importance: 1,
     desc: {
@@ -1188,6 +1190,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'south-america',
 
     civilizations: ['latin-american'],    geoPrecision: 'region',
+    sourceIds: ['wiki-war-of-the-pacific'],
+    review: 'reviewed',
     place: { zh: '南美 · 阿塔卡马', en: 'Atacama, South America' },
     type: 'war', importance: 1,
     desc: {
@@ -1227,6 +1231,8 @@ export const EVENTS: HistoryEvent[] = [
     start: 1898, end: 1898, lat: 14.6, lon: 120.98,
     continent: 'asia',
 
+    sourceIds: ['brit-spanish-american-war'],
+    review: 'reviewed',
     civilizations: ['north-american', 'latin-american'],    place: { zh: '东南亚 · 马尼拉湾', en: 'Manila Bay, Philippines' },
     type: 'war', importance: 2,
     desc: {
@@ -1426,6 +1432,8 @@ export const EVENTS: HistoryEvent[] = [
     continent: 'asia',
 
     civilizations: ['chinese'],    geoPrecision: 'region',
+    sourceIds: ['wiki-russian-conquest-central-asia'],
+    review: 'reviewed',
     place: { zh: '中国 · 新疆', en: 'Xinjiang, China' },
     type: 'war', importance: 1,
     desc: {
@@ -1599,7 +1607,7 @@ export const EVENTS: HistoryEvent[] = [
     start: 1871, end: 1871, lat: -4.91, lon: 29.67,
     continent: 'africa',
 
-    sourceIds: ['brit-david-livingstone'],
+    sourceIds: ['brit-david-livingstone', 'brit-henry-morton-stanley'],
     review: 'reviewed',
     civilizations: ['african', 'european'],    place: { zh: '东非 · 乌吉吉', en: 'Ujiji, East Africa' },
     type: 'exploration', importance: 1,
@@ -1901,14 +1909,14 @@ export const EVENTS: HistoryEvent[] = [
     start: 1895, end: 1898, lat: 23.11, lon: -82.37,
     continent: 'north-america',
 
+    sourceIds: ['wiki-cuban-war-of-independence', 'brit-spanish-american-war'],
+    review: 'reviewed',
     civilizations: ['latin-american', 'north-american'],    place: { zh: '古巴 · 哈瓦那', en: 'Havana, Cuba' },
     type: 'war', importance: 1,
     desc: {
       zh: '马蒂与戈麦斯再举义旗，战事与美国利益纠缠，最终引出美西战争与古巴名义独立。',
       en: 'Martí and Gómez rose again; the entanglement with U.S. interests led to the Spanish-American War.',
     },
-    sourceIds: ['wiki-cuban-war-of-independence'],
-    review: 'reviewed',
   },
   {
     id: 'gongche-shangshu',
