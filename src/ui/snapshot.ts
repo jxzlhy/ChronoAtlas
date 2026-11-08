@@ -224,11 +224,22 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       .join('')
   }
 
-  /** 文明筛选 chips（PHASE D）：有活跃事件的文明才显示 */
+  /** 文明筛选 chips（PHASE D 深化）：显示活跃计数 + 该文明的时代跨度（title） */
   const renderCivs = (active: HistoryEvent[]): void => {
     const civEl = document.getElementById('snapshot-civs') as HTMLElement | null
     if (!civEl) return
     const counts = new Map<string, number>()
+    const spans = new Map<string, [number, number]>()
+    for (const ev of EVENTS) {
+      for (const c of ev.civilizations ?? []) {
+        const span = spans.get(c)
+        if (!span) spans.set(c, [ev.start, ev.end])
+        else {
+          span[0] = Math.min(span[0], ev.start)
+          span[1] = Math.max(span[1], ev.end)
+        }
+      }
+    }
     for (const ev of active) {
       for (const c of ev.civilizations ?? []) counts.set(c, (counts.get(c) ?? 0) + 1)
     }
@@ -237,7 +248,9 @@ export function initSnapshot(onGo: (ev: HistoryEvent) => void, onFlyContinent: (
       CIVILIZATIONS.filter((c) => (counts.get(c) ?? 0) > 0)
         .map((c) => {
           const label = CIV_LABEL[c] ?? { zh: c, en: c }
-          return `<button class="snap-sort-btn${civFilter === c ? ' is-active' : ''}" type="button" data-civ="${c}" title="${label.en}">${label.zh} <span class="snap-chip-count">${counts.get(c)}</span></button>`
+          const span = spans.get(c)
+          const spanTxt = span ? `${span[0] < 0 ? `${-span[0]} BCE` : span[0]}–${span[1] < 0 ? `${-span[1]} BCE` : span[1]}` : ''
+          return `<button class="snap-sort-btn${civFilter === c ? ' is-active' : ''}" type="button" data-civ="${c}" title="${label.en} · 事件跨度 ${spanTxt}">${label.zh} <span class="snap-chip-count">${counts.get(c)}</span></button>`
         })
         .join('')
   }
