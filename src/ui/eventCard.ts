@@ -93,7 +93,7 @@ export function initEventCard(
             ${sources
               .map(
                 (s) =>
-                  `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name.en} — ${s.publisher.en}">${s.name.zh}<span class="ec-source-pub">${s.publisher.zh}</span></a></li>`,
+                  `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name.en} — ${s.publisher.en}">${s.name.zh}<span class="ec-source-grade${s.publisher.en.includes('Britannica') ? ' ec-source-grade--ref' : ''}">${s.publisher.en.includes('Britannica') ? '权威' : '社区'}</span><span class="ec-source-pub">${s.publisher.zh}</span></a></li>`,
               )
               .join('')}
           </ul>

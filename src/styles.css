@@ -2510,3 +2510,21 @@ input:focus-visible {
   font-weight: 400;
   color: var(--text-muted);
 }
+
+/* 来源可信度徽章（PHASE A3 分级展示） */
+.ec-source-grade {
+  flex: none;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--route);
+  background: color-mix(in srgb, var(--route) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--route) 35%, transparent);
+}
+
+.ec-source-grade--ref {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
