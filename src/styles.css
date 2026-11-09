@@ -2555,3 +2555,20 @@ input:focus-visible {
 .density-tooltip[hidden] {
   display: none;
 }
+
+/* 事件卡文明标签（PHASE D：多文明事件展示） */
+.ec-civs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.ec-civ-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  color: var(--text-muted);
+  background: rgba(148, 180, 255, 0.08);
+  border: 1px solid var(--border);
+}

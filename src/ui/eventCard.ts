@@ -4,6 +4,7 @@ import { EVENTS, EVENT_TYPES } from '../data/events'
 import { LINKS } from '../data/links'
 import { PEOPLE } from '../data/people'
 import { SOURCES } from '../data/sources'
+import { CIVILIZATIONS } from '../data/model'
 import { KIND_COLOR } from '../scene/LinkArcs'
 
 /** 关系类型的双语短标签（tooltip 前缀，区分因果与关联） */
@@ -182,6 +183,16 @@ export function initEventCard(
       <hr />
       <p class="ec-desc-en">${ev.desc.en}</p>
       <div class="ec-meta-en">${ev.place.en} · ${years} A.D. · Importance ${'★'.repeat(ev.importance)}</div>
+      ${
+        (ev.civilizations?.length ?? 0) > 1
+          ? `<div class="ec-civs">${(ev.civilizations ?? [])
+              .map((c) => {
+                const zh = { chinese: '中华', ottoman: '奥斯曼', european: '欧洲', russian: '俄罗斯', indian: '印度', japanese: '日本', african: '非洲', 'latin-american': '拉美', 'north-american': '北美', 'islamic-world': '伊斯兰' }[c] ?? c
+                return `<span class="ec-civ-tag">${zh}</span>`
+              })
+              .join('')}</div>`
+          : ''
+      }
       ${figuresSection()}
 
       ${section('前因', 'Origins', 'ec-chip--cause', causes)}
