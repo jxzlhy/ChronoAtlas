@@ -82,6 +82,16 @@ export function initPersonCard(
       <div class="pc-life">${p.life}</div>
       <p class="pc-bio">${p.bio.zh}</p>
       <p class="pc-bio-en">${p.bio.en}</p>
+      ${
+        (p.eventIds.flatMap((id) => EVENTS.find((e) => e.id === id)?.civilizations ?? []).filter((c, i, a) => a.indexOf(c) === i).length > 0)
+          ? `<div class="ec-civs">${[...new Set(p.eventIds.flatMap((id) => EVENTS.find((e) => e.id === id)?.civilizations ?? []))]
+              .map((c) => {
+                const zh = { chinese: '中华', ottoman: '奥斯曼', european: '欧洲', russian: '俄罗斯', indian: '印度', japanese: '日本', african: '非洲', 'latin-american': '拉美', 'north-american': '北美', 'islamic-world': '伊斯兰' }[c] ?? c
+                return `<span class="ec-civ-tag">${zh}</span>`
+              })
+              .join('')}</div>`
+          : ''
+      }
       <button class="pc-era" type="button" data-era="${eraOf(p.places?.[0]?.year ?? timeline[0]?.start ?? 1850).name.zh}"
               title="跳转到该时代 · Jump to era">
         <span class="pc-era-label">时代 · Era</span>
