@@ -317,8 +317,9 @@ export function initSnapshot(
     yearEl.textContent = `公元 ${s.year} 年`
     eraEl.textContent = `${era.name.zh} · ${era.name.en}`
     blurbEl.textContent = era.blurb.zh
-    blurbEl.title = era.blurb.en
+    blurbEl.title = `${era.blurb.en} · 点击跳到 ${era.name.zh} 代表年份（${era.from < 0 ? `${-era.from} BCE` : era.from}）`
     blurbEl.hidden = false
+    blurbEl.dataset.eraFrom = String(era.from)
 
     const active = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize))
 

@@ -1308,6 +1308,12 @@ body.ready .continent-nav {
   font-size: 11px;
   line-height: 1.6;
   color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.snapshot-blurb:hover {
+  color: var(--text);
 }
 
 .snapshot-chips {
