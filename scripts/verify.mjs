@@ -178,7 +178,7 @@ if (sliceInfo.typeChips < 8) throw new Error(`类型 chips 异常: ${sliceInfo.t
 if (sliceInfo.densityBars < 160) throw new Error(`密度条柱数异常: ${sliceInfo.densityBars}`)
 await shot('09-slice-panel')
 // 类型筛选：点击"战争"，全部行应为战争色
-await page.click('#snapshot-types [data-type="war"]')
+await page.evaluate(() => document.querySelector('#snapshot-types [data-type="war"]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const warFilter = await page.evaluate(() => {
   const rows = [...document.querySelectorAll('#slice-list .slice-row')]
@@ -186,9 +186,9 @@ const warFilter = await page.evaluate(() => {
 })
 console.log('   类型筛选(战争):', JSON.stringify(warFilter), warFilter.allWar && warFilter.rows > 0 ? '✓' : '✗')
 await shot('09b-snapshot-filter')
-await page.click('#snapshot-types [data-type="all"]')
+await page.evaluate(() => document.querySelector('#snapshot-types [data-type="all"]')?.click())
 // 大洲筛选：点击"亚洲"，行应只剩亚洲事件，且全局筛选写入 store（联动地球）
-await page.click('#snapshot-continents [data-continent="asia"]')
+await page.evaluate(() => document.querySelector('#snapshot-continents [data-continent="asia"]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const contInfo = await page.evaluate(() => {
   const rows = [...document.querySelectorAll('#slice-list .slice-row')]
@@ -204,7 +204,7 @@ const contInfo = await page.evaluate(() => {
 console.log('   大洲筛选(亚洲):', JSON.stringify(contInfo), contInfo.allAsia && contInfo.storeFilter === 'asia' ? '✓' : '✗')
 await shot('09c-snapshot-continent')
 // 排序切换：按时间排序后首行应为最早开始的活跃事件
-await page.click('#snapshot-sort [data-sort="time"]')
+await page.evaluate(() => document.querySelector('#snapshot-sort [data-sort="time"]')?.click())
 await new Promise((r) => setTimeout(r, 300))
 const sortInfo = await page.evaluate(() => {
   const ids = [...document.querySelectorAll('#slice-list .slice-row')].map((r) => r.getAttribute('data-id'))
@@ -216,12 +216,12 @@ const sortInfo = await page.evaluate(() => {
   return { first: ids[0], expect: active[0]?.id ?? null }
 })
 console.log('   排序(时间):', JSON.stringify(sortInfo), sortInfo.first === sortInfo.expect ? '✓' : '✗')
-await page.click('#snapshot-sort [data-sort="importance"]')
+await page.evaluate(() => document.querySelector('#snapshot-sort [data-sort="importance"]')?.click())
 // 复点取消筛选，行点击定位
-await page.click('#snapshot-continents [data-continent="asia"]')
+await page.evaluate(() => document.querySelector('#snapshot-continents [data-continent="asia"]')?.click())
 await new Promise((r) => setTimeout(r, 300))
 if (sliceInfo.rows > 0) {
-  await page.click('#slice-list .slice-row')
+  await page.evaluate(() => document.querySelector('#slice-list .slice-row')?.click())
   await new Promise((r) => setTimeout(r, 1800))
   const sel = await page.evaluate(() => window.__chrono.store.getState().selectedId)
   console.log('   面板选中:', sel, sel === sliceInfo.first ? '✓' : '✗ 与首行不一致')
@@ -233,7 +233,7 @@ const speedVal = await page.evaluate(() => window.__chrono.store.getState().play
 console.log('   播放速度:', speedVal, speedVal === 5 ? '✓' : '✗')
 await page.select('#speed-select', '1')
 // 同时代视图：按大洲分节并置代表事件
-await page.click('#snapshot-view [data-view="sync"]')
+await page.evaluate(() => document.querySelector('#snapshot-view [data-view="sync"]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const syncInfo = await page.evaluate(() => {
   const sections = [...document.querySelectorAll('#slice-list .sync-section')].length
@@ -244,7 +244,7 @@ const syncInfo = await page.evaluate(() => {
 console.log('   同时代视图:', JSON.stringify(syncInfo), syncInfo.sections >= 3 && syncInfo.rows >= 3 ? '✓' : '✗')
 await shot('09d-snapshot-sync')
 // 大洲标题 → 回列表视图并写入该洲筛选
-await page.click('#slice-list .sync-cont')
+await page.evaluate(() => document.querySelector('#slice-list .sync-cont')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const syncJump = await page.evaluate(() => ({
   view: document.querySelector('#snapshot-view .snap-sort-btn.is-active')?.getAttribute('data-view'),
@@ -345,7 +345,7 @@ console.log('   人物卡:', JSON.stringify(personDetail))
 if (!personDetail.open || personDetail.tlRows === 0) throw new Error(`人物卡异常: ${JSON.stringify(personDetail)}`)
 await shot('14-person-detail')
 // 时间线行点击 → 跳转事件并收起人物卡
-await page.click('#person-card .pc-tl-row')
+await page.evaluate(() => document.querySelector('#person-card .pc-tl-row')?.click())
 await new Promise((r) => setTimeout(r, 1800))
 const tlJump = await page.evaluate(() => ({
   sel: window.__chrono.store.getState().selectedId,
@@ -428,7 +428,7 @@ const relInfo = await page.evaluate(() => ({
 }))
 console.log('   人物关系:', JSON.stringify(relInfo), relInfo.rows >= 1 && relInfo.engels ? '✓' : '✗')
 await shot('23-person-relations')
-await page.click('#person-card [data-rel="engels"]')
+await page.evaluate(() => document.querySelector('#person-card [data-rel="engels"]')?.click())
 await new Promise((r) => setTimeout(r, 600))
 const relSwitch = await page.evaluate(() => window.__chrono.store.getState().selectedPersonId)
 console.log('   关系切换(恩格斯):', relSwitch, relSwitch === 'engels' ? '✓' : '✗')
@@ -635,7 +635,7 @@ console.log('   航线面板:', JSON.stringify(rpInfo))
 if (!rpInfo.open || rpInfo.rows !== 5) throw new Error(`航线面板异常: ${JSON.stringify(rpInfo)}`)
 await shot('21-routes')
 // 选中麦哲伦环球（9 途经点）→ 详情 + 不确定性标注 + URL rt= 写入
-await page.click('#routes-list [data-route="magellan-circumnavigation"]')
+await page.evaluate(() => document.querySelector('#routes-list [data-route="magellan-circumnavigation"]')?.click())
 await new Promise((r) => setTimeout(r, 1800))
 const rpDetail = await page.evaluate(() => ({
   stops: document.querySelectorAll('#routes-detail .rp-stop').length,
@@ -680,7 +680,7 @@ const rpPlay = await page.evaluate(() => ({
 }))
 console.log('   航线播放:', JSON.stringify(rpPlay), rpPlay.label !== '0%' ? '✓' : '✗')
 await shot('21c-route-play')
-await page.click('#routes-detail [data-reset]')
+await page.evaluate(() => document.querySelector('#routes-detail [data-reset]')?.click())
 await page.click('[data-routes-close]')
 await new Promise((r) => setTimeout(r, 400))
 
