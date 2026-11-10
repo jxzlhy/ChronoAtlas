@@ -1124,6 +1124,14 @@ export const SOURCES: Source[] = [
     url: 'https://en.wikipedia.org/wiki/Emancipation_reform_of_1861',
     type: 'encyclopedia',
   },
+  {
+    id: 'wiki-electrification',
+    name: { zh: '电气化（第二次工业革命核心）', en: 'Electrification' },
+    publisher: { zh: '维基百科（自由百科全书）', en: 'Wikipedia, the Free Encyclopedia' },
+    url: 'https://en.wikipedia.org/wiki/Electrification',
+    type: 'encyclopedia',
+  },
+
   // ---- V1.2.0 人物传记来源（2026-11-07 逐条 WebFetch 验证，52/52 全覆盖）----
   {
     id: 'brit-charles-darwin',

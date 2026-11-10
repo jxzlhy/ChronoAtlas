@@ -2088,7 +2088,7 @@ export const EVENTS: HistoryEvent[] = [
       zh: '电气、化学与内燃机取代蒸汽成为增长引擎，研究实验室与公司制把发明变成产业，美德由此赶超英国。',
       en: 'Electricity, chemistry and the combustion engine replaced steam; R&D labs and corporations let the U.S. and Germany overtake Britain.',
     },
-    sourceIds: ['wiki-second-industrial-revolution'],
+    sourceIds: ['wiki-second-industrial-revolution', 'wiki-electrification'],
     review: 'reviewed',
   },
   {
