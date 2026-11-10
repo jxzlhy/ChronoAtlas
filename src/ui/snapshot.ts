@@ -483,6 +483,16 @@ export function initSnapshot(
   })
   list.addEventListener('pointerleave', () => appStore.getState().setHover(null))
 
+  // 地球 → 面板联动（PHASE 深化）：地球悬停事件/热区时列表自动滚动到对应行
+  let lastScrollTarget: string | null = null
+  appStore.subscribe((st) => {
+    if (!st.hoverId || !open) return
+    if (st.hoverId === lastScrollTarget) return
+    lastScrollTarget = st.hoverId
+    const row = list.querySelector(`[data-id="${st.hoverId}"]`)
+    row?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  })
+
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) setOpen(false)
   })
