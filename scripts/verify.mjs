@@ -246,14 +246,15 @@ const sortInfo = await page.evaluate(() => {
 })
 console.log('   排序(时间):', JSON.stringify(sortInfo), sortInfo.first === sortInfo.expect ? '✓' : '✗')
 await page.evaluate(() => document.querySelector('#snapshot-sort [data-sort="importance"]')?.click())
-// 复点取消筛选，行点击定位
+// 复点取消筛选，行点击定位（era 跳年后首行可能变化，重读期望）
 await page.evaluate(() => document.querySelector('#snapshot-continents [data-continent="asia"]')?.click())
 await new Promise((r) => setTimeout(r, 300))
-if (sliceInfo.rows > 0) {
+const freshFirst = await page.evaluate(() => document.querySelector('#slice-list .slice-row')?.getAttribute('data-id'))
+if (freshFirst) {
   await page.evaluate(() => document.querySelector('#slice-list .slice-row')?.click())
   await new Promise((r) => setTimeout(r, 1800))
   const sel = await page.evaluate(() => window.__chrono.store.getState().selectedId)
-  console.log('   面板选中:', sel, sel === sliceInfo.first ? '✓' : '✗ 与首行不一致')
+  console.log('   面板选中:', sel, sel === freshFirst ? '✓' : '✗ 与首行不一致')
 }
 // 播放速度：选择 5× 写入 store
 await page.select('#speed-select', '5')
