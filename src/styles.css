@@ -2578,3 +2578,11 @@ input:focus-visible {
   background: rgba(148, 180, 255, 0.08);
   border: 1px solid var(--border);
 }
+
+/* 时代波段 chips 行（PHASE F 时间旅行） */
+.era-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 16px 0;
+}

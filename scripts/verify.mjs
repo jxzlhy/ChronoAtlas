@@ -197,11 +197,11 @@ const densityTip = await page.evaluate(() => {
 console.log('   密度tooltip:', JSON.stringify(densityTip), !densityTip.hidden && densityTip.text?.includes('1866') ? '✓' : '✗')
 // 时代波段 chips：六时代渲染 + 点击跳转
 const eraChips = await page.evaluate(() => ({
-  chips: document.querySelectorAll('#snapshot-era .snap-sort-btn').length,
-  active: document.querySelector('#snapshot-era .snap-sort-btn.is-active')?.textContent?.trim().split(/\s/)[0],
+  chips: document.querySelectorAll('#era-chips .snap-sort-btn').length,
+  active: document.querySelector('#era-chips .snap-sort-btn.is-active')?.textContent?.trim().split(/\s/)[0],
 }))
 console.log('   时代chips:', JSON.stringify(eraChips), eraChips.chips === 6 && eraChips.active ? '✓' : '✗')
-await page.evaluate(() => document.querySelector('#snapshot-era [data-era-from="1849"]')?.click())
+await page.evaluate(() => document.querySelector('#era-chips [data-era-from="1849"]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const eraChipJump = await page.evaluate(() => window.__chrono.store.getState().year)
 console.log('   时代跳转(1849):', eraChipJump, eraChipJump === 1849 ? '✓' : '✗')

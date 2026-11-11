@@ -73,6 +73,7 @@ export function initSnapshot(
   const list = document.getElementById('slice-list') as HTMLElement
   const yearEl = document.getElementById('slice-year') as HTMLElement
   const eraEl = document.getElementById('snapshot-era') as HTMLElement
+  const eraChipsEl = document.getElementById('era-chips') as HTMLElement
   const blurbEl = document.getElementById('snapshot-blurb') as HTMLElement
   const typesEl = document.getElementById('snapshot-types') as HTMLElement
   const contEl = document.getElementById('snapshot-continents') as HTMLElement
@@ -228,7 +229,7 @@ export function initSnapshot(
   /** 文明筛选 chips（PHASE D 深化）：显示活跃计数 + 该文明的时代跨度（title） */
   /** 时代波段 chips：点击跳到时代起点（时间旅行） */
   const renderEraChips = (year: number): void => {
-    eraEl.innerHTML = ERA_BANDS.map((band) => {
+    eraChipsEl.innerHTML = ERA_BANDS.map((band) => {
       const count = EVENTS.filter((ev) => isActive(ev, year, 9999) && ev.start <= band.to && ev.end >= band.from).length
       const active = year >= band.from && year <= band.to
       return `<button class="snap-sort-btn${active ? ' is-active' : ''}" type="button" data-era-from="${band.from}" title="${band.name.en}">${band.name.zh} <span class="snap-chip-count">${count}</span></button>`
@@ -431,7 +432,7 @@ export function initSnapshot(
   })
 
   // 时代 chips 点击 → 跳到该时代起点
-  eraEl.addEventListener('click', (e) => {
+  eraChipsEl.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-from]')
     if (!btn?.dataset.eraFrom) return
     appStore.getState().setYear(Number(btn.dataset.eraFrom))
