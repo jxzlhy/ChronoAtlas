@@ -205,6 +205,13 @@ await page.evaluate(() => document.querySelector('#era-chips [data-era-from="184
 await new Promise((r) => setTimeout(r, 400))
 const eraChipJump = await page.evaluate(() => window.__chrono.store.getState().year)
 console.log('   时代跳转(1849):', eraChipJump, eraChipJump === 1849 ? '✓' : '✗')
+// 时代背景点击跳转（blurb → 时代起点）
+await page.evaluate(() => document.getElementById('snapshot-blurb')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+await new Promise((r) => setTimeout(r, 400))
+const blurbJump = await page.evaluate(() => window.__chrono.store.getState().year)
+console.log('   blurb跳转(时代起点):', blurbJump, blurbJump === 1849 ? '✓' : '✗')
+// 恢复年份
+await page.evaluate(() => window.__chrono.store.getState().setYear(1850))
 await shot('09-slice-panel')
 // 类型筛选：点击"战争"，全部行应为战争色
 await page.evaluate(() => document.querySelector('#snapshot-types [data-type="war"]')?.click())

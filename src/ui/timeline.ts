@@ -40,6 +40,25 @@ function buildDensity(): void {
   tooltip.className = 'density-tooltip'
   tooltip.hidden = true
   svg.parentElement?.appendChild(tooltip)
+  svg.addEventListener('pointerdown', (e) => {
+    const rect = svg.getBoundingClientRect()
+    if (rect.width === 0) return
+    const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
+    const year = Math.round(YEAR_MIN + frac * (years - 1))
+    const titles = byYear[year - YEAR_MIN]
+    if (titles.length === 0) {
+      tooltip.hidden = true
+      return
+    }
+    const show = titles.slice(0, 4).join(' · ')
+    const more = titles.length > 4 ? `\n…等 ${titles.length} 个` : ''
+    tooltip.textContent = `${year} 年（${titles.length}）：${show}${more}`
+    tooltip.hidden = false
+    const wrap = svg.parentElement!.getBoundingClientRect()
+    const x = Math.min(Math.max(e.clientX - wrap.left, 60), wrap.width - 60)
+    tooltip.style.left = `${x}px`
+    tooltip.style.top = `${rect.bottom - wrap.top + 4}px`
+  })
   svg.addEventListener('pointermove', (e) => {
     const rect = svg.getBoundingClientRect()
     if (rect.width === 0) return
