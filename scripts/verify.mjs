@@ -195,6 +195,16 @@ const densityTip = await page.evaluate(() => {
   return { hidden: el?.hidden, text: el?.textContent?.slice(0, 40) }
 })
 console.log('   密度tooltip:', JSON.stringify(densityTip), !densityTip.hidden && densityTip.text?.includes('1866') ? '✓' : '✗')
+// 时代波段 chips：六时代渲染 + 点击跳转
+const eraChips = await page.evaluate(() => ({
+  chips: document.querySelectorAll('#snapshot-era .snap-sort-btn').length,
+  active: document.querySelector('#snapshot-era .snap-sort-btn.is-active')?.textContent?.trim().split(/\s/)[0],
+}))
+console.log('   时代chips:', JSON.stringify(eraChips), eraChips.chips === 6 && eraChips.active ? '✓' : '✗')
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-from="1849"]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const eraChipJump = await page.evaluate(() => window.__chrono.store.getState().year)
+console.log('   时代跳转(1849):', eraChipJump, eraChipJump === 1849 ? '✓' : '✗')
 await shot('09-slice-panel')
 // 类型筛选：点击"战争"，全部行应为战争色
 await page.evaluate(() => document.querySelector('#snapshot-types [data-type="war"]')?.click())
