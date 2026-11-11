@@ -213,7 +213,11 @@ export function initPersonCard(
     onPlacesChange(p.places ?? null)
     card.hidden = false
     eventCard.hidden = true // 人物卡与事件卡同位互斥
-    requestAnimationFrame(() => card.classList.add('show'))
+    requestAnimationFrame(() => {
+      card.classList.add('show')
+      // 键盘可达性（E5）：焦点移入人物卡
+      card.querySelector<HTMLButtonElement>('.pc-close')?.focus({ preventScroll: true })
+    })
   }
 
   appStore.subscribe(apply)

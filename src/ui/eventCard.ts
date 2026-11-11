@@ -225,7 +225,11 @@ export function initEventCard(
     }
     render(ev)
     card.hidden = false
-    requestAnimationFrame(() => card.classList.add('show'))
+    requestAnimationFrame(() => {
+      card.classList.add('show')
+      // 键盘可达性（E5）：焦点移入卡片，Tab 即可遍历卡内元素
+      card.querySelector<HTMLButtonElement>('.ec-close')?.focus({ preventScroll: true })
+    })
   }
 
   appStore.subscribe(apply)
