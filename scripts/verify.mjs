@@ -16,7 +16,7 @@ const envWarnings = []
 const logs = []
 
 // 沙箱代理对 CDN 的拦截属环境抖动（应用已设计降级），与应用错误区分开
-const ENV_NET_RE = /ERR_TUNNEL_CONNECTION_FAILED|ERR_INTERNET_DISCONNECTED|ERR_NAME_NOT_RESOLVED|ERR_PROXY/
+const ENV_NET_RE = /ERR_TUNNEL_CONNECTION_FAILED|ERR_INTERNET_DISCONNECTED|ERR_NAME_NOT_RESOLVED|ERR_PROXY|ERR_CONNECTION_CLOSED|ERR_CONNECTION_RESET|SSL_ERROR/
 
 // 服务器自愈：dev server 不在时自动拉起（脱离进程组，不随脚本退出）
 async function ensureServer(url) {
@@ -176,6 +176,25 @@ console.log('   快照面板:', JSON.stringify(sliceInfo))
 if (sliceInfo.era.length === 0) throw new Error('快照时代标签为空')
 if (sliceInfo.typeChips < 8) throw new Error(`类型 chips 异常: ${sliceInfo.typeChips}`)
 if (sliceInfo.densityBars < 160) throw new Error(`密度条柱数异常: ${sliceInfo.densityBars}`)
+// 密度条 hover tooltip：悬停显示当年活跃事件
+await page.evaluate(() => {
+  const svg = document.getElementById('timeline-density')
+  const rect = svg.getBoundingClientRect()
+  const ev = window.__chrono.events
+  // 找一个有事件的年份悬停（1866）
+  const target = ev.find((e) => e.start <= 1866 && e.end >= 1866)
+  const frac = (1866 - 1750) / 161
+  const x = rect.left + frac * rect.width
+  const y = rect.top + rect.height / 2
+  const mouse = new MouseEvent('pointermove', { clientX: x, clientY: y, bubbles: true })
+  svg.dispatchEvent(mouse)
+})
+await new Promise((r) => setTimeout(r, 300))
+const densityTip = await page.evaluate(() => {
+  const el = document.querySelector('.density-tooltip')
+  return { hidden: el?.hidden, text: el?.textContent?.slice(0, 40) }
+})
+console.log('   密度tooltip:', JSON.stringify(densityTip), !densityTip.hidden && densityTip.text?.includes('1866') ? '✓' : '✗')
 await shot('09-slice-panel')
 // 类型筛选：点击"战争"，全部行应为战争色
 await page.evaluate(() => document.querySelector('#snapshot-types [data-type="war"]')?.click())
