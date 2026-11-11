@@ -100,13 +100,14 @@ export function isActive(ev: HistoryEvent, year: number, windowSize: number): bo
   return ev.start - windowSize <= year && year <= ev.end + windowSize
 }
 
-/** 事件是否通过当前快照筛选（类型 + 大洲） */
+/** 事件是否通过当前快照筛选（类型 + 大洲 + 文明） */
 export function matchesFilters(
   ev: HistoryEvent,
-  s: Pick<AppState, 'typeFilter' | 'continentFilter'>,
+  s: Pick<AppState, 'typeFilter' | 'continentFilter' | 'civFilter'>,
 ): boolean {
   return (
     (s.typeFilter === null || ev.type === s.typeFilter) &&
-    (s.continentFilter === null || ev.continent === s.continentFilter)
+    (s.continentFilter === null || ev.continent === s.continentFilter) &&
+    (s.civFilter === null || (ev.civilizations ?? []).includes(s.civFilter))
   )
 }
