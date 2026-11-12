@@ -459,6 +459,7 @@ export function initSnapshot(
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-span-toggle]')
     if (!btn) return
     eraSpanMode = !eraSpanMode
+    appStore.getState().setHotspotsEraBoost(eraSpanMode) // 热区权重随时代视角联动
     render(true)
   })
 

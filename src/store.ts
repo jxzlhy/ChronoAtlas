@@ -27,6 +27,8 @@ export interface AppState {
   selectedPersonId: string | null
   /** 当前历史航线（URL 分享恢复；null = 关闭） */
   selectedRouteId: string | null
+  /** 时代视角下热区权重偏向时代核心段 */
+  hotspotsEraBoost: boolean
   setYear: (y: number) => void
   setPlaying: (p: boolean) => void
   togglePlay: () => void
@@ -42,6 +44,7 @@ export interface AppState {
   setSoundOn: (v: boolean) => void
   selectPerson: (id: string | null) => void
   selectRoute: (id: string | null) => void
+  setHotspotsEraBoost: (v: boolean) => void
 }
 
 export const YEAR_MIN = 1750
@@ -62,6 +65,7 @@ export const appStore = createStore<AppState>()((set) => ({
   soundOn: false,
   selectedPersonId: null,
   selectedRouteId: null,
+  hotspotsEraBoost: false,
   setYear: (year) => set({ year }),
   setPlaying: (playing) => set({ playing }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
@@ -77,6 +81,7 @@ export const appStore = createStore<AppState>()((set) => ({
   setSoundOn: (soundOn) => set({ soundOn }),
   selectPerson: (selectedPersonId) => set({ selectedPersonId }),
   selectRoute: (selectedRouteId) => set({ selectedRouteId }),
+  setHotspotsEraBoost: (hotspotsEraBoost) => set({ hotspotsEraBoost }),
 }))
 
 // 音效偏好记忆（首次访问默认关；无法读写时静默跳过）

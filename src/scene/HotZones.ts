@@ -86,13 +86,21 @@ export class HotZones {
   /** 网格聚类当前活跃事件，返回密度达标（≥MIN_COUNT）的簇，按密度降序 */
   private computeClusters(): Cluster[] {
     const s = appStore.getState()
-    const cells = new Map<string, { latSum: number; lonSum: number; count: number; topId: string; topImp: number }>()
+    const cells = new Map<string, { latSum: number; lonSum: number; count: number; topId: string; topImp: number; weight: number }>()
+    // 时代视角下：时代核心段事件权重 ×1.5（密度波集中于"段落"）
+    const eraBoost = (ev: (typeof EVENTS)[number]): number => {
+      if (!s.hotspotsEraBoost) return 1
+      return ev.start >= s.year - 10 && ev.end <= s.year + 10 ? 1.5 : 0.6
+    }
     for (const ev of EVENTS) {
       if (!isActive(ev, s.year, s.windowSize) || !matchesFilters(ev, s)) continue
+      const boost = eraBoost(ev)
+      if (boost === 0) continue
       const key = `${Math.floor((ev.lat + 90) / CELL)}:${Math.floor((ev.lon + 180) / CELL)}`
-      const cell = cells.get(key) ?? { latSum: 0, lonSum: 0, count: 0, topId: ev.id, topImp: 0 }
-      cell.latSum += ev.lat
-      cell.lonSum += ev.lon
+      const cell = cells.get(key) ?? { latSum: 0, lonSum: 0, count: 0, topId: ev.id, topImp: 0, weight: 0 }
+      cell.latSum += ev.lat * boost
+      cell.lonSum += ev.lon * boost
+      cell.weight += boost
       cell.count++
       if (ev.importance > cell.topImp) {
         cell.topImp = ev.importance
@@ -101,10 +109,10 @@ export class HotZones {
       cells.set(key, cell)
     }
     return [...cells.values()]
-      .filter((c) => c.count >= MIN_COUNT)
-      .sort((a, b) => b.count - a.count)
+      .filter((c) => c.weight >= MIN_COUNT)
+      .sort((a, b) => b.weight - a.weight)
       .slice(0, MAX_ZONES)
-      .map((c) => ({ lat: c.latSum / c.count, lon: c.lonSum / c.count, count: c.count, topId: c.topId }))
+      .map((c) => ({ lat: c.latSum / c.weight, lon: c.lonSum / c.weight, count: Math.round(c.weight), topId: c.topId }))
   }
 
   private recalc(): void {
