@@ -2586,3 +2586,23 @@ input:focus-visible {
   gap: 4px;
   padding: 6px 16px 0;
 }
+
+/* 时代视角按钮（V2.1 时间跨度模式） */
+.era-span-btn {
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease-out);
+}
+
+.era-span-btn:hover {
+  background: rgba(148, 180, 255, 0.1);
+}
+
+.era-span-btn.era-span-off {
+  color: inherit;
+}

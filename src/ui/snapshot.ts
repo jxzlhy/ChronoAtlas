@@ -84,6 +84,8 @@ export function initSnapshot(
   let signature = ''
   let sortBy: SortBy = 'importance'
   let viewMode: ViewMode = 'list'
+  /** 时代视角模式（V2.1）：开启后时间窗口锁定为当前时代起止 */
+  let eraSpanMode = false
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -325,13 +327,19 @@ export function initSnapshot(
 
     const era = eraOf(s.year)
     yearEl.textContent = `公元 ${s.year} 年`
-    eraEl.textContent = `${era.name.zh} · ${era.name.en}`
+    if (eraSpanMode) {
+      eraEl.innerHTML = `<button class="era-span-btn" type="button" data-era-span-toggle title="点击退出时代视角">⏳ 时代视角：${era.name.zh}（${era.from}–${era.to}）· ${era.name.en} ✕</button>`
+    } else {
+      eraEl.innerHTML = `<button class="era-span-btn era-span-off" type="button" data-era-span-toggle title="点击锁定当前时代视角">⏳ ${era.name.zh} · ${era.name.en}</button>`
+    }
     blurbEl.textContent = era.blurb.zh
     blurbEl.title = `${era.blurb.en} · 点击跳到 ${era.name.zh} 代表年份（${era.from < 0 ? `${-era.from} BCE` : era.from}）`
     blurbEl.hidden = false
     blurbEl.dataset.eraFrom = String(era.from)
 
-    const active = EVENTS.filter((ev) => isActive(ev, s.year, s.windowSize))
+    // 时代视角：窗口锁定为当前时代起止（±20 缓冲，保持时代边界事件可见）
+    const activeWindow = eraSpanMode ? 20 : s.windowSize
+    const active = EVENTS.filter((ev) => isActive(ev, s.year, activeWindow))
 
     // 类型统计（未筛选口径）；null = 全部
     const typeCounts = new Map<EventType | null, number>()
@@ -428,6 +436,14 @@ export function initSnapshot(
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-view]')
     if (!btn?.dataset.view) return
     viewMode = btn.dataset.view as ViewMode
+    render(true)
+  })
+
+  // 时代视角开关（V2.1）：头部时代名按钮 → 锁定/解锁当前时代窗口
+  eraEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-span-toggle]')
+    if (!btn) return
+    eraSpanMode = !eraSpanMode
     render(true)
   })
 

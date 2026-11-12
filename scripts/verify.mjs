@@ -205,6 +205,18 @@ await page.evaluate(() => document.querySelector('#era-chips [data-era-from="184
 await new Promise((r) => setTimeout(r, 400))
 const eraChipJump = await page.evaluate(() => window.__chrono.store.getState().year)
 console.log('   时代跳转(1849):', eraChipJump, eraChipJump === 1849 ? '✓' : '✗')
+// 时代视角（V2.1）：头部按钮 toggle
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const spanOn = await page.evaluate(() => ({
+  btn: document.querySelector('#snapshot-era .era-span-btn')?.textContent?.includes('时代视角'),
+  year: window.__chrono.store.getState().year,
+}))
+console.log('   时代视角开启:', JSON.stringify(spanOn), spanOn.btn ? '✓' : '✗')
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click())
+await new Promise((r) => setTimeout(r, 300))
+const spanOff = await page.evaluate(() => document.querySelector('#snapshot-era .era-span-btn')?.textContent)
+console.log('   时代视角关闭:', spanOff?.includes('时代视角') ? '✗ 仍开启' : '✓')
 // 时代背景点击跳转（blurb → 时代起点）
 await page.evaluate(() => document.getElementById('snapshot-blurb')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
 await new Promise((r) => setTimeout(r, 400))
