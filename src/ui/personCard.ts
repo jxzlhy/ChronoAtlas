@@ -2,7 +2,7 @@ import { appStore, type AppState, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { PEOPLE, PERSON_LINKS } from '../data/people'
 import { SOURCES } from '../data/sources'
-import { eraOf } from '../data/eras'
+import { ERA_BANDS, eraOf } from '../data/eras'
 import type { PersonPlace } from '../data/model'
 
 /** 人物卡罗盘元素引用（render 时更新；main.ts 主循环每帧读用） */
@@ -120,22 +120,40 @@ export function initPersonCard(
         timeline.length > 0
           ? `<div class="pc-links-label">人物时间线 · Timeline</div>
        <div class="pc-timeline">
-         ${timeline
-           .map((e) => {
-             const t = EVENT_TYPES[e.type]
-             const years = e.start === e.end ? `${e.start}` : `${e.start}–${e.end}`
-             return `
-               <button class="pc-tl-row" type="button" data-goto="${e.id}" style="--type-color:${t.color}"
-                       title="${t.zh} · ${t.en}">
-                 <span class="pc-tl-dot" aria-hidden="true"></span>
-                 <span class="pc-tl-year">${years}</span>
-                 <span class="pc-tl-main">
-                   <span class="pc-tl-title">${e.title.zh}</span>
-                   <span class="pc-tl-sub">${e.title.en}</span>
-                 </span>
-               </button>`
-           })
-           .join('')}
+         ${(() => {
+           // 按时代波段分组（PHASE V2.2）：人物各事件归入时代，组间显示时代分隔
+           const groups: { bandZh: string; bandEn: string; items: typeof timeline }[] = []
+           for (const ev of timeline) {
+             const band = eraOf(ev.start)
+             const last = groups[groups.length - 1]
+             if (last && last.bandZh === band.name.zh) last.items.push(ev)
+             else groups.push({ bandZh: band.name.zh, bandEn: band.name.en, items: [ev] })
+           }
+           return groups
+             .map(
+               (g) => `
+             <div class="pc-era-group">
+               <div class="pc-era-group-label">${g.bandZh}<span class="pc-era-group-en">${g.bandEn}</span></div>
+               ${g.items
+                 .map((e) => {
+                   const t = EVENT_TYPES[e.type]
+                   const years = e.start === e.end ? `${e.start}` : `${e.start}–${e.end}`
+                   return `
+                 <button class="pc-tl-row" type="button" data-goto="${e.id}" style="--type-color:${t.color}"
+                         title="${t.zh} · ${t.en}">
+                   <span class="pc-tl-dot" aria-hidden="true"></span>
+                   <span class="pc-tl-year">${years}</span>
+                   <span class="pc-tl-main">
+                     <span class="pc-tl-title">${e.title.zh}</span>
+                     <span class="pc-tl-sub">${e.title.en}</span>
+                   </span>
+                 </button>`
+                 })
+                 .join('')}
+             </div>`
+             )
+             .join('')
+         })()}
        </div>`
           : ''
       }

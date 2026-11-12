@@ -2606,3 +2606,17 @@ input:focus-visible {
 .era-span-btn.era-span-off {
   color: inherit;
 }
+
+/* 人物时间线时代分组（V2.2） */
+.pc-era-group + .pc-era-group {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+}
+
+.pc-era-group-label {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 2px 8px 4px;
+}

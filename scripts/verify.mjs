@@ -392,6 +392,12 @@ const personDetail = await page.evaluate(() => ({
 }))
 console.log('   人物卡:', JSON.stringify(personDetail))
 if (!personDetail.open || personDetail.tlRows === 0) throw new Error(`人物卡异常: ${JSON.stringify(personDetail)}`)
+// 时代分组（V2.2）：瓦特时间线按时代分组，组数应 ≥1 且组标签存在
+const eraGroups = await page.evaluate(() => ({
+  groups: document.querySelectorAll('#person-card .pc-era-group').length,
+  labels: [...document.querySelectorAll('#person-card .pc-era-group-label')].map((b) => b.textContent?.trim().split(/\s/)[0]),
+}))
+console.log('   时间线时代分组:', JSON.stringify(eraGroups), eraGroups.groups >= 1 && eraGroups.labels.length > 0 ? '✓' : '✗')
 await shot('14-person-detail')
 // 时间线行点击 → 跳转事件并收起人物卡
 await page.evaluate(() => document.querySelector('#person-card .pc-tl-row')?.click())
