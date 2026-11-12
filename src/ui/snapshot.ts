@@ -183,35 +183,41 @@ export function initSnapshot(
         .join('')
   }
 
-  /** 文明视图（PHASE F 对比起步）：按文明并置当年代表事件——跨文明同时代对比 */
+  /** 文明视图（PHASE F 对比深化）：按文明并置当年代表事件，事件按时代分组——跨文明+跨时代双维对比 */
   const renderCiv = (rows: HistoryEvent[], selectedId: string | null): string => {
-    const byCiv = new Map<string, HistoryEvent[]>()
+    const byCiv = new Map<string, Map<string, HistoryEvent[]>>()
     for (const ev of rows) {
       for (const c of ev.civilizations ?? []) {
-        const arr = byCiv.get(c) ?? []
+        const civMap = byCiv.get(c) ?? new Map<string, HistoryEvent[]>()
+        const band = eraOf(ev.start)
+        const arr = civMap.get(band.name.zh) ?? []
         arr.push(ev)
-        byCiv.set(c, arr)
+        civMap.set(band.name.zh, arr)
+        byCiv.set(c, civMap)
       }
     }
-    const sections = CIVILIZATIONS.filter((c) => (byCiv.get(c)?.length ?? 0) > 0)
+    const sections = CIVILIZATIONS.filter((c) => (byCiv.get(c)?.size ?? 0) > 0)
     if (sections.length === 0) {
       return '<div class="slice-empty">该筛选下没有活跃事件。<span class="slice-empty-en">No active events under this filter.</span></div>'
     }
     return sections
       .map((c) => {
-        const arr = (byCiv.get(c) ?? []).sort((a, b) => b.importance - a.importance || a.start - b.start)
+        const civMap = byCiv.get(c)!
         const label = CIV_LABEL[c] ?? { zh: c, en: c }
-        const top = arr.slice(0, 2)
-        return `
-          <div class="sync-section">
-            <div class="sync-head">
-              <span class="sync-cont">${label.zh}<span class="sync-cont-en">${label.en}</span><span class="sync-cont-count">${arr.length} 条</span></span>
-            </div>
-            ${top
-              .map((ev) => {
-                const t = EVENT_TYPES[ev.type]
-                const years = ev.start === ev.end ? `${ev.start}` : `${ev.start}–${ev.end}`
-                return `
+        const total = [...civMap.values()].reduce((s, arr) => s + arr.length, 0)
+        const bandBlocks = [...civMap.entries()]
+          .sort((a, b) => eraOf(byCiv.get(c)!.get(a[0])![0].start).from - eraOf(byCiv.get(c)!.get(b[0])![0].start).from)
+          .map(([bandZh, arr]) => {
+            const bandEn = eraOf(arr[0].start).name.en
+            const top = arr.sort((a, b) => b.importance - a.importance || a.start - b.start).slice(0, 2)
+            return `
+              <div class="civ-era-group">
+                <div class="civ-era-label">${bandZh}<span class="civ-era-en">${bandEn}</span></div>
+                ${top
+                  .map((ev) => {
+                    const t = EVENT_TYPES[ev.type]
+                    const years = ev.start === ev.end ? `${ev.start}` : `${ev.start}–${ev.end}`
+                    return `
                   <button class="slice-row${selectedId === ev.id ? ' is-active' : ''}" type="button"
                           data-id="${ev.id}" style="--type-color:${t.color}">
                     <span class="slice-dot" aria-hidden="true"></span>
@@ -221,8 +227,17 @@ export function initSnapshot(
                     </span>
                     <span class="slice-meta">${years} 年</span>
                   </button>`
-              })
-              .join('')}
+                  })
+                  .join('')}
+              </div>`
+          })
+          .join('')
+        return `
+          <div class="sync-section">
+            <div class="sync-head">
+              <span class="sync-cont">${label.zh}<span class="sync-cont-en">${label.en}</span><span class="sync-cont-count">${total} 条</span></span>
+            </div>
+            ${bandBlocks}
           </div>`
       })
       .join('')

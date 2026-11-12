@@ -2620,3 +2620,17 @@ input:focus-visible {
   color: var(--text-muted);
   padding: 2px 8px 4px;
 }
+
+/* 文明对比视图时代分组（V2.3） */
+.civ-era-group + .civ-era-group {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+}
+
+.civ-era-label {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 2px 8px 4px;
+}
