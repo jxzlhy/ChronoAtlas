@@ -2,6 +2,7 @@ import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { ERA_BANDS, eraOf } from '../data/eras'
 import { panelIn } from './motion'
+import { setEraSpanYear } from './timeline'
 import { CIVILIZATIONS } from '../data/model'
 import type { ContinentKey, EventType } from '../data/model'
 
@@ -460,6 +461,8 @@ export function initSnapshot(
     if (!btn) return
     eraSpanMode = !eraSpanMode
     appStore.getState().setHotspotsEraBoost(eraSpanMode) // 热区权重随时代视角联动
+    appStore.getState().setEraSpanOn(eraSpanMode) // 密度条时代高亮联动
+    setEraSpanYear(appStore.getState().year) // 密度条高亮当前时代
     render(true)
   })
 

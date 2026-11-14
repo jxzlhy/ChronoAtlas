@@ -1,10 +1,16 @@
 import { appStore, isActive, YEAR_MAX, YEAR_MIN } from '../store'
 import { EVENTS } from '../data/events'
-import { eraOf } from '../data/eras'
+import { ERA_BANDS, eraOf } from '../data/eras'
 import { playTick } from './sound'
 
-/** 事件密度条：每年 1 柱（全数据集重叠计数，与时间窗口无关），点击跳年 + 悬停显示当年事件 */
-function buildDensity(): void {
+/** 时代视角年份（snapshot toggle 时更新，密度条时代高亮用） */
+export function setEraSpanYear(y: number): void {
+  eraSpanYear = y
+}
+let eraSpanYear = 1850
+
+/** 事件密度条：每年 1 柱（全数据集重叠计数），点击跳年 + 悬停显示当年事件 + 时代视角高亮 */
+function buildDensity(eraSpanOn = false): void {
   const svg = document.getElementById('timeline-density') as SVGSVGElement | null
   if (!svg) return
   const years = YEAR_MAX - YEAR_MIN + 1
@@ -18,13 +24,23 @@ function buildDensity(): void {
       max = Math.max(max, counts[y - YEAR_MIN])
     }
   }
+  // 时代波段（eraSpanOn 时非核心段柱子降透明度，核心段提亮）
+  const bandOf = new Array<number>(years).fill(-1)
+  ERA_BANDS.forEach((band, bi) => {
+    for (let y = Math.max(band.from, YEAR_MIN); y <= Math.min(band.to, YEAR_MAX); y++) bandOf[y - YEAR_MIN] = bi
+  })
+  const activeBand = eraSpanOn ? ERA_BANDS.findIndex((b) => eraSpanYear >= b.from && eraSpanYear <= b.to) : -1
   const H = 20
   svg.setAttribute('viewBox', `0 0 ${years} ${H}`)
   svg.innerHTML = counts
     .map((c, i) => {
-      if (c === 0) return `<rect x="${i + 0.1}" y="${H - 1}" width="0.8" height="1" fill="#22d3ee" opacity="0.1" />`
+      const inCore = eraSpanOn && bandOf[i] === activeBand
+      const dimmed = eraSpanOn && !inCore
+      const base = dimmed ? 0.08 : 0.2
+      if (c === 0) return `<rect x="${i + 0.1}" y="${H - 1}" width="0.8" height="1" fill="#22d3ee" opacity="${dimmed ? 0.04 : 0.1}" />`
       const h = 1 + (c / max) * (H - 3)
-      return `<rect x="${i + 0.1}" y="${(H - h).toFixed(2)}" width="0.8" height="${h.toFixed(2)}" fill="#22d3ee" opacity="${(0.2 + 0.45 * (c / max)).toFixed(2)}" />`
+      const op = Math.min(1, (base + 0.45 * (c / max)) * (inCore ? 1.25 : 1))
+      return `<rect x="${i + 0.1}" y="${(H - h).toFixed(2)}" width="0.8" height="${h.toFixed(2)}" fill="#22d3ee" opacity="${op.toFixed(2)}" />`
     })
     .join('')
   svg.addEventListener('click', (e) => {
@@ -130,6 +146,12 @@ export function initTimeline(): void {
     requestAnimationFrame(step)
   }
   requestAnimationFrame(step)
+
+  // 时代视角联动：密度条时代高亮重渲染
+  appStore.subscribe((s) => {
+    const on = (s as { eraSpanOn?: boolean }).eraSpanOn ?? false
+    buildDensity(on)
+  })
 
   // 键盘 ←/→ 微调一年，Shift 加速十年（输入框内除外）
   window.addEventListener('keydown', (e) => {
