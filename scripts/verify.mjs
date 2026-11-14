@@ -337,6 +337,16 @@ const civView = await page.evaluate(() => ({
 }))
 console.log('   文明视图:', JSON.stringify(civView), civView.sections >= 5 ? '✓' : '✗')
 await shot('19d-civ-view')
+// 时代分布条（V3.10）：每文明块 6 格 + 双语 title，点击格跳时代起点
+const eraBars = await page.evaluate(() => ({
+  bars: document.querySelectorAll('#slice-list .civ-era-bar').length,
+  cells: [...document.querySelectorAll('#slice-list .civ-era-bar')].map((bar) => bar.querySelectorAll('.civ-era-cell').length),
+  bilingual: [...document.querySelectorAll('#slice-list .civ-era-cell')].every((cell) => /个事件 · \d+ events/.test(cell.getAttribute('title') ?? '')),
+}))
+await page.evaluate(() => document.querySelector('#slice-list .civ-era-cell[data-era-jump="1849"]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const eraBarJump = await page.evaluate(() => window.__chrono.store.getState().year)
+console.log('   时代分布条:', JSON.stringify({ bars: eraBars.bars, cells: [...new Set(eraBars.cells)], bilingual: eraBars.bilingual, jump: eraBarJump }), eraBars.bars === civView.sections && eraBars.cells.every((n) => n === 6) && eraBars.bilingual && eraBarJump === 1849 ? '✓' : '✗')
 // 文明筛选行：点击"中华" chip → 列表过滤
 await page.evaluate(() => document.querySelector('#snapshot-civs [data-civ="chinese"]')?.click())
 await new Promise((r) => setTimeout(r, 400))

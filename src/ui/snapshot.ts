@@ -234,6 +234,17 @@ export function initSnapshot(
         const civMap = byCiv.get(c)!
         const label = CIV_LABEL[c] ?? { zh: c, en: c }
         const total = [...civMap.values()].reduce((s, arr) => s + arr.length, 0)
+        // 时代分布条（V3.10）：六时代格 + 计数透明度，一眼看清文明兴衰节奏；格点击跳时代
+        const maxN = Math.max(...ERA_BANDS.map((b) => civMap.get(b.name.zh)?.length ?? 0), 1)
+        const eraBar = `<div class="civ-era-bar" aria-label="时代分布 · Era distribution">${ERA_BANDS.map(
+          (band) => {
+            const n = civMap.get(band.name.zh)?.length ?? 0
+            const spanTxt = `${band.from < 0 ? `${-band.from} BCE` : band.from}–${band.to < 0 ? `${-band.to} BCE` : band.to}`
+            return `<button class="civ-era-cell" type="button" data-era-jump="${band.from}"
+                     title="${band.name.zh} ${band.name.en}（${spanTxt}）· ${n} 个事件 · ${n} events"
+                     style="--fill:${(n / maxN).toFixed(2)}" aria-label="${band.name.zh} ${n} 个事件"></button>`
+          },
+        ).join('')}</div>`
         const bandBlocks = [...civMap.entries()]
           .sort((a, b) => eraOf(byCiv.get(c)!.get(a[0])![0].start).from - eraOf(byCiv.get(c)!.get(b[0])![0].start).from)
           .map(([bandZh, arr]) => {
@@ -243,7 +254,7 @@ export function initSnapshot(
             return `
               <div class="civ-era-group">
                 <button class="civ-era-label" type="button" data-era-jump="${bandFrom}"
-                        title="跳到 ${bandZh} 起点（${bandFrom < 0 ? `${-bandFrom} BCE` : bandFrom}）">${bandZh}<span class="civ-era-en">${bandEn}</span></div>
+                        title="跳到 ${bandZh} 起点（${bandFrom < 0 ? `${-bandFrom} BCE` : bandFrom}）">${bandZh}<span class="civ-era-en">${bandEn}</span></button>
                 ${top
                   .map((ev) => {
                     const t = EVENT_TYPES[ev.type]
@@ -268,6 +279,7 @@ export function initSnapshot(
             <div class="sync-head">
               <span class="sync-cont">${label.zh}<span class="sync-cont-en">${label.en}</span><span class="sync-cont-count">${total} 条</span></span>
             </div>
+            ${eraBar}
             ${bandBlocks}
           </div>`
       })

@@ -2657,4 +2657,31 @@ input:focus-visible {
   letter-spacing: 0.06em;
   color: var(--text-muted);
   padding: 2px 8px 4px;
+  background: transparent; /* button UA 白底重置（深色面板上否则发白发亮） */
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* 时代分布条（V3.10）：六时代格，透明度按该时代事件数归一；格点击跳时代 */
+.civ-era-bar {
+  display: flex;
+  gap: 3px;
+  margin: 4px 10px 8px;
+}
+
+.civ-era-cell {
+  flex: 1;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  background: rgba(34, 211, 238, calc(0.12 + 0.88 * var(--fill, 0)));
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.civ-era-cell:hover {
+  transform: scaleY(1.6);
+  box-shadow: 0 0 0 1px var(--accent-border);
 }
