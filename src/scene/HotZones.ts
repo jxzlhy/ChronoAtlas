@@ -9,6 +9,8 @@ interface Cluster {
   count: number
   /** 簇内重要度最高的事件（点击下钻目标） */
   topId: string
+  /** 簇内事件平均年份（播放头联动增亮用） */
+  avgYear: number
 }
 
 interface Zone {
@@ -86,7 +88,7 @@ export class HotZones {
   /** 网格聚类当前活跃事件，返回密度达标（≥MIN_COUNT）的簇，按密度降序 */
   private computeClusters(): Cluster[] {
     const s = appStore.getState()
-    const cells = new Map<string, { latSum: number; lonSum: number; count: number; topId: string; topImp: number; weight: number }>()
+    const cells = new Map<string, { latSum: number; lonSum: number; count: number; yearSum: number; topId: string; topImp: number; weight: number }>()
     // 时代视角下：时代核心段事件权重 ×1.5（密度波集中于"段落"）
     const eraBoost = (ev: (typeof EVENTS)[number]): number => {
       if (!s.hotspotsEraBoost) return 1
@@ -97,11 +99,12 @@ export class HotZones {
       const boost = eraBoost(ev)
       if (boost === 0) continue
       const key = `${Math.floor((ev.lat + 90) / CELL)}:${Math.floor((ev.lon + 180) / CELL)}`
-      const cell = cells.get(key) ?? { latSum: 0, lonSum: 0, count: 0, topId: ev.id, topImp: 0, weight: 0 }
+      const cell = cells.get(key) ?? { latSum: 0, lonSum: 0, count: 0, yearSum: 0, topId: ev.id, topImp: 0, weight: 0 }
       cell.latSum += ev.lat * boost
       cell.lonSum += ev.lon * boost
       cell.weight += boost
       cell.count++
+      cell.yearSum += ev.start
       // topId 按 importance×boost 加权选择（时代视角下核心事件优先成为下钻目标）
       const score = ev.importance * boost
       if (score > cell.topImp || (score === cell.topImp && boost > 1 && !cells.get(key))) {
@@ -114,7 +117,13 @@ export class HotZones {
       .filter((c) => c.weight >= MIN_COUNT)
       .sort((a, b) => b.weight - a.weight)
       .slice(0, MAX_ZONES)
-      .map((c) => ({ lat: c.latSum / c.weight, lon: c.lonSum / c.weight, count: Math.round(c.weight), topId: c.topId }))
+      .map((c) => ({
+        lat: c.latSum / c.weight,
+        lon: c.lonSum / c.weight,
+        count: Math.round(c.weight),
+        avgYear: Math.round(c.yearSum / c.count),
+        topId: c.topId,
+      }))
   }
 
   private recalc(): void {
@@ -170,18 +179,28 @@ export class HotZones {
     const k = 1 - Math.exp(-_dt * 5)
     const s = appStore.getState()
     const playing = s.playing || this.narrativePlaying || narrativeOverride === true
-    for (const zone of this.zones) {
+    // 播放头联动：簇平均年份接近当前年份时增亮（时间重心跟随）
+    const yearProximity = (avgYear: number, year: number): number =>
+      Math.max(0, 1 - Math.abs(avgYear - year) / 30)
+    for (let zi = 0; zi < this.zones.length; zi++) {
+      const zone = this.zones[zi]
       if (zone.target === 0 && zone.opacity < 0.01) {
         zone.mesh.visible = false
         continue
       }
       zone.mesh.visible = true
       zone.opacity += (zone.target - zone.opacity) * k
-      // 播放联动：按簇在 zones 数组中的序号产生相位差（密度波流动感）
-      const zonePhase = (this.zones.findIndex((z) => z === zone) * 0.9) % (Math.PI * 2)
+      // 播放联动：按簇序号产生相位差（密度波流动感）
+      const zonePhase = (zi * 0.9) % (Math.PI * 2)
       const wave = playing && !this.reducedMotion ? 0.82 + Math.sin(t * 2.6 + zonePhase) * 0.18 : 1
       const pulse = this.reducedMotion ? 1 : 0.9 + Math.sin(t * 1.8) * 0.1
-      zone.material.opacity = zone.opacity * pulse * wave
+      // 播放头年份接近的簇额外增亮（最多 ×1.35）
+      const cluster = this.clusters[zi]
+      const proximity =
+        cluster && playing && !this.reducedMotion
+          ? 1 + yearProximity(cluster.avgYear, s.year) * 0.35
+          : 1
+      zone.material.opacity = Math.min(1, zone.opacity * pulse * wave * proximity)
     }
   }
 
