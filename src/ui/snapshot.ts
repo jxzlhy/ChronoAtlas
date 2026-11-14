@@ -211,9 +211,11 @@ export function initSnapshot(
           .map(([bandZh, arr]) => {
             const bandEn = eraOf(arr[0].start).name.en
             const top = arr.sort((a, b) => b.importance - a.importance || a.start - b.start).slice(0, 2)
+            const bandFrom = eraOf(arr[0].start).from
             return `
               <div class="civ-era-group">
-                <div class="civ-era-label">${bandZh}<span class="civ-era-en">${bandEn}</span></div>
+                <button class="civ-era-label" type="button" data-era-jump="${bandFrom}"
+                        title="跳到 ${bandZh} 起点（${bandFrom < 0 ? `${-bandFrom} BCE` : bandFrom}）">${bandZh}<span class="civ-era-en">${bandEn}</span></div>
                 ${top
                   .map((ev) => {
                     const t = EVENT_TYPES[ev.type]
@@ -494,8 +496,13 @@ export function initSnapshot(
     }
   })
 
+  // 列表点击：era 标签跳转 / 同时代大洲标题 / 事件行
   list.addEventListener('click', (e) => {
-    // 同时代视图：大洲标题/查看全部 → 设定该大洲筛选并回到列表视图
+    const eraBtn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-jump]')
+    if (eraBtn?.dataset.eraJump) {
+      appStore.getState().setYear(Number(eraBtn.dataset.eraJump))
+      return
+    }
     const syncBtn = (e.target as HTMLElement).closest<HTMLElement>('[data-sync-cont]')
     if (syncBtn?.dataset.syncCont) {
       const key = syncBtn.dataset.syncCont as ContinentKey
