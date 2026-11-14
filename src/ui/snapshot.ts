@@ -35,6 +35,20 @@ const PEOPLE_PER_ERA: number[] = ERA_BANDS.map((band) =>
 )
 
 /**
+ * 每个文明下的活跃人物数（V2.2 人物反向查询·文明维度，数据集静态 → 模块级预计算一次）。
+ * 判定：人物任一挂接事件带有该文明标签。
+ */
+const PEOPLE_PER_CIV: Record<string, number> = {}
+for (const p of PEOPLE) {
+  const civs = new Set<string>()
+  for (const eid of p.eventIds) {
+    const ev = EVENTS.find((x) => x.id === eid)
+    for (const c of ev?.civilizations ?? []) civs.add(c)
+  }
+  for (const c of civs) PEOPLE_PER_CIV[c] = (PEOPLE_PER_CIV[c] ?? 0) + 1
+}
+
+/**
  * 世界快照面板（V1.0-M2）：年份驱动的时代切片。
  * - 头部：公元年份 + 时代名 + 一句话时代背景
  * - 年份概览：类型统计 chips（可筛选）
@@ -297,7 +311,8 @@ export function initSnapshot(
           const label = CIV_LABEL[c] ?? { zh: c, en: c }
           const span = spans.get(c)
           const spanTxt = span ? `${span[0] < 0 ? `${-span[0]} BCE` : span[0]}–${span[1] < 0 ? `${-span[1]} BCE` : span[1]}` : ''
-          return `<button class="snap-sort-btn${civFilter === c ? ' is-active' : ''}" type="button" data-civ="${c}" title="${label.en} · 事件跨度 ${spanTxt}">${label.zh} <span class="snap-chip-count">${counts.get(c)}</span></button>`
+          const figures = PEOPLE_PER_CIV[c] ?? 0
+          return `<button class="snap-sort-btn${civFilter === c ? ' is-active' : ''}" type="button" data-civ="${c}" title="${label.en} · 事件跨度 ${spanTxt} · 活跃人物 ${figures} 位 · ${figures} figures">${label.zh} <span class="snap-chip-count">${counts.get(c)}</span></button>`
         })
         .join('')
   }

@@ -15,12 +15,12 @@ function buildDensity(eraSpanOn = false): void {
   if (!svg) return
   const years = YEAR_MAX - YEAR_MIN + 1
   const counts = new Array<number>(years).fill(0)
-  const byYear: string[][] = Array.from({ length: years }, () => [])
+  const byYear: { zh: string; en: string }[][] = Array.from({ length: years }, () => [])
   let max = 0
   for (const ev of EVENTS) {
     for (let y = Math.max(ev.start, YEAR_MIN); y <= Math.min(ev.end, YEAR_MAX); y++) {
       counts[y - YEAR_MIN]++
-      byYear[y - YEAR_MIN].push(ev.title.zh)
+      byYear[y - YEAR_MIN].push({ zh: ev.title.zh, en: ev.title.en })
       max = Math.max(max, counts[y - YEAR_MIN])
     }
   }
@@ -51,49 +51,34 @@ function buildDensity(eraSpanOn = false): void {
     appStore.getState().setYear(year)
   })
 
-  // 悬停 tooltip：显示当年活跃事件名（PHASE 交互深化）
+  // 悬停 tooltip：显示当年活跃事件名（双语，PHASE 交互深化 + 多语言审计补齐）
   const tooltip = document.createElement('div')
   tooltip.className = 'density-tooltip'
   tooltip.hidden = true
   svg.parentElement?.appendChild(tooltip)
-  svg.addEventListener('pointerdown', (e) => {
+  const showYearTooltip = (clientX: number, clientY: number): void => {
     const rect = svg.getBoundingClientRect()
     if (rect.width === 0) return
-    const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
     const year = Math.round(YEAR_MIN + frac * (years - 1))
     const titles = byYear[year - YEAR_MIN]
     if (titles.length === 0) {
       tooltip.hidden = true
       return
     }
-    const show = titles.slice(0, 4).join(' · ')
-    const more = titles.length > 4 ? `\n…等 ${titles.length} 个` : ''
-    tooltip.textContent = `${year} 年（${titles.length}）：${show}${more}`
+    const showZh = titles.slice(0, 3).map((t) => t.zh).join(' · ')
+    const showEn = titles.slice(0, 3).map((t) => t.en).join(' · ')
+    const moreZh = titles.length > 3 ? ` …等 ${titles.length} 个` : ''
+    const moreEn = titles.length > 3 ? ` …+${titles.length - 3} more` : ''
+    tooltip.textContent = `${year} 年（${titles.length}）：${showZh}${moreZh}\nYear ${year} (${titles.length}): ${showEn}${moreEn}`
     tooltip.hidden = false
     const wrap = svg.parentElement!.getBoundingClientRect()
-    const x = Math.min(Math.max(e.clientX - wrap.left, 60), wrap.width - 60)
+    const x = Math.min(Math.max(clientX - wrap.left, 60), wrap.width - 60)
     tooltip.style.left = `${x}px`
     tooltip.style.top = `${rect.bottom - wrap.top + 4}px`
-  })
-  svg.addEventListener('pointermove', (e) => {
-    const rect = svg.getBoundingClientRect()
-    if (rect.width === 0) return
-    const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-    const year = Math.round(YEAR_MIN + frac * (years - 1))
-    const titles = byYear[year - YEAR_MIN]
-    if (titles.length === 0) {
-      tooltip.hidden = true
-      return
-    }
-    const show = titles.slice(0, 4).join(' · ')
-    const more = titles.length > 4 ? `\n…等 ${titles.length} 个` : ''
-    tooltip.textContent = `${year} 年（${titles.length}）：${show}${more}`
-    tooltip.hidden = false
-    const wrap = svg.parentElement!.getBoundingClientRect()
-    const x = Math.min(Math.max(e.clientX - wrap.left, 60), wrap.width - 60)
-    tooltip.style.left = `${x}px`
-    tooltip.style.top = `${rect.bottom - wrap.top + 4}px`
-  })
+  }
+  svg.addEventListener('pointerdown', (e) => showYearTooltip(e.clientX, e.clientY))
+  svg.addEventListener('pointermove', (e) => showYearTooltip(e.clientX, e.clientY))
   svg.addEventListener('pointerleave', () => {
     tooltip.hidden = true
   })

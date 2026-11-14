@@ -192,9 +192,9 @@ await page.evaluate(() => {
 await new Promise((r) => setTimeout(r, 300))
 const densityTip = await page.evaluate(() => {
   const el = document.querySelector('.density-tooltip')
-  return { hidden: el?.hidden, text: el?.textContent?.slice(0, 40) }
+  return { hidden: el?.hidden, text: el?.textContent?.slice(0, 80) }
 })
-console.log('   密度tooltip:', JSON.stringify(densityTip), !densityTip.hidden && densityTip.text?.includes('1866') ? '✓' : '✗')
+console.log('   密度tooltip:', JSON.stringify(densityTip), !densityTip.hidden && /\b1866 年（\d+）/.test(densityTip.text ?? '') && /Year 1866 \(\d+\)/.test(densityTip.text ?? '') ? '✓ 双语' : '✗')
 // 时代波段 chips：六时代渲染 + 点击跳转
 const eraChips = await page.evaluate(() => ({
   chips: document.querySelectorAll('#era-chips .snap-sort-btn').length,
@@ -345,6 +345,17 @@ const civFilter = await page.evaluate(() => {
   return { rows: rows.length, allChinese: rows.length > 0 && rows.every((r) => { const e = window.__chrono.events.find((x) => x.id === r.getAttribute('data-id')); return e && (e.civilizations ?? []).includes('chinese') }) }
 })
 console.log('   文明筛选(中华):', JSON.stringify(civFilter), civFilter.allChinese ? '✓' : '✗')
+// 文明 chips 人物反向查询（V3.8.0）：title 含活跃人物数（双语）
+const civFigures = await page.evaluate(() =>
+  [...document.querySelectorAll('#snapshot-civs [data-civ]')].map((b) => ({
+    civ: b.getAttribute('data-civ'),
+    title: b.getAttribute('title') ?? '',
+  })),
+)
+const civFigOk =
+  civFigures.length > 0 &&
+  civFigures.every((f) => /活跃人物 \d+ 位 · \d+ figures/.test(f.title))
+console.log('   文明chips人物计数:', JSON.stringify(civFigures.map((f) => `${f.civ}:${(f.title.match(/活跃人物 (\d+)/) ?? [])[1] ?? '?'}位`)), civFigOk ? '✓' : '✗')
 await page.evaluate(() => document.querySelector('#snapshot-civs [data-civ="chinese"]')?.click())
 await page.evaluate(() => document.querySelector('#snapshot-view [data-view="list"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
 await new Promise((r) => setTimeout(r, 300))
