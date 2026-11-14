@@ -102,8 +102,10 @@ export class HotZones {
       cell.lonSum += ev.lon * boost
       cell.weight += boost
       cell.count++
-      if (ev.importance > cell.topImp) {
-        cell.topImp = ev.importance
+      // topId 按 importance×boost 加权选择（时代视角下核心事件优先成为下钻目标）
+      const score = ev.importance * boost
+      if (score > cell.topImp || (score === cell.topImp && boost > 1 && !cells.get(key))) {
+        cell.topImp = score
         cell.topId = ev.id
       }
       cells.set(key, cell)
