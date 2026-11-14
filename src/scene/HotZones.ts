@@ -38,6 +38,8 @@ export class HotZones {
   private texture: THREE.Texture
   private reducedMotion: boolean
   private clusters: Cluster[] = []
+  /** 悬停簇索引（main 经 pick 结果注入，update 时增亮） */
+  private hoveredIndex: number | null = null
   /** 航线叙事播放中标志（routesPanel 经 main 注入） */
   narrativePlaying = false
 
@@ -173,6 +175,7 @@ export class HotZones {
    * 每帧更新：透明度逼近目标 + 呼吸脉动。
    * 播放联动（PHASE）：自动播放或航线叙事播放中，各簇随"本簇事件距当前
    * 年份的偏移"产生相位差呼吸——密度波随时间推移在地球上流动。
+   * 悬停联动（V3.9）：悬停簇额外增亮（×1.25）并微放大（×1.06，lerp 平滑）。
    */
   update(_dt: number, t: number, narrativeOverride?: boolean): void {
     if (!this.root.visible) return
@@ -200,8 +203,27 @@ export class HotZones {
         cluster && playing && !this.reducedMotion
           ? 1 + yearProximity(cluster.avgYear, s.year) * 0.35
           : 1
-      zone.material.opacity = Math.min(1, zone.opacity * pulse * wave * proximity)
+      // 悬停增亮（V3.9）：×1.25
+      const hoverBoost = zi === this.hoveredIndex ? 1.25 : 1
+      zone.material.opacity = Math.min(1, zone.opacity * pulse * wave * proximity * hoverBoost)
+      // 悬停微放大（lerp 平滑，不与 recalc 的基准 scale 冲突：乘在当前 scale 上）
+      const baseScale = cluster ? 0.16 + 0.045 * Math.min(cluster.count, 8) : 1
+      const targetScale = baseScale * (zi === this.hoveredIndex ? 1.06 : 1)
+      const cur = zone.mesh.scale.x
+      zone.mesh.scale.setScalar(cur + (targetScale - cur) * Math.min(1, _dt * 12))
     }
+  }
+
+  /** 悬停注入：代表事件 id 对应的簇增亮；null 清除 */
+  setHovered(topId: string | null): void {
+    this.hoveredIndex = topId ? this.clusters.findIndex((c) => c.topId === topId) : null
+    if (topId && this.hoveredIndex === -1) this.hoveredIndex = null
+  }
+
+  /** 簇信息（tooltip 用）：事件数 + 代表事件 id */
+  getClusterInfo(topId: string): { count: number; topId: string } | null {
+    const cluster = this.clusters.find((c) => c.topId === topId)
+    return cluster ? { count: cluster.count, topId: cluster.topId } : null
   }
 
   /** 释放共享资源（显式释放以备场景重建） */

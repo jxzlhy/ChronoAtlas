@@ -22,6 +22,7 @@ import { initLegend } from './ui/legend'
 import { initSnapshot } from './ui/snapshot'
 import { initNetwork } from './ui/network'
 import { initRoutesPanel } from './ui/routesPanel'
+import { initHotzoneTip } from './ui/hotzoneTip'
 import { playSelect, playFly } from './ui/sound'
 
 function boot(): void {
@@ -43,6 +44,7 @@ function boot(): void {
   const rig = new CameraRig(globe.camera, globe.controls)
   const arcs = new LinkArcs(globe.scene)
   const hotspots = new HotZones(globe.scene)
+  const hotzoneTip = initHotzoneTip(hotspots)
   const routeArcs = new RouteArcs(globe.scene)
   const personMarkers = new PersonMarkers(globe.scene)
 
@@ -125,11 +127,26 @@ function boot(): void {
     const now = performance.now()
     if (now - lastHover < 70) return
     lastHover = now
-    const id = pillars.pick(e.clientX, e.clientY, globe.camera, canvas) ?? hotspots.pick(e.clientX, e.clientY, globe.camera, canvas)
+    // 棱柱优先，未命中再查热区（V3.9 起区分二者：热区命中时悬停预览）
+    const pid = pillars.pick(e.clientX, e.clientY, globe.camera, canvas)
+    const hid = pid ? null : hotspots.pick(e.clientX, e.clientY, globe.camera, canvas)
+    const id = pid ?? hid
     if (id !== appStore.getState().hoverId) {
       appStore.getState().setHover(id)
     }
+    // 热区悬停预览（V3.9）：光晕增亮 + 双语 tooltip；棱柱命中或拖拽中隐藏
+    if (hid && !downPoint) {
+      hotspots.setHovered(hid)
+      hotzoneTip.show(hid, e.clientX, e.clientY)
+    } else {
+      hotspots.setHovered(null)
+      hotzoneTip.hide()
+    }
     if (!downPoint) canvas.style.cursor = id ? 'pointer' : 'grab'
+  })
+  canvas.addEventListener('pointerleave', () => {
+    hotspots.setHovered(null)
+    hotzoneTip.hide()
   })
 
   // ---- 大洲定位 ----
@@ -334,6 +351,8 @@ function boot(): void {
       hotspots.root.visible
         ? hotspots.root.children.filter((c) => (c as THREE.Mesh).visible).length
         : 0,
+    /** 热区拾取探针（自动化断言用）：屏幕坐标 → 代表事件 id 或 null */
+    hotspotsProbe: (x: number, y: number) => hotspots.pick(x, y, globe.camera, canvas),
     /** 渲染性能摘要（自动化基线记录用，总任务书 §6.6 先测量再优化） */
     perf: () => {
       const info = globe.renderer.info

@@ -573,6 +573,31 @@ const on = await page.evaluate(() => ({
 await page.evaluate(() => window.__chrono.store.getState().setYear(1870))
 await new Promise((r) => setTimeout(r, 900))
 await shot('18-hotspots')
+// 热区悬停预览（V3.9）：网格采样找热区 → 真实 pointermove → tooltip 双语可见 + 光晕增亮
+const hotPt = await page.evaluate(() => {
+  const canvas = document.querySelector('#scene-container canvas')
+  const r = canvas.getBoundingClientRect()
+  for (let gy = 0.2; gy <= 0.82; gy += 0.15) {
+    for (let gx = 0.15; gx <= 0.86; gx += 0.14) {
+      const x = r.left + gx * r.width
+      const y = r.top + gy * r.height
+      if (window.__chrono.hotspotsProbe(x, y)) return { x, y }
+    }
+  }
+  return null
+})
+let hotTip = null
+if (hotPt) {
+  await page.mouse.move(hotPt.x, hotPt.y)
+  await new Promise((r) => setTimeout(r, 300))
+  hotTip = await page.evaluate(() => {
+    const el = document.getElementById('hotzone-tip')
+    return { hidden: el?.hidden ?? true, text: el?.textContent?.slice(0, 100) }
+  })
+  await page.mouse.move(10, 300) // 移出热区，还原无 tooltip 状态
+  await new Promise((r) => setTimeout(r, 200))
+}
+console.log('   热区悬停预览:', JSON.stringify(hotTip), hotTip && !hotTip.hidden && /个事件 · 代表：/.test(hotTip.text ?? '') && /events · Representative: /.test(hotTip.text ?? '') ? '✓' : '✗')
 await page.click('#hotspot-toggle')
 await new Promise((r) => setTimeout(r, 600))
 const after = await page.evaluate(() => window.__chrono.hotspotsCount())

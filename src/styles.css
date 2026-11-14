@@ -2565,6 +2565,27 @@ input:focus-visible {
   display: none;
 }
 
+/* 热区悬停信息预览（V3.9）：簇事件数 + 代表事件，双语两行，跟随鼠标 */
+.hotzone-tip {
+  position: fixed;
+  z-index: 26; /* 事件卡 25 之上、search/random/timeline 30 之下 */
+  padding: 5px 10px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+  max-width: 320px;
+  color: var(--text);
+  background: var(--panel-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+
+.hotzone-tip[hidden] {
+  display: none;
+}
+
 /* 事件卡文明标签（PHASE D：多文明事件展示） */
 .ec-civs {
   display: flex;
