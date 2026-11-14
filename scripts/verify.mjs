@@ -217,6 +217,23 @@ await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-t
 await new Promise((r) => setTimeout(r, 300))
 const spanOff = await page.evaluate(() => document.querySelector('#snapshot-era .era-span-btn')?.textContent)
 console.log('   时代视角关闭:', spanOff?.includes('时代视角') ? '✗ 仍开启' : '✓')
+// 热区时代权重（V2.4.0 回归验证）：开启 era boost 后热区簇应重新计算
+await page.evaluate(() => {
+  const s = window.__chrono.store.getState()
+  s.setHotspotsOn(true)
+  s.setHotspotsEraBoost(true)
+})
+await new Promise((r) => setTimeout(r, 900))
+const boostOn = await page.evaluate(() => window.__chrono.hotspotsCount())
+await page.evaluate(() => window.__chrono.store.getState().setHotspotsEraBoost(false))
+await new Promise((r) => setTimeout(r, 900))
+const boostOff = await page.evaluate(() => window.__chrono.hotspotsCount())
+console.log('   热区时代权重:', JSON.stringify({ boostOn, boostOff }), boostOn > 0 && boostOff > 0 ? '✓' : '✗')
+await page.evaluate(() => {
+  const s = window.__chrono.store.getState()
+  s.setHotspotsOn(false)
+  s.setHotspotsEraBoost(false)
+})
 // 时代背景点击跳转（blurb → 时代起点）
 await page.evaluate(() => document.getElementById('snapshot-blurb')?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
 await new Promise((r) => setTimeout(r, 400))
