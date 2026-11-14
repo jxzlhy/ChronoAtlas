@@ -2535,9 +2535,12 @@ input:focus-visible {
   border-color: var(--accent-border);
 }
 
-/* 密度条 hover tooltip（PHASE 交互深化） */
+/* 密度条 hover tooltip（PHASE 交互深化）。
+   ⚠️ 不能给 .timeline-wrap 加 position: relative——会覆盖上方 V0.x 的
+   absolute; bottom:14px（时间轴从底部掉回文档流顶部并探出视口，
+   且快照面板 bottom:calc(100%+12px) 随之整体飞出屏幕，V2.1.0 回归踩坑）。
+   absolute 定位本身就是有效的 containing block，tooltip 锚定不受影响。 */
 .timeline-wrap {
-  position: relative; /* tooltip 定位锚 */
   overflow: visible;
 }
 

@@ -4,6 +4,7 @@ import { ERA_BANDS, eraOf } from '../data/eras'
 import { panelIn } from './motion'
 import { setEraSpanYear } from './timeline'
 import { CIVILIZATIONS } from '../data/model'
+import { PEOPLE } from '../data/people'
 import type { ContinentKey, EventType } from '../data/model'
 
 /** 文明标签展示名（PHASE D） */
@@ -19,6 +20,19 @@ const CIV_LABEL: Record<string, { zh: string; en: string }> = {
   'north-american': { zh: '北美', en: 'North America' },
   'islamic-world': { zh: '伊斯兰', en: 'Islamic World' },
 }
+
+/**
+ * 每个时代波段下的活跃人物数（V2.2 人物反向查询，数据集静态 → 模块级预计算一次）。
+ * 判定：人物任一挂接事件与波段年代重叠（与事件 chips 的跨段判定一致）。
+ */
+const PEOPLE_PER_ERA: number[] = ERA_BANDS.map((band) =>
+  PEOPLE.filter((p) =>
+    p.eventIds.some((eid) => {
+      const ev = EVENTS.find((x) => x.id === eid)
+      return ev !== undefined && ev.start <= band.to && ev.end >= band.from
+    }),
+  ).length,
+)
 
 /**
  * 世界快照面板（V1.0-M2）：年份驱动的时代切片。
@@ -247,12 +261,14 @@ export function initSnapshot(
   }
 
   /** 文明筛选 chips（PHASE D 深化）：显示活跃计数 + 该文明的时代跨度（title） */
-  /** 时代波段 chips：点击跳到时代起点（时间旅行） */
+  /** 时代波段 chips：点击跳到时代起点（时间旅行）；hover 显示时代起止 + 活跃人物数（V2.2 人物反向查询） */
   const renderEraChips = (year: number): void => {
-    eraChipsEl.innerHTML = ERA_BANDS.map((band) => {
+    eraChipsEl.innerHTML = ERA_BANDS.map((band, bi) => {
       const count = EVENTS.filter((ev) => isActive(ev, year, 9999) && ev.start <= band.to && ev.end >= band.from).length
       const active = year >= band.from && year <= band.to
-      return `<button class="snap-sort-btn${active ? ' is-active' : ''}" type="button" data-era-from="${band.from}" title="${band.name.en}">${band.name.zh} <span class="snap-chip-count">${count}</span></button>`
+      const spanTxt = `${band.from < 0 ? `${-band.from} BCE` : band.from}–${band.to < 0 ? `${-band.to} BCE` : band.to}`
+      const figures = PEOPLE_PER_ERA[bi] ?? 0
+      return `<button class="snap-sort-btn${active ? ' is-active' : ''}" type="button" data-era-from="${band.from}" title="${band.name.en}（${spanTxt}）· 活跃人物 ${figures} 位 · ${figures} figures active">${band.name.zh} <span class="snap-chip-count">${count}</span></button>`
     }).join('')
   }
 

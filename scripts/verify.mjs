@@ -201,6 +201,17 @@ const eraChips = await page.evaluate(() => ({
   active: document.querySelector('#era-chips .snap-sort-btn.is-active')?.textContent?.trim().split(/\s/)[0],
 }))
 console.log('   时代chips:', JSON.stringify(eraChips), eraChips.chips === 6 && eraChips.active ? '✓' : '✗')
+// 时代 chips 人物反向查询（V2.2 遗留补齐）：title 含活跃人物数（双语）
+const eraFigures = await page.evaluate(() =>
+  [...document.querySelectorAll('#era-chips .snap-sort-btn')].map((b) => ({
+    era: b.textContent?.trim().split(/\s/)[0],
+    title: b.getAttribute('title') ?? '',
+  })),
+)
+const figOk =
+  eraFigures.length === 6 &&
+  eraFigures.every((f) => /活跃人物 \d+ 位 · \d+ figures active/.test(f.title))
+console.log('   时代chips人物计数:', JSON.stringify(eraFigures.map((f) => `${f.era}:${(f.title.match(/活跃人物 (\d+)/) ?? [])[1] ?? '?'}位`)), figOk ? '✓' : '✗')
 await page.evaluate(() => document.querySelector('#era-chips [data-era-from="1849"]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 const eraChipJump = await page.evaluate(() => window.__chrono.store.getState().year)
