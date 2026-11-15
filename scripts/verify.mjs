@@ -152,6 +152,12 @@ await new Promise((r) => setTimeout(r, 3000))
 await page.click('#play-btn')
 const playYear = await page.evaluate(() => window.__chrono.store.getState().year)
 console.log('   播放后年份:', playYear)
+// V3.12 回归：播放期间密度条不重建——tooltip DOM 恒为 1、rect 数恒定（旧实现每帧叠加 listener/tooltip）
+const densityLeak = await page.evaluate(() => ({
+  tips: document.querySelectorAll('.density-tooltip').length,
+  rects: document.querySelectorAll('#timeline-density rect').length,
+}))
+console.log('   密度条无泄漏:', JSON.stringify(densityLeak), densityLeak.tips === 1 && densityLeak.rects === 162 ? '✓' : '✗')
 await shot('07-after-play')
 
 // 8. 随机发现
@@ -224,6 +230,17 @@ const spanOn = await page.evaluate(() => ({
   year: window.__chrono.store.getState().year,
 }))
 console.log('   时代视角开启:', JSON.stringify(spanOn), spanOn.btn ? '✓' : '✗')
+// 时代高亮跳时代跟随（V3.12）：开启视角后按 3 跳 1816（维也纳体系），高亮应从民族之春迁到维也纳段
+await page.keyboard.press('3')
+await new Promise((r) => setTimeout(r, 400))
+const hlFollow = await page.evaluate(() => {
+  const rects = [...document.querySelectorAll('#timeline-density rect')]
+  const op = (y) => Number(rects[y - 1750]?.getAttribute('opacity') ?? 0)
+  return { year: window.__chrono.store.getState().year, vienna: op(1816), spring: op(1855) } // 新时代 1816 应亮于旧时代 1855
+})
+console.log('   时代高亮跟随:', JSON.stringify(hlFollow), hlFollow.year === 1816 && hlFollow.vienna > hlFollow.spring ? '✓' : '✗')
+await page.evaluate(() => window.__chrono.store.getState().setYear(1850)) // 恢复年份（后续 blurb 断言前提）
+await new Promise((r) => setTimeout(r, 300))
 await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click())
 await new Promise((r) => setTimeout(r, 300))
 const spanOff = await page.evaluate(() => document.querySelector('#snapshot-era .era-span-btn')?.textContent)

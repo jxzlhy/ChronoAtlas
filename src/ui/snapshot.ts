@@ -2,7 +2,6 @@ import { appStore, isActive, matchesFilters, type HistoryEvent } from '../store'
 import { EVENTS, EVENT_TYPES } from '../data/events'
 import { ERA_BANDS, eraOf } from '../data/eras'
 import { panelIn } from './motion'
-import { setEraSpanYear } from './timeline'
 import { CIVILIZATIONS } from '../data/model'
 import { PEOPLE } from '../data/people'
 import type { ContinentKey, EventType } from '../data/model'
@@ -506,8 +505,7 @@ export function initSnapshot(
     if (!btn) return
     eraSpanMode = !eraSpanMode
     appStore.getState().setHotspotsEraBoost(eraSpanMode) // 热区权重随时代视角联动
-    appStore.getState().setEraSpanOn(eraSpanMode) // 密度条时代高亮联动
-    setEraSpanYear(appStore.getState().year) // 密度条高亮当前时代
+    appStore.getState().setEraSpanOn(eraSpanMode) // 密度条时代高亮联动（V3.12 起高亮由实时年份驱动，无需快照年份）
     render(true)
   })
 
@@ -516,6 +514,12 @@ export function initSnapshot(
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-from]')
     if (!btn?.dataset.eraFrom) return
     appStore.getState().setYear(Number(btn.dataset.eraFrom))
+  })
+
+  // 时代背景行点击 → 跳到当前时代起点（V3.3 断言对应功能，V3.5 重构中误删，V3.12 补回）
+  blurbEl.addEventListener('click', () => {
+    const from = blurbEl.dataset.eraFrom
+    if (from) appStore.getState().setYear(Number(from))
   })
 
   // 文明筛选（PHASE D 深化）：写入 store（URL civ= 联动）

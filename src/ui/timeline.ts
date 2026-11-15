@@ -3,44 +3,66 @@ import { EVENTS } from '../data/events'
 import { ERA_BANDS, eraOf } from '../data/eras'
 import { playTick } from './sound'
 
-/** 时代视角年份（snapshot toggle 时更新，密度条时代高亮用） */
-export function setEraSpanYear(y: number): void {
-  eraSpanYear = y
-}
-let eraSpanYear = 1850
+/**
+ * 事件密度条：每年 1 柱（全数据集重叠计数）。
+ * V3.12 修复（V2.1 遗留）：此前 buildDensity 在 store 订阅内整函数重跑——
+ * 播放时每帧重建 SVG 并叠加 4 个匿名 listener + 1 个 tooltip DOM（泄漏）。
+ * 现拆为「构建一次（buildDensity，仅时代视角开关变化时重建）」+
+ * 「时代高亮 repaint（repaintDensity，按 store 实时年份计算 activeBand，
+ *  band 不变零开销）」——同时修复时代视角下跳时代后高亮错位（旧 eraSpanYear 快照）。
+ */
+const H = 20
+let densityBuilt = false
+let lastEraSpan = false
+let lastActiveBand = -999 // 哨兵：与"非时代视角 activeBand=-1"区分，保证构建后 repaint 必跑一次
+let countsArr: number[] = []
+let byYear: { zh: string; en: string }[][] = []
+let bandOf: number[] = []
+let maxCount = 1
 
-/** 事件密度条：每年 1 柱（全数据集重叠计数），点击跳年 + 悬停显示当年事件 + 时代视角高亮 */
-function buildDensity(eraSpanOn = false): void {
+/** 当前应高亮的 band（时代视角下由实时年份决定；关闭视角恒 -1） */
+function computeActiveBand(): number {
+  if (!lastEraSpan) return -1
+  const year = appStore.getState().year
+  return ERA_BANDS.findIndex((b) => year >= b.from && year <= b.to)
+}
+
+/** 柱透明度（构建与 repaint 共用一份公式）：时代视角下非核心段压暗、核心段提亮 */
+function densityOpacity(c: number, i: number): string {
+  const inCore = lastEraSpan && bandOf[i] === lastActiveBand
+  const dimmed = lastEraSpan && !inCore
+  if (c === 0) return dimmed ? '0.04' : '0.1'
+  const base = dimmed ? 0.08 : 0.2
+  return Math.min(1, (base + 0.45 * (c / maxCount)) * (inCore ? 1.25 : 1)).toFixed(2)
+}
+
+function buildDensity(eraSpanOn: boolean): void {
   const svg = document.getElementById('timeline-density') as SVGSVGElement | null
   if (!svg) return
+  if (densityBuilt && eraSpanOn === lastEraSpan) return // 已构建：listener/tooltip 只绑一次
   const years = YEAR_MAX - YEAR_MIN + 1
-  const counts = new Array<number>(years).fill(0)
-  const byYear: { zh: string; en: string }[][] = Array.from({ length: years }, () => [])
-  let max = 0
+  countsArr = new Array<number>(years).fill(0)
+  byYear = Array.from({ length: years }, () => [])
+  maxCount = 1
   for (const ev of EVENTS) {
     for (let y = Math.max(ev.start, YEAR_MIN); y <= Math.min(ev.end, YEAR_MAX); y++) {
-      counts[y - YEAR_MIN]++
+      countsArr[y - YEAR_MIN]++
       byYear[y - YEAR_MIN].push({ zh: ev.title.zh, en: ev.title.en })
-      max = Math.max(max, counts[y - YEAR_MIN])
+      maxCount = Math.max(maxCount, countsArr[y - YEAR_MIN])
     }
   }
-  // 时代波段（eraSpanOn 时非核心段柱子降透明度，核心段提亮）
-  const bandOf = new Array<number>(years).fill(-1)
+  // 时代波段：每年所属 band 索引
+  bandOf = new Array<number>(years).fill(-1)
   ERA_BANDS.forEach((band, bi) => {
     for (let y = Math.max(band.from, YEAR_MIN); y <= Math.min(band.to, YEAR_MAX); y++) bandOf[y - YEAR_MIN] = bi
   })
-  const activeBand = eraSpanOn ? ERA_BANDS.findIndex((b) => eraSpanYear >= b.from && eraSpanYear <= b.to) : -1
-  const H = 20
+  lastEraSpan = eraSpanOn
+  lastActiveBand = computeActiveBand() // 构建即用真实 band（repaint 逻辑与构建共用 densityOpacity）
   svg.setAttribute('viewBox', `0 0 ${years} ${H}`)
-  svg.innerHTML = counts
+  svg.innerHTML = countsArr
     .map((c, i) => {
-      const inCore = eraSpanOn && bandOf[i] === activeBand
-      const dimmed = eraSpanOn && !inCore
-      const base = dimmed ? 0.08 : 0.2
-      if (c === 0) return `<rect x="${i + 0.1}" y="${H - 1}" width="0.8" height="1" fill="#22d3ee" opacity="${dimmed ? 0.04 : 0.1}" />`
-      const h = 1 + (c / max) * (H - 3)
-      const op = Math.min(1, (base + 0.45 * (c / max)) * (inCore ? 1.25 : 1))
-      return `<rect x="${i + 0.1}" y="${(H - h).toFixed(2)}" width="0.8" height="${h.toFixed(2)}" fill="#22d3ee" opacity="${op.toFixed(2)}" />`
+      const h = c === 0 ? 1 : 1 + (c / maxCount) * (H - 3)
+      return `<rect x="${i + 0.1}" y="${(H - h).toFixed(2)}" width="0.8" height="${h.toFixed(2)}" fill="#22d3ee" opacity="${densityOpacity(c, i)}" />`
     })
     .join('')
   svg.addEventListener('click', (e) => {
@@ -50,6 +72,7 @@ function buildDensity(eraSpanOn = false): void {
     const year = Math.round(YEAR_MIN + frac * (years - 1))
     appStore.getState().setYear(year)
   })
+  densityBuilt = true // 守卫标记（漏写则每次 store 更新全量重建 → listener/tooltip 泄漏）
 
   // 悬停 tooltip：显示当年活跃事件名（双语，PHASE 交互深化 + 多语言审计补齐）
   const tooltip = document.createElement('div')
@@ -84,6 +107,19 @@ function buildDensity(eraSpanOn = false): void {
   })
 }
 
+/** 时代高亮 repaint：activeBand 由 store 实时年份决定（跳时代自动跟随）；band 未变零开销 */
+function repaintDensity(): void {
+  const svg = document.getElementById('timeline-density') as SVGSVGElement | null
+  if (!svg || !densityBuilt) return
+  const activeBand = computeActiveBand()
+  if (activeBand === lastActiveBand) return
+  lastActiveBand = activeBand
+  for (let i = 0; i < countsArr.length; i++) {
+    const rect = svg.children[i] as SVGRectElement | undefined
+    if (rect) rect.setAttribute('opacity', densityOpacity(countsArr[i], i))
+  }
+}
+
 /** 底部时间轴：拖动选年、自动播放、时间窗口、键盘左右微调（活跃计数由快照面板负责） */
 export function initTimeline(): void {
   const range = document.getElementById('year-range') as HTMLInputElement
@@ -95,7 +131,8 @@ export function initTimeline(): void {
 
   range.min = String(YEAR_MIN)
   range.max = String(YEAR_MAX)
-  buildDensity()
+  buildDensity(false)
+  repaintDensity()
 
   speedSelect.addEventListener('change', () => {
     appStore.getState().setPlaySpeed(Number(speedSelect.value) as 1 | 2 | 5)
@@ -132,10 +169,11 @@ export function initTimeline(): void {
   }
   requestAnimationFrame(step)
 
-  // 时代视角联动：密度条时代高亮重渲染
+  // 时代视角联动：开关变化才重建（listener 只绑一次）；年份变化走高亮 repaint（V3.12）
   appStore.subscribe((s) => {
     const on = (s as { eraSpanOn?: boolean }).eraSpanOn ?? false
     buildDensity(on)
+    repaintDensity()
   })
 
   // 键盘 ←/→ 微调一年，Shift 加速十年（输入框内除外）
