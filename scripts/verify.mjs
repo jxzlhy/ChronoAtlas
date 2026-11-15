@@ -764,6 +764,14 @@ console.log(
   JSON.stringify({ '3': kb3, '6': kb6 }),
   kb3 === 1816 && kb6 === 1898 ? '✓' : '✗',
 )
+// J 键开合航线面板（快捷键体系补全：N/H/R/P/J/1-6/←→ 全覆盖）
+await page.keyboard.press('j')
+await new Promise((r) => setTimeout(r, 600))
+const kbJ1 = await page.evaluate(() => !document.getElementById('routes-panel')?.hidden)
+await page.keyboard.press('j')
+await new Promise((r) => setTimeout(r, 400))
+const kbJ2 = await page.evaluate(() => document.getElementById('routes-panel')?.hidden)
+console.log('   快捷键 J 航线面板:', JSON.stringify({ open: kbJ1, closed: kbJ2 }), kbJ1 && kbJ2 ? '✓' : '✗')
 
 // 12.9 音效开关：点击 → store.soundOn + aria；再点关
 await page.click('#sound-toggle')
