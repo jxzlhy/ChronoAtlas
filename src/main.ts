@@ -358,6 +358,8 @@ function boot(): void {
         : 0,
     /** 热区拾取探针（自动化断言用）：屏幕坐标 → 代表事件 id 或 null */
     hotspotsProbe: (x: number, y: number) => hotspots.pick(x, y, globe.camera, canvas),
+    /** 时代波段数据（自动化断言用） */
+    eraBands: ERA_BANDS,
     /** 渲染性能摘要（自动化基线记录用，总任务书 §6.6 先测量再优化） */
     perf: () => {
       const info = globe.renderer.info

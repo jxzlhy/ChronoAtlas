@@ -1,6 +1,7 @@
 import { appStore, type AppState, type HistoryEvent } from '../store'
 import type { LinkKind } from '../data/model'
 import { EVENTS, EVENT_TYPES } from '../data/events'
+import { eraOf } from '../data/eras'
 import { LINKS } from '../data/links'
 import { PEOPLE } from '../data/people'
 import { SOURCES } from '../data/sources'
@@ -175,7 +176,7 @@ export function initEventCard(
         </svg>
       </div>
       <div class="ec-type">${type.zh} · ${type.en}</div>
-      <div class="ec-meta">公元 ${years} 年 · ${ev.place.zh}</div>
+      <div class="ec-meta">公元 ${years} 年 · ${ev.place.zh} · <button class="ec-era" type="button" data-ec-era data-era-from="${eraOf(ev.start).from}" title="时代入口 · 跳到 ${eraOf(ev.start).name.zh} 起点（${eraOf(ev.start).from}）· Jump to era start">⏳ ${eraOf(ev.start).name.zh}<span class="ec-era-en">${eraOf(ev.start).name.en}</span></button></div>
 
       <h3 class="ec-title">${ev.title.zh}</h3>
       <div class="ec-title-en">${ev.title.en}</div>
@@ -246,6 +247,12 @@ export function initEventCard(
       // 跳数切换 → store（LinkArcs 订阅重建弧线），并重绘按钮激活态
       appStore.getState().setArcsDepth(depthBtn.dataset.depth === '1' ? 1 : 3)
       if (current) render(current)
+      return
+    }
+    const eraBtn = target.closest<HTMLElement>('[data-ec-era]')
+    if (eraBtn?.dataset.eraFrom) {
+      // 时代入口（V3.13，与人物卡 pc-era 对称）：跳到事件所属时代起点
+      appStore.getState().setYear(Number(eraBtn.dataset.eraFrom))
       return
     }
     const personBtn = target.closest<HTMLElement>('[data-person]')

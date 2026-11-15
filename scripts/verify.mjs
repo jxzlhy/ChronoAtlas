@@ -126,6 +126,33 @@ const cardVisible = await page.evaluate(() => {
 })
 console.log('   事件卡:', JSON.stringify(cardVisible))
 if (!cardVisible.compass) throw new Error('卡片罗盘未显示（棱柱屏幕锚定失效）')
+// 时代入口（V3.13）：徽章双语 + 点击跳事件所属时代起点
+const evEraEntry = await page.evaluate(() => {
+  const btn = document.querySelector('#event-card .ec-era')
+  if (!btn) return null
+  const id = window.__chrono.store.getState().selectedId
+  const ev = window.__chrono.events.find((x) => x.id === id)
+  const band = [...(window.__chrono.eraBands ?? [])].find((b) => ev && ev.start >= b.from && ev.start <= b.to)
+  return {
+    zh: /⏳/.test(btn.textContent ?? ''),
+    en: btn.querySelector('.ec-era-en')?.textContent ?? '',
+    fromAttr: Number(btn.getAttribute('data-era-from')),
+    expectFrom: band ? band.from : null,
+  }
+})
+if (evEraEntry) {
+  await page.evaluate(() => document.querySelector('#event-card .ec-era')?.click())
+  await new Promise((r) => setTimeout(r, 400))
+  const eraYear = await page.evaluate(() => window.__chrono.store.getState().year)
+  console.log(
+    '   事件卡时代入口:',
+    JSON.stringify({ ...evEraEntry, jumpedTo: eraYear }),
+    evEraEntry.zh && evEraEntry.en && evEraEntry.fromAttr === evEraEntry.expectFrom && eraYear === evEraEntry.expectFrom ? '✓' : '✗',
+  )
+} else {
+  console.log('   事件卡时代入口: MISSING ✗')
+}
+await page.evaluate(() => window.__chrono.store.getState().setYear(1850)) // 还原年份
 await shot('03-event-card')
 
 // 5. 搜索"鸦片"
