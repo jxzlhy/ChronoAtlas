@@ -9,6 +9,7 @@ import { RouteArcs } from './scene/RouteArcs'
 import { PersonMarkers } from './scene/PersonMarkers'
 import { appStore, isActive, matchesFilters, YEAR_MAX, YEAR_MIN, type HistoryEvent } from './store'
 import { EVENTS, CONTINENTS } from './data/events'
+import { ERA_BANDS } from './data/eras'
 import { LINKS } from './data/links'
 import { PEOPLE } from './data/people'
 import { ROUTES } from './data/routes'
@@ -278,6 +279,10 @@ function boot(): void {
       ;(document.getElementById('slice-toggle') as HTMLButtonElement)?.click()
     } else if (e.key === 'j' || e.key === 'J') {
       ;(document.getElementById('routes-toggle') as HTMLButtonElement)?.click()
+    } else if (/^[1-6]$/.test(e.key)) {
+      // 数字键 1-6：跳时代起点（与时代 chips / 文明视图分布条同一路径，V3.11）
+      const band = ERA_BANDS[Number(e.key) - 1]
+      if (band) s.setYear(band.from)
     }
   })
   // 世界快照面板：onGo 跳转事件；大洲 chip 复用大洲导航的飞行参数

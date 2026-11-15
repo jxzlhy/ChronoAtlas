@@ -696,6 +696,18 @@ console.log(
   JSON.stringify({ h: kbH.on, n: kbN1 && !kbN2, r: !!kbR, p: kbP1 && !kbP2, arrow: yearAfter === yearBefore + 1 }),
   kbOk ? '✓' : '✗',
 )
+// 数字键 1-6 跳时代起点（V3.11）：按 3 → 维也纳体系起点 1816；按 6 → 革命前夜起点 1898
+await page.keyboard.press('3')
+await new Promise((r) => setTimeout(r, 300))
+const kb3 = await page.evaluate(() => window.__chrono.store.getState().year)
+await page.keyboard.press('6')
+await new Promise((r) => setTimeout(r, 300))
+const kb6 = await page.evaluate(() => window.__chrono.store.getState().year)
+console.log(
+  '   快捷键 1-6 跳时代:',
+  JSON.stringify({ '3': kb3, '6': kb6 }),
+  kb3 === 1816 && kb6 === 1898 ? '✓' : '✗',
+)
 
 // 12.9 音效开关：点击 → store.soundOn + aria；再点关
 await page.click('#sound-toggle')
