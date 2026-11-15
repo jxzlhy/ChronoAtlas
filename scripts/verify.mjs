@@ -680,6 +680,9 @@ const netInfo = await page.evaluate(() => {
 console.log('   因果网络:', JSON.stringify(netInfo))
 if (!netInfo.open || netInfo.nodes !== 137 || netInfo.links !== 52)
   throw new Error(`因果网络异常: ${JSON.stringify(netInfo)}`)
+// 焦点管理（V3.18）：浮层打开后焦点应移入 #network-close
+const netFocus = await page.evaluate(() => document.activeElement?.id)
+console.log('   网络焦点:', netFocus, netFocus === 'network-close' ? '✓' : '✗')
 await shot('19-network')
 // 点击"洋务运动"节点（坐标由布局暴露），选中应同步 store
 await page.evaluate(() => {
@@ -838,6 +841,9 @@ const rpInfo = await page.evaluate(() => ({
 }))
 console.log('   航线面板:', JSON.stringify(rpInfo))
 if (!rpInfo.open || rpInfo.rows !== 5) throw new Error(`航线面板异常: ${JSON.stringify(rpInfo)}`)
+// 焦点管理（V3.18）：面板打开后焦点应移入面板 close 按钮
+const rpFocus = await page.evaluate(() => document.activeElement?.getAttribute('data-routes-close') !== undefined)
+console.log('   航线焦点:', rpFocus ? '✓' : '✗')
 await shot('21-routes')
 // 选中麦哲伦环球（9 途经点）→ 详情 + 不确定性标注 + URL rt= 写入
 await page.evaluate(() => document.querySelector('#routes-list [data-route="magellan-circumnavigation"]')?.click())

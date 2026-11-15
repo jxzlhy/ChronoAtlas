@@ -377,6 +377,9 @@ export function initNetwork(onPause?: () => void, onResume?: () => void): void {
     toggle.setAttribute('aria-pressed', String(v))
     toggle.classList.toggle('is-open', v)
     hideLinkInfo()
+    // 键盘可达性（E5，V3.18 补齐）：打开焦点移入浮层 close，关闭移回 toggle
+    if (v) overlay.querySelector<HTMLButtonElement>('#network-close')?.focus({ preventScroll: true })
+    else toggle.focus({ preventScroll: true })
     if (v) {
       onPause?.() // 浮层完全遮挡地球，暂停 3D 渲染循环省电
       resize()

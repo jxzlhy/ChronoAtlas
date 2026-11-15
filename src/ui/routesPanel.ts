@@ -59,6 +59,9 @@ export function initRoutesPanel(
     toggle.setAttribute('aria-expanded', String(v))
     toggle.classList.toggle('is-open', v)
     appStore.getState().selectRoute(v ? (current?.id ?? null) : null)
+    // 键盘可达性（E5，V3.18 补齐与事件/人物卡一致）：打开焦点移入面板 close，关闭移回 toggle
+    if (v) panel.querySelector<HTMLButtonElement>('[data-routes-close]')?.focus({ preventScroll: true })
+    else toggle.focus({ preventScroll: true })
     if (!v) {
       playing = false
       cancelAnimationFrame(raf)
