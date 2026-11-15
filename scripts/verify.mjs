@@ -911,6 +911,24 @@ console.log('   移动端航线全屏:', JSON.stringify(mRoutes), mRoutes.full ?
 await page.evaluate(() => document.querySelector('[data-routes-close]')?.click())
 await new Promise((r) => setTimeout(r, 400))
 await shot('17-mobile')
+// 13.1 移动端快照面板可见性（V3.15）：桌面 P1（面板整体飞出视口）的移动端回归保险
+await page.evaluate(() => document.getElementById('slice-toggle')?.click())
+await new Promise((r) => setTimeout(r, 700))
+const mPanel = await page.evaluate(() => {
+  const p = document.getElementById('slice-panel').getBoundingClientRect()
+  const c = document.getElementById('era-chips').getBoundingClientRect()
+  return {
+    top: Math.round(p.top),
+    bottom: Math.round(p.bottom),
+    vh: window.innerHeight,
+    inView: p.top >= 0 && p.bottom <= window.innerHeight,
+    chipsInView: c.top >= 0 && c.bottom <= window.innerHeight,
+  }
+})
+console.log('   移动端快照面板:', JSON.stringify(mPanel), mPanel.inView && mPanel.chipsInView ? '✓' : '✗')
+await shot('27-mobile-panel')
+await page.evaluate(() => document.getElementById('slice-toggle')?.click())
+await new Promise((r) => setTimeout(r, 300))
 
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
 const perf = await page.evaluate(() => window.__chrono.perf()).catch(() => null)
