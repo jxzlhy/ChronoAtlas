@@ -32,3 +32,9 @@ V1.0 阶段遵循 docs/CHRONOATLAS_V1_0_LIVING_HISTORY_MASTER_PLAN.md（永久 G
 - Vite `504 Outdated Optimize Dep` → `rm -rf node_modules/.vite` 重启。
 - 贴图加载不得阻塞 window load（会卡死导航）→ Globe.ts 在 load 后加载并 12s 超时降级。
 - 无头截图注意：加载层要等 `body.ready`，贴图冷缓存可达 10s+。
+- **store 订阅回调内禁止重建式渲染**（V3.12 踩坑）：buildDensity 曾在订阅内整函数重跑——播放每帧叠加 4 个匿名 listener + 1 个 tooltip DOM（实测播放 3 秒积累 29 个）。拆「构建一次（守卫标记）+ 高亮 repaint（值不变零开销）」；守卫标记 `built = true` 千万别漏写，否则守卫永不拦截。
+- **button 元素必须重置 UA 白底**（V3.10 踩坑）：自定义 button 类若不写 `background: transparent`，深色面板上会出现发白横条（civ-era-label）。
+- **listener 重构易误删功能分支**（V3.5/V3.12 踩坑）：合并/重构 addEventListener 后要对照"功能回环"断言逐条核对；断言若依赖"year 恰好停在期望值"会假通过——断言内部应显式驱动状态再断言结果。
+- **断言顺序耦合**：新断言改变 store 状态会污染后续断言前提——断言完恢复现场（setYear 回基准值）。
+- **verify 挂 SyntaxError 先怀疑 TS 语法**：verify.mjs 是 .mjs（纯 JS），evaluate 回调里不能写 TS 类型标注；变量重命名防跨段重名（eraEntry/evEraEntry）。
+- **dev server 旧 bundle 干扰**：源码改动后 verify 现象与代码不符时，`lsof -ti :5173 | xargs kill` + `rm -rf node_modules/.vite` 重启再验（watcher 可能失灵）。
