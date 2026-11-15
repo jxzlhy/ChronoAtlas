@@ -170,10 +170,13 @@ export function initTimeline(): void {
   requestAnimationFrame(step)
 
   // 时代视角联动：开关变化才重建（listener 只绑一次）；年份变化走高亮 repaint（V3.12）
+  // 时代视角锁定 ±20 窗口 → 窗口选择器禁用（V3.16，避免"选了没效果"的困惑）
   appStore.subscribe((s) => {
     const on = (s as { eraSpanOn?: boolean }).eraSpanOn ?? false
     buildDensity(on)
     repaintDensity()
+    windowSelect.disabled = on
+    windowSelect.setAttribute('aria-disabled', String(on))
   })
 
   // 键盘 ←/→ 微调一年，Shift 加速十年（输入框内除外）

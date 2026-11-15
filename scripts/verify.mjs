@@ -272,6 +272,18 @@ await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-t
 await new Promise((r) => setTimeout(r, 300))
 const spanOff = await page.evaluate(() => document.querySelector('#snapshot-era .era-span-btn')?.textContent)
 console.log('   时代视角关闭:', spanOff?.includes('时代视角') ? '✗ 仍开启' : '✓')
+// 时代视角锁定窗口 → 窗口选择器禁用（V3.16）：此刻视角已关（应为可选），再开启则禁用
+const wsClosedState = await page.evaluate(() => document.getElementById('window-select')?.disabled ?? null)
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const wsOpenState = await page.evaluate(() => document.getElementById('window-select')?.disabled ?? null)
+console.log(
+  '   时代视角窗口禁用:',
+  JSON.stringify({ 关闭视角: wsClosedState, 开启视角: wsOpenState }),
+  wsClosedState === false && wsOpenState === true ? '✓' : '✗',
+)
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click()) // 还原关闭
+await new Promise((r) => setTimeout(r, 300))
 // 热区时代权重（V2.4.0 回归验证）：开启 era boost 后热区簇应重新计算
 await page.evaluate(() => {
   const s = window.__chrono.store.getState()
