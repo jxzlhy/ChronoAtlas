@@ -950,6 +950,24 @@ await shot('27-mobile-panel')
 await page.evaluate(() => document.getElementById('slice-toggle')?.click())
 await new Promise((r) => setTimeout(r, 300))
 
+// 13.2 PWA 资产齐备（V3.17）：manifest 链接/theme-color/apple-touch-icon + 三尺寸 PNG 可达
+const pwa = await page.evaluate(async () => {
+  const link = document.querySelector('link[rel="manifest"]')
+  const touch = document.querySelector('link[rel="apple-touch-icon"]')
+  const theme = document.querySelector('meta[name="theme-color"]')
+  const icons = ['/manifest.webmanifest', '/icon-180.png', '/icon-192.png', '/icon-512.png']
+  const codes = await Promise.all(icons.map(async (u) => (await fetch(u)).status))
+  return {
+    manifestLink: !!link,
+    touchIcon: !!touch,
+    themeColor: !!theme,
+    codes,
+  }
+})
+const pwaOk =
+  pwa.manifestLink && pwa.touchIcon && pwa.themeColor && pwa.codes.every((c) => c === 200)
+console.log('   PWA 资产:', JSON.stringify(pwa), pwaOk ? '✓' : '✗')
+
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
 const perf = await page.evaluate(() => window.__chrono.perf()).catch(() => null)
 console.log('性能基线:', JSON.stringify(perf), '· init:', `${initMs}ms`)

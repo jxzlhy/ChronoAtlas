@@ -7,6 +7,10 @@
 const CACHE_VERSION = 'chrono-v1'
 const PRECACHE = [
   '/',
+  '/manifest.webmanifest',
+  '/icon-180.png',
+  '/icon-192.png',
+  '/icon-512.png',
   '/textures/earth-blue-marble.jpg',
   '/textures/earth-night.jpg',
   '/textures/earth-topology.png',
