@@ -810,10 +810,16 @@ const closeEvent = await page.evaluate(() => {
   const card = document.getElementById('event-card')
   return card.hidden || !card.classList.contains('show')
 })
+// 航线面板 Esc（V3.18 补全：Esc 路径覆盖第四面板）
+await page.evaluate(() => document.getElementById('routes-toggle')?.click())
+await new Promise((r) => setTimeout(r, 500))
+await page.keyboard.press('Escape')
+await new Promise((r) => setTimeout(r, 500))
+const escRoutes = await page.evaluate(() => document.getElementById('routes-panel')?.hidden)
 console.log(
   '   Esc/close 关闭路径:',
-  JSON.stringify({ escSlice, escPerson, closeEvent }),
-  escSlice && escPerson && closeEvent ? '✓' : '✗',
+  JSON.stringify({ escSlice, escPerson, closeEvent, escRoutes }),
+  escSlice && escPerson && closeEvent && escRoutes ? '✓' : '✗',
 )
 // 无效 hash 容错：reload 后不崩溃、无选中、hash 被写回清理
 await page.evaluate(() => {
@@ -973,6 +979,26 @@ const pwa = await page.evaluate(async () => {
 const pwaOk =
   pwa.manifestLink && pwa.touchIcon && pwa.themeColor && pwa.codes.every((c) => c === 200)
 console.log('   PWA 资产:', JSON.stringify(pwa), pwaOk ? '✓' : '✗')
+
+// 13.3 手改 URL 热恢复（V3.19）：hashchange → UI 跟随（粘贴分享链接用例）
+await page.evaluate(() => {
+  window.location.hash = '#y=1776&ev=communist-manifesto'
+})
+await new Promise((r) => setTimeout(r, 400))
+const hotRestore = await page.evaluate(() => ({
+  year: window.__chrono.store.getState().year,
+  selected: window.__chrono.store.getState().selectedId,
+}))
+console.log(
+  '   手改URL热恢复:',
+  JSON.stringify(hotRestore),
+  hotRestore.year === 1776 && hotRestore.selected === 'communist-manifesto' ? '✓' : '✗',
+)
+await page.evaluate(() => {
+  window.location.hash = '#y=1850'
+})
+await new Promise((r) => setTimeout(r, 300))
+await page.evaluate(() => window.__chrono.store.getState().select(null))
 
 // 汇总（含性能基线：__chrono.perf() 在初始视图 + 各交互后采样一次）
 const perf = await page.evaluate(() => window.__chrono.perf()).catch(() => null)

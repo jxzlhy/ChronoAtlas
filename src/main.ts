@@ -49,8 +49,8 @@ function boot(): void {
   const routeArcs = new RouteArcs(globe.scene)
   const personMarkers = new PersonMarkers(globe.scene)
 
-  // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>&p=<人物>）----
-  {
+  // ---- URL hash 状态还原（分享链接 #y=1850&ev=<id>&p=<人物>&rt=<航线>&civ=<文明>）----
+  const restoreFromHash = (): void => {
     const params = new URLSearchParams(window.location.hash.replace(/^#/, ''))
     const s = appStore.getState()
     if (params.has('y')) {
@@ -66,6 +66,10 @@ function boot(): void {
     const civ = params.get('civ')
     if (civ && CIVILIZATIONS.includes(civ as never)) s.setCivFilter(civ)
   }
+  restoreFromHash()
+  // 手改 URL 热恢复（V3.19）：粘贴分享链接回车 → hashchange → UI 跟随。
+  // store→hash 走 replaceState（不触发 hashchange），监听无自写回环。
+  window.addEventListener('hashchange', restoreFromHash)
   // store → hash（replaceState，不打断导航）；boot 时也写回一次以清理无效参数
   {
     let lastHash = ''
