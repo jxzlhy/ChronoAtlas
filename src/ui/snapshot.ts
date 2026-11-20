@@ -113,7 +113,6 @@ export function initSnapshot(
   let sortBy: SortBy = 'importance'
   let viewMode: ViewMode = 'list'
   /** 时代视角模式（V2.1）：开启后时间窗口锁定为当前时代起止 */
-  let eraSpanMode = false
 
   const setOpen = (v: boolean): void => {
     open = v
@@ -387,6 +386,7 @@ export function initSnapshot(
 
     const era = eraOf(s.year)
     yearEl.textContent = `公元 ${s.year} 年`
+    const eraSpanMode = s.eraSpanOn // 单一事实源：store（V3.20 去 V2.1 双源）
     if (eraSpanMode) {
       eraEl.innerHTML = `<button class="era-span-btn" type="button" data-era-span-toggle title="点击退出时代视角">⏳ 时代视角：${era.name.zh}（${era.from}–${era.to}）· ${era.name.en} ✕</button>`
     } else {
@@ -503,9 +503,9 @@ export function initSnapshot(
   eraEl.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-era-span-toggle]')
     if (!btn) return
-    eraSpanMode = !eraSpanMode
-    appStore.getState().setHotspotsEraBoost(eraSpanMode) // 热区权重随时代视角联动
-    appStore.getState().setEraSpanOn(eraSpanMode) // 密度条时代高亮联动（V3.12 起高亮由实时年份驱动，无需快照年份）
+    const next = !appStore.getState().eraSpanOn
+    appStore.getState().setEraSpanOn(next) // 密度条时代高亮 + 热区权重（订阅联动）
+    appStore.getState().setHotspotsEraBoost(next)
     render(true)
   })
 

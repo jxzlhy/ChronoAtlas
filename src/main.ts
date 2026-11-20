@@ -65,6 +65,8 @@ function boot(): void {
     if (rtId && ROUTES.some((x) => x.id === rtId)) s.selectRoute(rtId)
     const civ = params.get('civ')
     if (civ && CIVILIZATIONS.includes(civ as never)) s.setCivFilter(civ)
+    const es = params.get('es')
+    if (es === '1') s.setEraSpanOn(true)
   }
   restoreFromHash()
   // 手改 URL 热恢复（V3.19）：粘贴分享链接回车 → hashchange → UI 跟随。
@@ -81,6 +83,7 @@ function boot(): void {
       if (s.selectedPersonId) p.set('p', s.selectedPersonId)
       if (s.selectedRouteId) p.set('rt', s.selectedRouteId)
       if (s.civFilter) p.set('civ', s.civFilter)
+      if (s.eraSpanOn) p.set('es', '1')
       const h = `#${p.toString()}`
       if (h !== lastHash) {
         lastHash = h

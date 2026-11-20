@@ -284,6 +284,27 @@ console.log(
 )
 await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click()) // 还原关闭
 await new Promise((r) => setTimeout(r, 300))
+// es=1 URL 参数（V3.20）：热恢复锁定时代视角 + 关闭后从 hash 移除（双向闭环）
+await page.evaluate(() => {
+  window.location.hash = '#y=1850&es=1'
+})
+await new Promise((r) => setTimeout(r, 500))
+const esOn = await page.evaluate(() => ({
+  on: window.__chrono.store.getState().eraSpanOn,
+  selDisabled: document.getElementById('window-select')?.disabled,
+}))
+const esHashOn = await page.evaluate(() => window.location.hash.includes('es=1'))
+await page.evaluate(() => document.querySelector('#snapshot-era [data-era-span-toggle]')?.click())
+await new Promise((r) => setTimeout(r, 400))
+const esOff = await page.evaluate(() => ({
+  on: window.__chrono.store.getState().eraSpanOn,
+  hashCleared: !window.location.hash.includes('es=1'),
+}))
+console.log(
+  '   es=URL参数:',
+  JSON.stringify({ esOn: esOn.on, selDisabled: esOn.selDisabled, hashOn: esHashOn, esOff: esOff.on, hashCleared: esOff.hashCleared }),
+  esOn.on && esOn.selDisabled && esHashOn && !esOff.on && esOff.hashCleared ? '✓' : '✗',
+)
 // 热区时代权重（V2.4.0 回归验证）：开启 era boost 后热区簇应重新计算
 await page.evaluate(() => {
   const s = window.__chrono.store.getState()
