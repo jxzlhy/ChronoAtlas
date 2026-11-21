@@ -50,7 +50,7 @@ async function ensureServer(url) {
 await ensureServer('http://127.0.0.1:5173/')
 
 const browser = await puppeteer.launch({
-  executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  executablePath: process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', // CI 经 CHROME_PATH 注入（GitHub Actions setup-chrome）
   headless: 'new',
   args: [
     '--no-sandbox',

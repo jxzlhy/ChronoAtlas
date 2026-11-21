@@ -1,0 +1,38 @@
+name: CI
+
+# 每次推送/PR 自动跑验证链（AGENTS 工作循环的自动化）：类型 → 数据 → 构建 → 端到端
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: 类型检查
+        run: npx tsc --noEmit
+      - name: 数据完整性
+        run: npm run validate:data
+      - name: 生产构建
+        run: npm run build
+      - name: 安装 Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: 端到端验证（无头 + SwiftShader）
+        run: node scripts/verify.mjs
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+      - name: 截图产物
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verify-shots
+          path: verify-shots/*.png
+          retention-days: 7
